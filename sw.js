@@ -1,7 +1,7 @@
 /* JollyTrip service worker: lets the app open with no connection.
    Pages are fetched fresh when online (so updates arrive) and served from cache when offline.
    Your trips and photos are not stored here; they live in cookies, local storage and IndexedDB. */
-const VERSION = 'jollytrip-v1';
+const VERSION = 'jollytrip-v2';
 const SHELL = [
   './',
   './index.html',
