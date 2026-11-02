@@ -2,7 +2,7 @@
 
 A minimalist vacation budget and expense tracker. A sibling of BasKar.
 
-**Live:** https://tktarun03.github.io/jollytrip/ (after GitHub Pages is turned on)
+**Live:** https://tktarun03.github.io/JollyTrip/ (after GitHub Pages is turned on)
 
 ## What it does
 
@@ -20,7 +20,7 @@ Everything stays in the browser on the device you use. Nothing is uploaded.
 
 | What | Where |
 |---|---|
-| Trips and spends | Compressed into cookies (scoped to `/jollytrip/`), mirrored to `localStorage` |
+| Trips and spends | Compressed into cookies (scoped to the app's folder), mirrored to `localStorage` |
 | Photos | The browser's IndexedDB, shrunk to JPEG (1600 px; avatars 256 px) |
 | Backup | Settings → Copy backup: one text blob with trips and photos, pasted into Restore on another device |
 
