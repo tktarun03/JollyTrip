@@ -9,6 +9,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="JollyTrip">
 <meta name="description" content="JollyTrip: vacation budget, daily allowance and group expense splitting.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>JollyTrip</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -582,6 +585,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     camera: '<path d="M4 8h3l2-2.5h6L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
     left: '<path d="m15 5-7 7 7 7"/>',
+    share: '<path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6"/>',
+    download: '<path d="M12 4v11M8 11l4 4 4-4M5 19h14"/>',
     right: '<path d="m9 5 7 7-7 7"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
   };
@@ -783,7 +788,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var chips = '<div class="chips scroll" role="group" aria-label="Filter by category"><button type="button" class="chip" data-act="fcat" data-cat="all" aria-pressed="' + (f.cat === 'all') + '">All</button>' +
       Object.keys(CATS).filter(function (k) { return c.byCat[k]; }).map(function (k) { return '<button type="button" class="chip" data-act="fcat" data-cat="' + k + '" aria-pressed="' + (f.cat === k) + '" style="--c:' + CATS[k].color + '"><i class="dot"></i>' + esc(cs(k)) + '</button>'; }).join('') + '</div>';
     var search = '<label class="input row" style="border-radius:999px;gap:8px;color:var(--muted)">' + ic('search', 17) + '<input id="f-q" type="search" placeholder="Search notes" aria-label="Search spends" value="' + esc(f.q) + '" style="flex:1;min-width:0;border:0;background:transparent;outline:none;font-size:max(16px,1rem);color:var(--ink)"></label>';
-    return h + '<div class="narrow">' + search + chips + '<div id="spend-list">' + spendList(t) + '</div></div>';
+    var tools = '<div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn quiet sm" data-act="share">' + ic('share', 16) + 'Share summary</button><button type="button" class="btn quiet sm" data-act="csv">' + ic('download', 16) + 'Export CSV</button></div>';
+    return h + '<div class="narrow">' + tools + search + chips + '<div id="spend-list">' + spendList(t) + '</div></div>';
   }
   function spendList(t) {
     var f = S.filter, q = f.q.trim().toLowerCase();
@@ -809,8 +815,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       return '<div class="prow">' + avatar(r.p, 38) + '<div class="grow"><strong>' + esc(r.p.name) + '</strong><span class="hint">Paid ' + esc(money(r.paid, t.home)) + ' · share ' + esc(money(r.share, t.home)) + '</span></div>' + pill + '</div>';
     }).join('') + '<div style="height:6px"></div></section>';
     var st = '<section class="card tight"><div class="card-head"><h2 class="h3">Settle up</h2><span class="hint">' + plural(set.length, 'payment') + '</span></div>' +
-      (set.length ? set.map(function (s) { return '<div class="settle">' + avatar(s.from, 32) + '<span class="grow"><span><strong>' + esc(s.from.name) + '</strong> pays <strong>' + esc(s.to.name) + '</strong></span></span><span class="num" style="font-size:var(--t-md);font-weight:400;letter-spacing:-0.01em">' + esc(money(s.v, t.home)) + '</span></div>'; }).join('') : '<div class="empty"><p class="hint">Everyone is even.</p></div>') +
-      '<div style="height:6px"></div></section><p class="hint" style="padding:0 2px">Each spend is shared equally by the people ticked on it. Spends in ' + esc(t.local || t.home) + ' are converted at the rate saved with that spend.</p>';
+      (set.length ? set.map(function (s) { return '<div class="settle">' + avatar(s.from, 32) + '<span class="grow"><span><strong>' + esc(s.from.name) + '</strong> ' + pays(s.from) + ' <strong>' + esc(s.to.name) + '</strong></span></span><span class="num" style="font-size:var(--t-md);font-weight:400;letter-spacing:-0.01em">' + esc(money(s.v, t.home)) + '</span></div>'; }).join('') : '<div class="empty"><p class="hint">Everyone is even.</p></div>') +
+      '<div style="height:6px"></div></section><p class="hint" style="padding:0 2px">Each spend is shared equally by the people ticked on it. Spends in ' + esc(t.local || t.home) + ' are converted at the rate saved with that spend.</p><button type="button" class="btn block" data-act="share">' + ic('share', 18) + 'Share summary</button>';
     return h + '<div class="split2"><div>' + bal + '</div><div>' + st + '</div></div>';
   }
 
@@ -871,6 +877,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       '<button type="button" class="btn block" data-act="tr-save">' + (isNew ? 'Create trip' : 'Save trip') + '</button>' +
       (isNew ? '' : '<button type="button" class="btn danger block' + (S.armed ? ' armed' : '') + '" data-act="tr-del">' + (S.armed ? 'Tap again to delete this trip and its spends' : 'Delete trip') + '</button>');
   }
+  function sheetText() {
+    return '<h2>' + esc(S.textOut.title) + '</h2><p class="hint">Copying was blocked here, so the text is selected below. Copy it from there.</p><textarea id="text-out" class="input" readonly aria-label="' + esc(S.textOut.title) + '" style="min-height:260px">' + esc(S.textOut.body) + '</textarea>';
+  }
   function sheetSettings() {
     var s = S.st.settings;
     return '<h2>Settings</h2>' +
@@ -899,8 +908,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function renderSheet(fresh) {
     var root = $('#sheet-root');
     if (!S.sheet) { root.innerHTML = ''; return; }
-    var t = trip(), body = S.sheet === 'expense' ? sheetExpense(t) : S.sheet === 'trip' ? sheetTrip() : sheetSettings();
-    var label = S.sheet === 'expense' ? 'Spend' : S.sheet === 'trip' ? 'Trip' : 'Settings';
+    var t = trip(), body = S.sheet === 'expense' ? sheetExpense(t) : S.sheet === 'trip' ? sheetTrip() : S.sheet === 'text' ? sheetText() : sheetSettings();
+    var label = S.sheet === 'expense' ? 'Spend' : S.sheet === 'trip' ? 'Trip' : S.sheet === 'text' ? S.textOut.title : 'Settings';
     var sc = root.querySelector('.sheet'), top = sc ? sc.scrollTop : 0;
     root.innerHTML = '<div class="sheet-wrap' + (fresh ? '' : ' still') + '" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-label="' + label + '"><div class="grabber"></div><div class="row between" style="margin-bottom:-6px"><span class="eyebrow">' + esc(t && S.sheet !== 'settings' && !(S.sheet === 'trip' && !S.draft.id) ? t.name : 'JollyTrip') + '</span><button type="button" class="icon-btn" data-act="close" aria-label="Close" style="width:36px;height:36px">' + ic('x', 16) + '</button></div>' + body + '</div></div>';
     if (!fresh) root.querySelector('.sheet').scrollTop = top;
@@ -1031,8 +1040,63 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         S.st = o; load2(); save(); closeSheet(); S.tab = 'overview'; renderAll(); toast('Restored ' + plural(o.trips.length, 'trip') + (Object.keys(ph).length ? ' and ' + plural(Object.keys(ph).length, 'photo') : ''));
       });
     },
+    share: function () {
+      var t = trip(); if (!t) return;
+      var txt = summaryText(t);
+      if (IS_TOP && navigator.share && PHONE) { navigator.share({ title: 'JollyTrip · ' + t.name, text: txt }).catch(function (e) { if (!e || e.name !== 'AbortError') copyText(txt, 'Summary copied. Paste it into WhatsApp or a message.', 'Trip summary'); }); return; }
+      copyText(txt, 'Summary copied. Paste it into WhatsApp or a message.', 'Trip summary');
+    },
+    csv: function () {
+      var t = trip(); if (!t) return;
+      var txt = csvText(t), name = 'jollytrip-' + slug(t.name) + '.csv';
+      if (!IS_TOP) { copyText(txt.replace(/^\uFEFF/, ''), 'CSV copied. Paste it into a spreadsheet.', 'Spends as CSV'); return; }
+      var blob = new Blob([txt], { type: 'text/csv;charset=utf-8' });
+      try {
+        var file = new File([blob], name, { type: 'text/csv' });
+        if (PHONE && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: name }).catch(function () { }); return; }
+      } catch (e) { }
+      var a = document.createElement('a'), u = URL.createObjectURL(blob);
+      a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(u); }, 4000);
+      toast('Saved ' + name);
+    },
     wipe: function () { if (!S.armed) { S.armed = true; renderSheet(); return; } S.st = { v: 1, trips: [], active: null, settings: S.st.settings }; save(); Photos.keys().then(function (k) { return Photos.del(k); }); closeSheet(); S.tab = 'trips'; renderView(); toast('All trips erased'); }
   };
+  /* ---------- Share summary & CSV ---------- */
+  function summaryText(t) {
+    var c = calc(t), o = { show: true }, rows = balances(t), set = settleUp(rows);
+    var L = ['JollyTrip · ' + t.name, (t.place ? t.place + ' · ' : '') + range(t) + ' · ' + plural(t.people.length, 'traveler'), ''];
+    L.push('Spent ' + money(c.total, t.home, o) + ' of ' + money(c.budget, t.home, o) + ' (' + Math.round(c.budget ? c.total / c.budget * 100 : 0) + '%)');
+    L.push(c.left >= 0 ? money(c.left, t.home, o) + ' left in the budget' : money(-c.left, t.home, o) + ' over budget');
+    if (t.people.length > 1) L.push('Per person ' + money(c.total / t.people.length, t.home, o));
+    if (c.status === 'active') L.push('Day ' + c.dayIdx + ' of ' + c.n + ' · safe to spend today ' + money(Math.max(c.safe, 0), t.home, o));
+    var keys = Object.keys(CATS).filter(function (k) { return c.byCat[k]; }).sort(function (a, b) { return c.byCat[b] - c.byCat[a]; });
+    if (keys.length) { L.push('', 'Where it went'); keys.forEach(function (k) { L.push('• ' + CATS[k].label + ': ' + money(c.byCat[k], t.home, o)); }); }
+    if (t.people.length > 1) {
+      L.push('', 'Settle up');
+      if (set.length) set.forEach(function (x) { L.push('• ' + x.from.name + ' ' + pays(x.from) + ' ' + x.to.name + ' ' + money(x.v, t.home, o)); });
+      else L.push('• Everyone is even');
+    }
+    return L.join('\n');
+  }
+  function csvCell(v) { v = String(v == null ? '' : v); return /[",\n\r]/.test(v) || /^[=+\-@]/.test(v) ? '"' + (/^[=+\-@]/.test(v) ? "'" : '') + v.replace(/"/g, '""') + '"' : v; }
+  function csvText(t) {
+    var head = ['Date', 'Trip day', 'Note', 'Category', 'Amount', 'Currency', 'Rate to ' + t.home, 'Amount in ' + t.home, 'Paid by', 'Shared by', 'Photos'];
+    var rows = t.expenses.slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }).map(function (x) {
+      var day = x.date < t.start ? 'Before' : x.date > t.end ? 'After' : diff(t.start, x.date) + 1;
+      var sh = (x.split && x.split.length ? x.split : [x.paidBy]).map(function (id) { return person(t, id).name; }).join('; ');
+      return [x.date, day, x.note || '', CATS[x.cat] ? CATS[x.cat].label : 'Other', x.amt, x.cur || t.home, x.cur === t.home ? 1 : x.rate, Math.round(homeOf(x) * 100) / 100, person(t, x.paidBy).name, sh, (x.photos || []).length];
+    });
+    return '\uFEFF' + [head].concat(rows).map(function (r) { return r.map(csvCell).join(','); }).join('\r\n');
+  }
+  function pays(p) { return String(p.name).trim().toLowerCase() === 'you' ? 'pay' : 'pays'; }
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'trip'; }
+  function showText(title, body) { S.textOut = { title: title, body: body }; openSheet('text'); setTimeout(function () { var b = $('#text-out'); if (b) { b.focus(); b.select(); } }, 320); }
+  function copyText(txt, ok, title) {
+    try { navigator.clipboard.writeText(txt).then(function () { toast(ok); }, function () { showText(title, txt); }); }
+    catch (e) { showText(title, txt); }
+  }
+  var PHONE = (function () { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } })();
   function kb(n) { return n < 1024 ? n + ' B' : (n / 1024).toFixed(1) + ' KB'; }
   function cookieBytes() { try { return document.cookie.length; } catch (e) { return 0; } }
   function selBackup() { var b = $('#backup-box'); if (b) { b.focus(); b.select(); } }
@@ -1095,6 +1159,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   if (!S.st.trips.length) S.tab = 'trips';
   renderAll();
   Photos.ready.then(function () { gc(); });
+  /* Offline + install: only when JollyTrip is hosted on its own (GitHub Pages), never inside Claude's frame. */
+  if (IS_TOP && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () { }); });
+  }
   // Refresh "today" if the page stays open past midnight.
   var lastDay = today();
   setInterval(function () { if (today() !== lastDay) { lastDay = today(); renderView(); } }, 60000);
