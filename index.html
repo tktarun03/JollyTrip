@@ -946,8 +946,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.3';
+  var APP_VERSION = '3.4';
   var CHANGELOG = [
+    { v: '3.4', date: '2026-11-03', items: ['Face ID or fingerprint can be turned on straight from More → Security or your profile. Without a PIN, it walks you through setting one first, and new PINs offer Face ID right away.'] },
     { v: '3.3', date: '2026-11-03', items: ['The app locks itself after 5 minutes without a touch, click or keystroke (with a PIN or Face ID set up). The time follows your Lock the app setting.', 'Pinch and double-tap zoom are turned off. Use More → Appearance → Text size instead.'] },
     { v: '3.2', date: '2026-11-03', items: ['Paste a booking’s confirmation text to fill in its details.', 'Bookings get a picture: the hotel photo from your PDF, a photo you attach, or a drawn picture for each kind of booking.', 'Messages now slide up from the bottom and have a close button.'] },
     { v: '3.1', date: '2026-11-03', items: ['Version history: your trips are saved automatically while you make changes, before big changes, and whenever you choose. Restore any version in one tap.', 'Undo straight after deleting, importing or restoring.', 'App lock with a PIN, plus Face ID or fingerprint unlock, in More → Security.', 'Attach booking confirmations as PDFs or photos. JollyTrip reads the code, dates and total, and can read the amount from a spend’s receipt photo.', 'Manage your profile, including your own picture.', 'A refresh button, and sheets whose title stays put while the content scrolls.'] },
@@ -3000,11 +3001,20 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     }
   }
   /* PIN set / change / remove, in a sheet */
+  function bioUnavailableText() { return 'It works when ' + BR.name + ' is opened from its own web address (tktarun03.github.io/JollyTrip) or its home-screen icon, on a phone or computer with Face ID, Touch ID, a fingerprint reader or Windows Hello. It can’t work inside a preview such as Claude’s.'; }
+  function sheetBio(sh) {
+    var m = meta(), ok = BIO.avail !== false;
+    return sheetHead(bioName()) + '<div class="lock" style="padding:0.5rem 0 0"><span class="flame" style="width:72px;height:72px">' + ic('face', 36) + '</span>' +
+      (ok ? (m && m.pin && !m.bio ? '<span class="pill good">PIN lock is on</span>' : '') + '<h3 class="h3">Unlock with your face or fingerprint</h3><p class="hint" style="max-width:34ch">' + esc(BR.name) + ' asks your device to check it’s you. Your face or fingerprint never leaves the device. Your ' + (m && m.pin ? m.pin.len + '-digit ' : '') + 'PIN still works as a fallback.</p>' +
+        '<button type="button" class="btn block" data-act="bio-enroll">' + ic('face', 18) + ' Turn on ' + esc(bioName()) + '</button><button type="button" class="btn ghost block" data-act="close">Not now</button>'
+        : '<h3 class="h3">Not available here</h3><p class="hint" style="max-width:36ch">' + esc(bioUnavailableText()) + '</p><p class="hint" style="max-width:36ch">' + (m && m.pin ? 'Your PIN lock is on and works everywhere.' : '') + '</p><button type="button" class="btn block" data-act="close">OK</button>') + '</div>';
+  }
   function sheetPin(sh) {
+    if (sh.step === 'bio') return sheetBio(sh);
     var m = meta(), d = sh.d, len = sh.step === 'current' || sh.step === 'remove' ? m.pin.len : d.len;
-    var title = sh.purpose === 'remove' ? 'Turn off PIN lock' : sh.purpose === 'change' ? 'Change PIN' : 'Set a PIN';
+    var title = sh.purpose === 'remove' ? 'Turn off PIN lock' : sh.purpose === 'change' ? 'Change PIN' : sh.thenBio ? 'First, set a PIN' : 'Set a PIN';
     var prompt = { current: 'Enter your current PIN.', remove: 'Enter your PIN to turn the lock off.', 'new': 'Choose a new ' + d.len + '-digit PIN.', confirm: 'Enter the same PIN again.' }[sh.step];
-    return sheetHead(title) + '<p class="hint">' + esc(prompt) + '</p>' +
+    return sheetHead(title) + '<p class="hint">' + esc(prompt) + (sh.thenBio && sh.step === 'new' ? ' It’s the fallback for when your face or finger isn’t recognised.' : '') + '</p>' +
       (sh.step === 'new' ? '<div class="seg" role="group" aria-label="PIN length"><button type="button" data-act="pin-len" data-v="4" aria-pressed="' + (d.len === 4) + '">4 digits</button><button type="button" data-act="pin-len" data-v="6" aria-pressed="' + (d.len === 6) + '">6 digits</button></div>' : '') +
       '<div class="lock" style="padding:0">' + pinDots(len, d.entry.length) + keypad(false) + '</div>' + errLine(sh) +
       (sh.purpose === 'remove' && m.bio ? '<p class="hint">Face ID or fingerprint unlock turns off too, because it needs the PIN as a fallback.</p>' : '');
@@ -3032,6 +3042,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var salt = uid();
     hashPw(d.entry, salt).then(function (h) {
       m.pin = { salt: salt, hash: h, len: d.len }; if (m.lockAfter == null) m.lockAfter = 5; saveIndex();
+      if (!m.bio && sh.purpose === 'set' && (sh.thenBio || BIO.avail)) { sh.busy = false; sh.step = 'bio'; S.sheet = sh; renderSheet(); renderView(); return; }
       closeSheet(); renderView(); toast(sh.purpose === 'change' ? 'PIN changed' : 'PIN lock is on', 'You’ll be asked for it when you open ' + BR.name + '.');
     });
   }
@@ -3039,10 +3050,11 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function idleMinutes(m) { var a = m && m.lockAfter != null ? +m.lockAfter : 5; return a > 0 ? a : 5; }
   function securityCard(m) {
     var on = lockEnabled(m), bioOk = BIO.avail !== false;
-    var bioHint = !m.pin ? 'Set a PIN first. It’s the fallback when your face or finger isn’t recognised.' : !bioOk ? 'Not available here. It works when ' + BR.name + ' is opened from its own web address or home-screen icon, on a device with Face ID, Touch ID, fingerprint or Windows Hello.' : 'Unlock with ' + bioName() + ' instead of typing the PIN.';
+    var bioHint = !bioOk ? 'Not available in this view. Tap to see where it works.' : !m.pin ? 'Unlock with your face or fingerprint. You’ll set a PIN first as the fallback.' : 'Unlock with your face or fingerprint instead of typing the PIN.';
     return '<section class="card"><div class="row between"><h2 class="h3">Security</h2><span class="pill ' + (on ? 'good' : 'info') + '">' + (on ? 'App lock on' : 'App lock off') + '</span></div>' +
       '<div class="setrow"><div class="grow"><span class="label">PIN lock</span><span class="hint">' + (m.pin ? 'On · ' + m.pin.len + ' digits' : 'Ask for a PIN when the app opens.') + '</span></div><div class="row" style="gap:6px">' + (m.pin ? '<button type="button" class="btn quiet sm" data-act="pin-change">Change</button><button type="button" class="btn ghost sm" data-act="pin-off">Turn off</button>' : '<button type="button" class="btn sm" data-act="pin-set">Set PIN</button>') + '</div></div>' +
-      '<div class="setrow"><div class="grow"><span class="label" id="bio-lbl">Face ID or fingerprint</span><span class="hint">' + esc(bioHint) + '</span></div><button type="button" class="switch" role="switch" aria-labelledby="bio-lbl" aria-checked="' + !!m.bio + '" data-act="bio-toggle"' + (!m.pin || (!bioOk && !m.bio) ? ' disabled style="opacity:.4"' : '') + '><span></span></button></div>' +
+      '<div class="setrow"><span class="tile" style="--c:var(--accent)">' + ic('face', 18) + '</span><div class="grow"><span class="label" id="bio-lbl">' + esc(bioName()) + '</span><span class="hint">' + esc(m.bio ? 'On. Use it on the lock screen; your PIN still works too.' : bioHint) + '</span></div>' +
+        (m.bio ? '<button type="button" class="switch" role="switch" aria-labelledby="bio-lbl" aria-checked="true" data-act="bio-toggle"><span></span></button>' : '<button type="button" class="btn sm" data-act="bio-toggle">Turn on</button>') + '</div>' +
       (on ? '<div class="field"><label for="lock-after">Lock the app</label><select id="lock-after" class="input" data-lockafter="1">' + LOCK_AFTER.map(function (o) { return '<option value="' + o[0] + '"' + (+(m.lockAfter == null ? 5 : m.lockAfter) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select><span class="hint">Idle means you haven’t touched or typed in the app. It always locks when the app is opened fresh.</span></div>' : '') +
       '<div class="setrow"><div class="grow"><span class="label">Account password</span><span class="hint">' + (m.hash ? 'Set. Asked when you open this account from the account list, and works if you forget the PIN.' : 'Not set.') + '</span></div><button type="button" class="btn quiet sm" data-act="profile" data-pw="1">' + (m.hash ? 'Change' : 'Set') + '</button></div>' +
       (on ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '') +
@@ -3069,7 +3081,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       '<div class="field"><span class="label">Password</span><div class="row wrap">' + (m.hash ? '<button type="button" class="btn quiet sm" data-act="pf-pw" data-v="change">Change password</button><button type="button" class="btn quiet sm" data-act="pf-pw" data-v="remove">Remove password</button>' : '<button type="button" class="btn quiet sm" data-act="pf-pw" data-v="set">Set a password</button>') + '</div></div>' + pwBlock +
       errLine(sh) + '<button type="button" class="btn block" data-act="pf-save" data-primary="1">Save profile</button>' +
       '<div class="duo"><button type="button" class="btn quiet" data-act="accounts">' + ic('users', 18) + ' Switch account</button><button type="button" class="btn quiet" data-act="signout">' + ic('logout', 18) + ' Sign out</button></div>' +
-      (lockEnabled(m) ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '<button type="button" class="btn ghost block" data-act="pin-set">' + ic('lock', 16) + ' Set up a PIN lock</button>');
+      (lockEnabled(m) ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '<div class="duo"><button type="button" class="btn ghost" data-act="pin-set">' + ic('lock', 16) + ' Set a PIN</button><button type="button" class="btn ghost" data-act="bio-toggle">' + ic('face', 16) + ' ' + esc(bioName().split(' or ')[0]) + '</button></div>');
   }
 
   /* =========================================================
@@ -3360,11 +3372,17 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     'pin-len': function (el) { var d = S.sheet.d; d.len = +el.dataset.v; d.entry = ''; renderSheet(); },
     kp: function (el) { var k = el.dataset.k; if (S.locked) lockKey(k); else if (S.sheet && S.sheet.type === 'pin') pinKey(k); },
     'bio-toggle': function () {
+      var m = meta(); if (!m) return;
+      if (m.bio) { delete m.bio; saveIndex(); renderView(); toast(bioName() + ' unlock turned off', 'Your PIN still locks the app.'); return; }
+      if (BIO.avail === false) { openSheet({ type: 'pin', step: 'bio', d: {} }); return; }
+      if (!m.pin) { openSheet({ type: 'pin', purpose: 'set', step: 'new', thenBio: true, d: { len: 4, entry: '', first: '' } }); return; }
+      openSheet({ type: 'pin', step: 'bio', d: {} });
+    },
+    'bio-enroll': function () {
       var m = meta(); if (!m || !m.pin) return;
-      if (m.bio) { delete m.bio; saveIndex(); renderView(); toast(bioName() + ' unlock turned off'); return; }
-      bioCheck().then(function (ok) {
-        if (!ok) { toast('Not available here', 'Open ' + BR.name + ' from its own web address or home-screen icon on a device with ' + bioName() + '.'); return; }
-        bioEnroll(m).then(function () { renderView(); toast(bioName() + ' unlock is on', 'Use it on the lock screen. Your PIN still works too.'); }, function (e) { toast('Couldn’t turn it on', e && e.name === 'NotAllowedError' ? 'It was cancelled or isn’t allowed here.' : 'This device or browser didn’t allow it.'); });
+      bioEnroll(m).then(function () { closeSheet(); renderView(); toast(bioName() + ' unlock is on', 'Use it on the lock screen. Your PIN still works too.'); }, function (e) {
+        if (e && e.name === 'NotAllowedError') toast('Not turned on', 'It was cancelled, or this browser didn’t allow it.');
+        else { BIO.avail = false; renderSheet(); toast('Couldn’t turn it on', 'This device or browser doesn’t support it here.'); }
       });
     },
     'lock-now': function () { if (!lockEnabled(meta())) return; lockApp(); renderAll(); },
