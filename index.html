@@ -192,7 +192,8 @@ input[type=number] { -moz-appearance: textfield; }
 .pill.sea { background: var(--accent-soft); color: var(--accent); }
 
 /* Header */
-.app-head { display: flex; align-items: flex-start; gap: 0.625rem; }
+.app-head { display: flex; align-items: flex-start; gap: 0.5rem; }
+@media (max-width: 420px) { .app-head .icon-btn { width: 38px; height: 38px; } }
 .app-head h1 { font-size: var(--t-xl); line-height: 1.1; font-weight: 300; overflow-wrap: anywhere; }
 .trip-btn { display: inline-flex; align-items: center; gap: 0.25rem; max-width: 100%; border: 0; background: none; padding: 0; color: var(--accent); font-size: var(--t-sm); font-weight: 500; cursor: pointer; text-align: left; }
 .brand { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--f-display); font-weight: 300; font-size: 1.3rem; letter-spacing: -0.03em; color: var(--ink); }
@@ -368,7 +369,11 @@ input[type=color] { width: 56px; height: 44px; border: 1px solid var(--line); bo
 .fab { position: absolute; z-index: 31; right: max(20px, calc((100% - var(--colmax)) / 2 + 20px), env(safe-area-inset-right, 0px)); bottom: 76px; width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--ink); color: var(--on-ink); box-shadow: var(--shadow); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.12s ease; }
 .fab:active { transform: scale(0.94); }
 .sheet-wrap { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: center; background: var(--scrim); animation: fade 0.2s ease; }
-.sheet { width: 100%; max-width: 540px; max-height: 92%; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; background: var(--bg); border-radius: 22px 22px 0 0; padding-top: 0.625rem; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 1.125rem; animation: up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: var(--shadow); }
+.sheet { width: 100%; max-width: 540px; max-height: 92%; overflow: hidden; background: var(--bg); border-radius: 22px 22px 0 0; display: flex; flex-direction: column; animation: up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: var(--shadow); }
+/* The title row stays put; only the content below it scrolls. */
+.sheet-top { flex: none; display: flex; flex-direction: column; gap: 0.625rem; padding-top: 0.625rem; padding-bottom: 0.75rem; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); background: var(--bg); border-bottom: 1px solid var(--line); }
+.sheet-top:not(:has(.sheet-head)) { border-bottom: 0; padding-bottom: 0.25rem; }
+.sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 1.125rem; padding-top: 1rem; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); }
 .sheet-wrap.still, .sheet-wrap.still .sheet { animation: none; }
 .grabber { width: 36px; height: 4px; border-radius: 999px; background: var(--line-strong); margin: 0 auto; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
@@ -380,8 +385,29 @@ input[type=color] { width: 56px; height: 44px; border: 1px solid var(--line); bo
 details.card summary { cursor: pointer; font-size: var(--t-sm); font-weight: 500; color: var(--ink-2); }
 .toast { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; z-index: 80; width: min(420px, calc(100% - 32px)); transform: translateX(-50%); display: flex; flex-direction: column; gap: 2px; padding: 0.75rem 1rem; border-radius: 16px; background: var(--notif-bg); color: var(--notif-ink); box-shadow: var(--shadow); font-size: var(--t-sm); pointer-events: none; animation: drop 0.3s ease-out; }
 .toast strong { font-weight: 500; font-size: var(--t-base); }
+.toast .tbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.toast.act { pointer-events: auto; flex-direction: row; align-items: center; gap: 0.75rem; }
+.toast-btn { flex-shrink: 0; min-height: 36px; padding: 0 0.875rem; border-radius: 999px; border: 1px solid var(--notif-muted); background: transparent; color: var(--notif-ink); font-weight: 500; font-size: var(--t-sm); cursor: pointer; }
+.vrow { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 0.75rem; align-items: start; padding: 0.75rem 0; }
+.vact { display: flex; align-items: center; gap: 0.125rem; }
+.cl { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; color: var(--ink-2); font-size: var(--t-sm); line-height: 1.5; }
 .toast span { color: var(--notif-muted); }
 
+.lock { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.875rem; padding-top: 1.5rem; }
+.lock .h2 { font-size: var(--t-xl); }
+.dots { display: flex; gap: 0.875rem; justify-content: center; padding: 0.5rem 0; }
+.dots i { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--ink-2); }
+.dots i.on { background: var(--ink); border-color: var(--ink); }
+.dots.shake { animation: shake 0.35s; }
+.keypad { display: grid; grid-template-columns: repeat(3, 4.5rem); gap: 0.875rem 1.5rem; justify-content: center; }
+.key { width: 4.5rem; height: 4.5rem; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-family: var(--f-display); font-size: 1.75rem; font-weight: 300; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.key:active { background: var(--surface-2); }
+.key.fn { border-color: transparent; background: transparent; color: var(--ink-2); }
+.forgot { max-width: 340px; text-align: left; }
+.forgot summary { cursor: pointer; font-size: var(--t-sm); color: var(--muted); text-align: center; list-style: none; }
+.forgot[open] { display: flex; flex-direction: column; gap: 0.625rem; }
+.doc { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
@@ -396,7 +422,9 @@ details.card summary { cursor: pointer; font-size: var(--t-sm); font-weight: 500
   .card.tight { padding: 0.375rem 1.375rem; }
   .trips-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sheet-wrap { align-items: center; padding: 24px; }
-  .sheet { border-radius: 22px; max-height: 88%; padding-bottom: 1.5rem; }
+  .sheet { border-radius: 22px; max-height: 88%; }
+  .sheet-top { padding-top: 1rem; }
+  .sheet-body { padding-bottom: 1.5rem; }
   .grabber { display: none; }
 }
 @media (min-width: 960px) {
@@ -577,10 +605,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       var self = this;
       this.ready = new Promise(function (res) {
         try {
-          var r = indexedDB.open('jollytrip', 1);
-          r.onupgradeneeded = function () { r.result.createObjectStore('photos', { keyPath: 'id' }); };
-          r.onsuccess = function () { self.db = r.result; res(); };
-          r.onerror = r.onblocked = function () { self.ok = false; res(); };
+          var r = indexedDB.open('jollytrip', 2), done = false;
+          r.onupgradeneeded = function () {
+            var db = r.result;
+            if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('versions')) db.createObjectStore('versions', { keyPath: 'id' }).createIndex('pid', 'pid');
+          };
+          r.onsuccess = function () { self.db = r.result; self.db.onversionchange = function () { try { self.db.close(); } catch (e) { } }; if (!done) { done = true; res(); } };
+          r.onerror = function () { self.ok = false; if (!done) { done = true; res(); } };
+          r.onblocked = function () { setTimeout(function () { if (!done) { done = true; self.ok = false; res(); } }, 3000); };
         } catch (e) { self.ok = false; res(); }
       });
       return this.ready;
@@ -623,6 +656,36 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       var self = this;
       if (self.urls[id]) return Promise.resolve(self.urls[id]);
       return this.get(id).then(function (b) { if (!b) return null; var u = URL.createObjectURL(b); self.urls[id] = u; return u; });
+    }
+  };
+  /* Saved versions of each account, in the same IndexedDB database. They never go into cookies. */
+  var Versions = {
+    mem: {},
+    store: function (mode) { try { if (Photos.db && Photos.db.objectStoreNames.contains('versions')) return Photos.db.transaction('versions', mode).objectStore('versions'); } catch (e) { } return null; },
+    ok: function () { return !!this.store('readonly'); },
+    add: function (rec) {
+      var self = this;
+      return Photos.ready.then(function () {
+        var st = self.store('readwrite'); if (!st) { self.mem[rec.id] = rec; return; }
+        return new Promise(function (res) { try { var q = st.put(rec); q.onsuccess = function () { res(); }; q.onerror = function () { self.mem[rec.id] = rec; res(); }; } catch (e) { self.mem[rec.id] = rec; res(); } });
+      });
+    },
+    all: function () {
+      var self = this;
+      return Photos.ready.then(function () {
+        var m = Object.keys(self.mem).map(function (k) { return self.mem[k]; }), st = self.store('readonly');
+        if (!st) return m;
+        return new Promise(function (res) { try { var q = st.getAll(); q.onsuccess = function () { res(m.concat(q.result || [])); }; q.onerror = function () { res(m); }; } catch (e) { res(m); } });
+      });
+    },
+    list: function (pid) { return this.all().then(function (a) { return a.filter(function (v) { return v.pid === pid; }).sort(function (x, y) { return y.at - x.at; }); }); },
+    del: function (ids) {
+      var self = this; ids = [].concat(ids).filter(Boolean);
+      ids.forEach(function (id) { delete self.mem[id]; });
+      return Photos.ready.then(function () {
+        var st = self.store('readwrite'); if (!st || !ids.length) return;
+        return new Promise(function (res) { try { ids.forEach(function (id) { st.delete(id); }); st.transaction.oncomplete = st.transaction.onerror = function () { res(); }; } catch (e) { res(); } });
+      });
     }
   };
   function shrink(file, max, square) {
@@ -795,6 +858,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     wallet: '<path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2.5"/><path d="M16 13.5h.01"/>',
+    face: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16a3.5 3.5 0 0 0 5 0"/>',
+    doc: '<path d="M6 3.5h8l4 4V20.5H6z"/><path d="M14 3.5v4h4M9 13h6M9 16.5h4"/>',
+    scan: '<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8 10h8M8 14h5"/>',
+    refresh: '<path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3M19.5 4.5v4.2h-4.2"/>',
     open: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>'
   };
   function ic(n, s) { s = s || 20; return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[n] || P.other) + '</svg>'; }
@@ -868,11 +935,24 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function stampText(c) { var w = String(c).replace(/[^\p{L}\p{N} ]/gu, '').trim().toUpperCase().split(/\s+/), out = ''; for (var i = 0; i < w.length; i++) { var n = out ? out + ' ' + w[i] : w[i]; if (n.length > 12) break; out = n; } return out || 'OVER'; }
 
   /* =========================================================
+     App version and what changed
+     ========================================================= */
+  var APP_VERSION = '3.1';
+  var CHANGELOG = [
+    { v: '3.1', date: '2026-11-03', items: ['Version history: your trips are saved automatically while you make changes, before big changes, and whenever you choose. Restore any version in one tap.', 'Undo straight after deleting, importing or restoring.', 'App lock with a PIN, plus Face ID or fingerprint unlock, in More → Security.', 'Attach booking confirmations as PDFs or photos. JollyTrip reads the code, dates and total, and can read the amount from a spend’s receipt photo.', 'Manage your profile, including your own picture.', 'A refresh button, and sheets whose title stays put while the content scrolls.'] },
+    { v: '3.0', date: '2026-11-03', items: ['Rebuilt as a family trip planner: day-by-day itinerary, bookings with deposits and due dates, packing list and trip notes.', 'Accounts, branding, wallets, bank SMS and CSV import, streaks, category limits, trip fund, nightly recap and insights.', 'Bookings are set aside before the daily allowance.', 'Money splitting removed.'] },
+    { v: '2.2', date: '2026-11-02', items: ['Works offline and installs to the home screen.', 'Share a trip summary and export spends as CSV.'] },
+    { v: '2.1', date: '2026-11-02', items: ['Trip cover photos, photos on spends and traveller avatars.', 'Light theme by default.'] },
+    { v: '2.0', date: '2026-11-02', items: ['Trips save to cookies, with a copy in local storage.'] },
+    { v: '1.0', date: '2026-11-02', items: ['First version: daily allowance, local and home currency, several trips.'] }
+  ];
+
+  /* =========================================================
      State, accounts, migration
      ========================================================= */
-  var S = { index: { v: 1, profiles: [] }, pid: null, p: null, tab: 'today', planSeg: 'itinerary', auth: { mode: 'home' }, sheet: null, lb: null, filter: { wallet: 'all', cat: 'all', q: '' }, limit: 80, showJson: false, bk: null, lastWallet: null, warned: false, legacy: null };
+  var S = { index: { v: 1, profiles: [] }, pid: null, p: null, tab: 'today', planSeg: 'itinerary', auth: { mode: 'home' }, sheet: null, lb: null, filter: { wallet: 'all', cat: 'all', q: '' }, limit: 80, showJson: false, bk: null, lastWallet: null, warned: false, legacy: null, locked: false, lockPid: null, lock: null, hiddenAt: 0, undo: null, savedJson: null, lastSnapJson: null, lastAutoAt: 0, vinfo: null };
   function meta(pid) { var id = pid || S.pid; for (var i = 0; i < S.index.profiles.length; i++) if (S.index.profiles[i].id === id) return S.index.profiles[i]; return null; }
-  function accAvatar(m, s) { return avatar({ name: m && m.name || '?', color: m && m.color || AV[0] }, s); }
+  function accAvatar(m, s) { return avatar({ name: m && m.name || '?', color: m && m.color || AV[0], photo: m && m.photo || null }, s); }
   function trip() { if (!S.p) return null; for (var i = 0; i < S.p.trips.length; i++) if (S.p.trips[i].id === S.p.active) return S.p.trips[i]; return S.p.trips[0] || null; }
   function person(t, id) { for (var i = 0; i < t.people.length; i++) if (t.people[i].id === id) return t.people[i]; return null; }
   function walletById(t, id) { for (var i = 0; i < t.wallets.length; i++) if (t.wallets[i].id === id) return t.wallets[i]; return null; }
@@ -906,7 +986,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     t.plan = (Array.isArray(t.plan) ? t.plan : []).filter(Boolean);
     t.plan.forEach(function (it) { it.id = it.id || uid(); it.day = validDate(it.day) ? it.day : ''; it.time = /^\d{2}:\d{2}$/.test(it.time || '') ? it.time : ''; it.title = String(it.title || 'Plan'); it.kind = PLK[it.kind] ? it.kind : 'sight'; it.place = String(it.place || ''); it.notes = String(it.notes || ''); it.cost = num(it.cost); it.cur = it.cur === t.local ? t.local : t.home; it.done = !!it.done; });
     t.bookings = (Array.isArray(t.bookings) ? t.bookings : []).filter(Boolean);
-    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; });
+    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; b.files = Array.isArray(b.files) ? b.files.filter(function (f) { return f && f.id; }) : []; });
     t.packing = (Array.isArray(t.packing) ? t.packing : []).filter(Boolean);
     t.packing.forEach(function (k) { k.id = k.id || uid(); k.text = String(k.text || ''); k.group = PACK_GROUPS.indexOf(k.group) >= 0 ? k.group : 'Other'; k.who = k.who || ''; k.done = !!k.done; });
     t.notes = String(t.notes || '');
@@ -930,13 +1010,63 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (!S.p || !S.pid) return;
     S.p.savedAt = Date.now();
     var r = Store.set('jt_p_' + S.pid, S.p);
+    autoVersion();
     if (!r.ok) toast('Couldn’t save', 'This browser’s storage is full or blocked. Copy a backup from More to keep your trips.');
     else if (r.overflow && !S.warned) { S.warned = true; toast('Moved to local storage', 'Your trips outgrew cookie space, so they now save to local storage on this device.'); }
   }
   function setSession(pid) { if (pid) Store.set('jt_sess', { pid: pid }); else Store.remove('jt_sess'); }
-  function loadProfile(pid) { var p = Store.get('jt_p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); return true; }
-  function signOut(silent) { S.pid = null; S.p = null; S.sheet = null; S.lb = null; setSession(null); nf = {}; S.auth = { mode: 'home' }; applySettings(); if (!silent) { renderAll(); toast('Signed out', 'Your trips stay saved on this device.'); } }
-  function deleteProfile(pid) { Store.remove('jt_p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
+  function loadProfile(pid) { var p = Store.get('jt_p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); initVersions(''); return true; }
+  function signOut(silent) { S.undo = null; S.vinfo = null; S.pid = null; S.p = null; S.sheet = null; S.lb = null; setSession(null); nf = {}; S.auth = { mode: 'home' }; applySettings(); if (!silent) { renderAll(); toast('Signed out', 'Your trips stay saved on this device.'); } }
+  function deleteProfile(pid) { Versions.list(pid).then(function (vs) { return Versions.del(vs.map(function (v) { return v.id; })); }); Store.remove('jt_p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
+  /* =========================================================
+     Version history and undo
+     ========================================================= */
+  var AUTO_GAP = 20 * 60000;
+  function snapJson(p) { var o = JSON.parse(JSON.stringify(p || S.p)); delete o.savedAt; return JSON.stringify(o); }
+  function vcounts(p) {
+    var c = { trips: p.trips.length, spends: 0, plans: 0, bookings: 0, packing: 0, names: [] };
+    p.trips.forEach(function (t) { c.spends += t.expenses.length; c.plans += t.plan.length; c.bookings += t.bookings.length; c.packing += t.packing.length; c.names.push(t.name + ' (' + plural(t.expenses.length, 'spend') + ')'); });
+    return c;
+  }
+  function snapshot(kind, label, json) {
+    if (!S.p || !S.pid) return Promise.resolve(null);
+    json = json || snapJson();
+    if (kind === 'auto' && json === S.lastSnapJson) return Promise.resolve(null);
+    var counts; try { counts = vcounts(migrate(JSON.parse(json))); } catch (e) { counts = vcounts(S.p); }
+    var rec = { id: 'v_' + uid(), pid: S.pid, at: Date.now(), kind: kind, label: label || '', size: json.length, counts: counts, data: json };
+    S.lastSnapJson = json; if (kind === 'auto') S.lastAutoAt = rec.at;
+    return Versions.add(rec).then(function () { return pruneVersions(rec.pid); }).then(function () { S.vinfo = null; return rec; });
+  }
+  /* Before the first change in each 20-minute stretch, keep the state as it was. */
+  function autoVersion() {
+    var now = snapJson(), prev = S.savedJson;
+    if (prev && prev !== now && Date.now() - S.lastAutoAt >= AUTO_GAP && prev !== S.lastSnapJson) snapshot('auto', '', prev);
+    S.savedJson = now;
+  }
+  function pruneVersions(pid) {
+    return Versions.list(pid).then(function (vs) {
+      var keep = { auto: 40, before: 25, manual: 60 }, seen = { auto: 0, before: 0, manual: 0 }, drop = [];
+      vs.forEach(function (v) { var k = keep[v.kind] ? v.kind : 'auto'; seen[k]++; if (seen[k] > keep[k]) drop.push(v.id); });
+      if (drop.length) return Versions.del(drop);
+    });
+  }
+  function initVersions(firstLabel) {
+    S.undo = null; S.vinfo = null; S.savedJson = snapJson(); S.lastSnapJson = null; S.lastAutoAt = 0;
+    var pid = S.pid;
+    return Versions.list(pid).then(function (vs) {
+      if (pid !== S.pid) return;
+      var a = vs.filter(function (v) { return v.kind === 'auto'; })[0];
+      S.lastAutoAt = a ? a.at : 0; S.lastSnapJson = vs[0] ? vs[0].data : null;
+      if (!vs.length || (vs[0].data !== S.savedJson && Date.now() - vs[0].at > AUTO_GAP)) return snapshot('auto', vs.length ? '' : (firstLabel || 'First saved version'), S.savedJson);
+    });
+  }
+  /* Keeps the state before a change so it can be undone; big changes also become a saved version. */
+  function checkpoint(label, keepVersion) {
+    var json = snapJson();
+    S.undo = { json: json, label: label, at: Date.now() };
+    if (keepVersion) snapshot('before', label, json);
+  }
+  function fmtWhen(ts) { return new Date(ts).toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }); }
   function applySettings() {
     var s = S.p ? S.p.settings : { theme: 'light', ts: 'device' }, r = document.documentElement;
     if (s.theme === 'system') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', s.theme === 'dark' ? 'dark' : 'light');
@@ -1125,7 +1255,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       if (t.cover) o[t.cover] = 1;
       (t.people || []).forEach(function (x) { if (x.photo) o[x.photo] = 1; });
       (t.expenses || []).forEach(function (x) { (x.photos || []).forEach(function (id) { o[id] = 1; }); });
-      (t.bookings || []).forEach(function (b) { (b.photos || []).forEach(function (id) { o[id] = 1; }); });
+      (t.bookings || []).forEach(function (b) { (b.photos || []).forEach(function (id) { o[id] = 1; }); (b.files || []).forEach(function (f) { o[f.id] = 1; }); });
     });
     return o;
   }
@@ -1133,16 +1263,26 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var o = {};
     S.index.profiles.forEach(function (m) { refsOf(m.id === S.pid ? S.p : Store.get('jt_p_' + m.id), o); });
     if (S.p) refsOf(S.p, o);
+    S.index.profiles.forEach(function (m) { if (m.photo) o[m.photo] = 1; });
     var lg = legacyData(); if (lg) refsOf(lg, o);
     if (S.sheet && S.sheet.d) {
       var d = S.sheet.d;
       (d.photos || []).forEach(function (id) { o[id] = 1; });
+      (d.files || []).forEach(function (f) { o[f.id] = 1; });
+      if (d.photo) o[d.photo] = 1;
       if (d.cover) o[d.cover] = 1;
       (d.people || []).forEach(function (x) { if (x.photo) o[x.photo] = 1; });
     }
     return o;
   }
-  function gc() { var r = allRefs(); return Photos.keys().then(function (ks) { var drop = ks.filter(function (k) { return !r[k]; }); if (drop.length) return Photos.del(drop); }); }
+  function gc() {
+    return Versions.all().then(function (vs) {
+      var r = allRefs();
+      vs.forEach(function (v) { try { refsOf(JSON.parse(v.data), r); } catch (e) { } });
+      if (S.undo) { try { refsOf(JSON.parse(S.undo.json), r); } catch (e) { } }
+      return Photos.keys().then(function (ks) { var drop = ks.filter(function (k) { return !r[k]; }); if (drop.length) return Photos.del(drop); });
+    });
+  }
 
   /* =========================================================
      Bank SMS reader
@@ -1423,8 +1563,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     return '<header class="app-head"><div class="grow">' +
       '<div class="row" style="gap:6px;min-width:0">' + (t ? '<button type="button" class="trip-btn" data-act="trips"><span class="ellip">' + esc(t.name) + '</span>' + ic('down', 14) + '</button>' : wordmark(BR, true)) + (S.p && S.p.demo ? '<span class="badge">Example</span>' : '') + '</div>' +
       '<h1>' + esc(title) + '</h1></div>' +
+      '<button type="button" class="icon-btn" data-act="refresh" aria-label="Refresh">' + ic('refresh', 18) + '</button>' +
       '<button type="button" class="icon-btn" data-act="privacy" aria-pressed="' + hide + '" aria-label="' + (hide ? 'Show amounts' : 'Hide amounts') + '">' + ic(hide ? 'eyeoff' : 'eye', 18) + '</button>' +
-      '<button type="button" class="av-btn" data-act="accounts" aria-label="Accounts">' + accAvatar(m, 42) + '</button></header>';
+      '<button type="button" class="av-btn" data-act="profile" aria-label="Your profile">' + accAvatar(m, 42) + '</button></header>';
   }
   function greeting() { var hr = new Date().getHours(); return (hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening') + ', ' + firstName((meta() || {}).name); }
   function coverBanner(t) {
@@ -1772,11 +1913,16 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="backup">' + ic('copy', 16) + 'Copy backup</button><button type="button" class="btn quiet sm" data-act="restore-open">Restore from backup</button><button type="button" class="btn quiet sm" data-act="json">' + (S.showJson ? 'Hide JSON' : 'View JSON') + '</button>' + (t ? '<button type="button" class="btn quiet sm" data-act="csv">Export CSV</button><button type="button" class="btn quiet sm" data-act="open-csv">Import CSV</button>' : '') + '</div>' +
       '<p class="hint">The backup includes photos, so it can be large. Paste it into Restore on another device to move everything across.</p>' +
       (S.showJson ? '<pre class="json" tabindex="0">' + esc(JSON.stringify(S.p, null, 2)) + '</pre>' : '') + '</section>';
+    right += securityCard(m);
+    var vi = S.vinfo; if (!vi) refreshVinfo();
+    right += '<section class="card"><div class="row between"><h2 class="h3">Version history</h2>' + (vi ? '<span class="hint">' + plural(vi.count, 'version') + '</span>' : '') + '</div>' +
+      '<p class="hint">' + (vi && vi.last ? 'Last saved ' + esc(fmtWhen(vi.last)) + '. ' : '') + 'Go back to an earlier state of your trips if something goes wrong. Versions save automatically as you make changes.</p>' +
+      '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="history">' + ic('clock', 16) + 'See versions</button><button type="button" class="btn quiet sm" data-act="vh-quick">' + ic('target', 16) + 'Save a version now</button>' + (S.undo ? '<button type="button" class="btn quiet sm" data-act="undo">' + ic('back', 16) + 'Undo last change</button>' : '') + '</div></section>';
     right += '<section class="card"><div class="row">' + accAvatar(m, 46) + '<div class="grow"><strong style="font-size:var(--t-md)">' + esc(m.name) + '</strong><span class="hint">' + (m.hash ? 'Locked with a password' : 'No password') + ' · home currency ' + esc(S.p.home) + '</span></div></div>' +
-      '<div class="duo"><button type="button" class="btn quiet" data-act="accounts">' + ic('users', 18) + ' Switch</button><button type="button" class="btn quiet" data-act="signout">' + ic('logout', 18) + ' Sign out</button></div>' +
+      '<button type="button" class="btn quiet block" data-act="profile">' + ic('edit', 18) + ' Manage profile</button><div class="duo"><button type="button" class="btn quiet" data-act="accounts">' + ic('users', 18) + ' Switch</button><button type="button" class="btn quiet" data-act="signout">' + ic('logout', 18) + ' Sign out</button></div>' +
       (S.p.demo ? '<button type="button" class="btn ghost block" data-act="reset-demo">Reset the example trip</button>' : '') +
       '<button type="button" class="btn danger block' + (S.armed === 'acct' ? ' armed' : '') + '" data-act="acct-del">' + (S.armed === 'acct' ? 'Tap again to delete this account and its trips' : 'Delete this account') + '</button></section>';
-    right += '<p class="fine pad">' + esc(BR.name) + ' works offline once opened, and keeps everything on this device. Nothing is uploaded.</p>';
+    right += '<section class="card"><div class="setrow"><div class="grow"><span class="label">' + esc(BR.name) + ' ' + APP_VERSION + '</span><span class="hint">Works offline once opened, and keeps everything on this device. Nothing is uploaded.</span></div><button type="button" class="btn ghost sm" data-act="about">What’s new</button></div></section>';
     return header(t, 'More') + '<div class="split2"><div>' + (left || '<section class="card"><p>No trip yet.</p><button type="button" class="btn" data-act="trip-new">' + ic('plus', 18) + ' Plan a trip</button></section>') + '</div><div>' + right + '</div></div>';
   }
   function fundEta(t, saved, target) {
@@ -1792,7 +1938,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* =========================================================
      Sheets
      ========================================================= */
-  function sheetHead(title) { return '<div class="sheet-head"><h2 id="sheet-title">' + esc(title) + '</h2><button type="button" class="icon-btn" data-act="close" aria-label="Close">' + ic('x', 18) + '</button></div>'; }
+  function sheetHead(title) { return '<div class="sheet-head"><h2 id="sheet-title">' + esc(title) + '</h2><button type="button" class="icon-btn" data-act="close" aria-label="Close">' + ic('x', 18) + '</button></div><!--/head-->'; }
   function errLine(sh) { return sh.err ? '<p class="error" role="alert">' + esc(sh.err) + '</p>' : ''; }
   function delBtn(sh, label, armedLabel, act) { return '<button type="button" class="btn danger block' + (sh.armed ? ' armed' : '') + '" data-act="' + act + '">' + esc(sh.armed ? armedLabel : label) + '</button>'; }
   function curSeg(t, d, act) {
@@ -1824,7 +1970,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       '<div class="field"><label for="sp-wallet">Paid from</label><select id="sp-wallet" class="input" data-f="wallet">' + wopts + '</select></div>' +
       (t.people.length > 1 ? '<div class="field"><span class="label">For</span><div class="chips"><button type="button" class="chip" data-act="sp-who" data-id="" aria-pressed="' + (!d.who) + '">Whole family</button>' + t.people.map(function (p) { return '<button type="button" class="chip" data-act="sp-who" data-id="' + esc(p.id) + '" aria-pressed="' + (d.who === p.id) + '">' + esc(p.name) + '</button>'; }).join('') + '</div></div>' : '') +
       (t.bookings.length ? '<div class="field"><label for="sp-bk">Payment for a booking?</label><select id="sp-bk" class="input" data-f="bookingId"><option value="">No, a day-to-day spend</option>' + t.bookings.map(function (b) { return '<option value="' + esc(b.id) + '"' + (d.bookingId === b.id ? ' selected' : '') + '>' + esc(b.name) + '</option>'; }).join('') + '</select><span class="hint">Booking payments come out of what’s set aside for bookings, not today’s allowance.</span></div>' : '') +
-      photoField(d, 'ed', 6) + errLine(sh) +
+      photoField(d, 'ed', 6) + (d.photos.length ? ocrNote(sh.ocr) + '<button type="button" class="btn quiet sm" data-act="ocr-run" style="align-self:flex-start"' + (sh.ocr && sh.ocr.busy ? ' disabled' : '') + '>' + ic('scan', 16) + ' Read the receipt</button>' : '') + errLine(sh) +
       '<button type="button" class="btn block" data-act="sp-save" data-primary="1">' + (isNew ? 'Add spend' : 'Save changes') + '</button>' +
       (isNew ? '' : delBtn(sh, 'Delete spend', 'Tap again to delete', 'sp-del'));
   }
@@ -1887,7 +2033,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       (d.id ? '' : '<div class="field"><label for="bk-paid">Paid so far</label><div class="money-input sm"><input id="bk-paid" data-f="paidNow" type="number" inputmode="decimal" step="any" min="0" placeholder="0" value="' + esc(d.paidNow) + '"><span class="cur">' + esc(d.cur) + '</span></div><span class="hint">A deposit or the full amount. It’s logged as a spend today.</span></div>') +
       '<div class="field"><label for="bk-due">Balance due by <span class="muted">(optional)</span></label><input id="bk-due" class="input" data-f="due" type="date" value="' + esc(d.due) + '"><span class="hint">You get a reminder on Today a week before.</span></div>' +
       '<div class="field"><label for="bk-notes">Notes</label><textarea id="bk-notes" class="input" data-f="notes" style="min-height:80px" placeholder="Seats, baggage, address, check-in rules…">' + esc(d.notes) + '</textarea></div>' +
-      photoField(d, 'ed', 4) +
+      docsField(sh) +
       (b ? '<section class="card tight"><div class="card-head"><h3 class="h3">Payments</h3><span class="hint">' + (st.st === 'paid' ? 'Paid in full' : esc(money(st.left, t.home)) + ' to pay') + '</span></div><div class="rows">' + (pays.length ? pays.map(function (x) { return txnRow(t, x); }).join('') : '<p class="hint" style="padding:6px 0 12px">No payments logged yet.</p>') + '</div>' +
         (st.st !== 'paid' ? '<button type="button" class="add-row" data-act="bk-pay">' + ic('plus', 16) + ' Log a payment of ' + esc(money(st.left, t.home, { show: true })) + '</button>' : '<div class="spacer"></div>') + '</section>' : '') +
       errLine(sh) + '<button type="button" class="btn block" data-act="bk-save" data-primary="1">' + (d.id ? 'Save booking' : 'Add booking') + '</button>' +
@@ -2043,13 +2189,56 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     }).join('') + '</div><div class="duo"><button type="button" class="btn quiet" data-act="add-account">' + ic('plus', 18) + ' New account</button><button type="button" class="btn quiet" data-act="signout">' + ic('logout', 18) + ' Sign out</button></div>';
   }
 
-  var SHEETS = { spend: sheetSpend, trip: sheetTrip, trips: sheetTrips, wallet: sheetWallet, booking: sheetBooking, item: sheetItem, fund: sheetFund, caps: sheetCaps, sms: sheetSms, csv: sheetCsv, text: sheetText, restore: sheetRestore, recap: sheetRecap, brand: sheetBrand, accounts: sheetAccounts };
+  function vtitle(v) { return v.kind === 'manual' ? (v.label ? '“' + v.label + '”' : 'Saved by you') : v.kind === 'before' ? v.label : (v.label || 'Automatic save'); }
+  function vdiff(v, cur, curJson) {
+    if (v.data === curJson) return 'Same as now';
+    var c = v.counts || {}, parts = [];
+    [['trips', 'trip'], ['spends', 'spend'], ['plans', 'plan'], ['bookings', 'booking'], ['packing', 'packing item']].forEach(function (k) {
+      var d = (c[k[0]] || 0) - (cur[k[0]] || 0);
+      if (d) parts.push(Math.abs(d) + (d > 0 ? ' more ' : ' fewer ') + (Math.abs(d) === 1 ? k[1] : k[1] + 's'));
+    });
+    return parts.length ? 'Compared with now: ' + parts.join(', ') : 'Same counts as now, different details';
+  }
+  function sheetHistory(sh) {
+    var cur = vcounts(S.p), curJson = snapJson(), list = sh.list;
+    var h = sheetHead('Version history') +
+      '<p class="hint">' + esc(BR.name) + ' keeps versions of this account on this device. It saves one automatically while you make changes (at most every 20 minutes), before big changes like deleting a trip or importing spends, and whenever you save one yourself. Restoring a version saves your current state first, so you can always come back.</p>' +
+      '<section class="card"><div class="field"><label for="vh-label">Save a version now</label><input id="vh-label" class="input" data-f="label" maxlength="60" placeholder="Optional name, e.g. Before changing hotels" value="' + esc(sh.d.label) + '"></div><button type="button" class="btn" data-act="vh-save" data-primary="1">' + ic('target', 18) + ' Save this version</button></section>';
+    if (!Versions.ok()) h += '<p class="notice">This browser can’t store versions here, so they last only until you close the tab.</p>';
+    if (!list) return h + '<p class="hint">Loading versions…</p>';
+    if (!list.length) return h + '<section class="card"><p class="hint">No versions yet. One is saved the next time you make a change.</p></section>';
+    var groups = [], g = null, td = today();
+    list.forEach(function (v) { var ds = iso(new Date(v.at)); if (!g || g.ds !== ds) { g = { ds: ds, items: [] }; groups.push(g); } g.items.push(v); });
+    h += groups.map(function (gr) {
+      var lbl = gr.ds === td ? 'Today' : gr.ds === addDays(td, -1) ? 'Yesterday' : fmtD(gr.ds, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      return '<section class="card tight"><div class="card-head"><span class="eyebrow">' + esc(lbl) + '</span><span class="hint">' + plural(gr.items.length, 'version') + '</span></div><div class="rows">' + gr.items.map(function (v) {
+        var c = v.counts || {}, armed = sh.armed === v.id, open = sh.open === v.id, icon = v.kind === 'manual' ? 'target' : v.kind === 'before' ? 'lock' : 'clock';
+        var line = plural(c.trips || 0, 'trip') + ' · ' + plural(c.spends || 0, 'spend') + ' · ' + plural(c.plans || 0, 'plan') + ' · ' + plural(c.bookings || 0, 'booking');
+        return '<div class="vrow"><span class="tile" style="--c:var(--accent)">' + ic(icon, 17) + '</span>' +
+          '<button type="button" class="it-main" data-act="vh-open" data-id="' + esc(v.id) + '" aria-expanded="' + open + '"><strong>' + esc(vtitle(v)) + '</strong><span class="hint">' + esc(new Date(v.at).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) + ' · ' + line) + '</span><span class="hint">' + esc(vdiff(v, cur, curJson)) + '</span>' +
+          (open ? '<span class="hint" style="color:var(--ink-2);margin-top:4px">' + esc((c.names || []).join(' · ') || 'No trips') + ' · ' + esc(kb(v.size || 0)) + '</span>' : '') + '</button>' +
+          '<span class="vact"><button type="button" class="btn sm' + (armed ? '' : ' quiet') + '" data-act="vh-restore" data-id="' + esc(v.id) + '"' + (v.data === curJson ? ' disabled' : '') + '>' + (armed ? 'Tap to restore' : 'Restore') + '</button><button type="button" class="icon-btn sm" data-act="vh-del" data-id="' + esc(v.id) + '" aria-label="Delete this version" style="border:0">' + ic('x', 14) + '</button></span></div>';
+      }).join('') + '</div><div class="spacer"></div></section>';
+    }).join('');
+    var size = list.reduce(function (a, v) { return a + (v.size || 0); }, 0), autos = list.filter(function (v) { return v.kind === 'auto'; }).length;
+    h += errLine(sh) + '<p class="hint">' + plural(list.length, 'version') + (list.length === 1 ? ' uses ' : ' use ') + esc(kb(size)) + ' on this device. ' + esc(BR.name) + ' keeps the latest 40 automatic saves, 25 before-change saves and 60 of your own. Versions aren’t part of backups, and photos removed since a version was saved come back only if they’re still on this device.</p>' +
+      (autos ? '<button type="button" class="btn danger block' + (sh.armed === 'all' ? ' armed' : '') + '" data-act="vh-clear">' + (sh.armed === 'all' ? 'Tap again to delete ' + plural(autos, 'automatic version') : 'Delete automatic versions') + '</button>' : '');
+    return h;
+  }
+  function sheetAbout() {
+    return sheetHead('What’s new') + '<div class="row">' + (BR.showMascot ? mascot('chill', 44) : '') + '<div class="grow"><strong style="font-size:var(--t-md)">' + esc(BR.name) + ' ' + APP_VERSION + '</strong><span class="hint">Everything stays on this device. It works offline once opened.</span></div></div>' +
+      CHANGELOG.map(function (r, i) {
+        return '<section class="card' + (i ? ' tight' : '') + '"' + (i ? ' style="padding-block:0.875rem"' : '') + '><div class="row between"><h3 class="h3">Version ' + esc(r.v) + (i === 0 ? ' · current' : '') + '</h3><span class="hint">' + esc(fmtD(r.date, { day: 'numeric', month: 'short', year: 'numeric' })) + '</span></div><ul class="cl">' + r.items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></section>';
+      }).join('') + '<p class="hint">Rolling back your trips is in More → Version history. Updates to the app arrive automatically the next time you open it online.</p>';
+  }
+  var SHEETS = { spend: sheetSpend, trip: sheetTrip, trips: sheetTrips, wallet: sheetWallet, booking: sheetBooking, item: sheetItem, fund: sheetFund, caps: sheetCaps, sms: sheetSms, csv: sheetCsv, text: sheetText, restore: sheetRestore, recap: sheetRecap, brand: sheetBrand, accounts: sheetAccounts, history: sheetHistory, about: sheetAbout };
   /* =========================================================
      Rendering
      ========================================================= */
   var TABS = [['today', 'Today', 'sun'], ['plan', 'Plan', 'map'], ['spends', 'Spends', 'list'], ['insights', 'Insights', 'chart'], ['more', 'More', 'dots']];
   function renderView() {
     var app = $('#app'), v = $('#view'), nav = $('#nav'), fab = $('#fab');
+    if (S.locked) { app.classList.add('is-auth'); v.innerHTML = renderLock(); nav.hidden = true; fab.hidden = true; return; }
     if (!S.p) { app.classList.add('is-auth'); v.innerHTML = renderAuth(); nav.hidden = true; fab.hidden = true; return; }
     app.classList.remove('is-auth');
     var t = trip();
@@ -2065,12 +2254,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function renderSheet() {
     var root = $('#sheet-root'), sh = S.sheet;
-    if (!sh || !S.p && sh.type !== 'brand') { root.innerHTML = ''; root.removeAttribute('data-type'); return; }
+    if (!sh || S.locked || !S.p && sh.type !== 'brand') { root.innerHTML = ''; root.removeAttribute('data-type'); return; }
     if (!trip() && ['spend', 'wallet', 'booking', 'item', 'fund', 'caps', 'sms', 'csv', 'recap'].indexOf(sh.type) >= 0) { S.sheet = null; root.innerHTML = ''; return; }
-    var prev = root.querySelector('.sheet'), top = prev ? prev.scrollTop : 0, same = !!prev && root.getAttribute('data-type') === sh.type;
-    root.innerHTML = '<div class="sheet-wrap' + (same ? ' still' : '') + '" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="grabber"></div>' + SHEETS[sh.type](sh) + '</div></div>';
+    var prev = root.querySelector('.sheet-body'), top = prev ? prev.scrollTop : 0, same = !!prev && root.getAttribute('data-type') === sh.type;
+    var html = SHEETS[sh.type](sh), cut = html.indexOf('<!--/head-->'), head = cut >= 0 ? html.slice(0, cut) : '', body = cut >= 0 ? html.slice(cut + 12) : html;
+    root.innerHTML = '<div class="sheet-wrap' + (same ? ' still' : '') + '" data-act="scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="sheet-top"><div class="grabber"></div>' + head + '</div><div class="sheet-body">' + body + '</div></div></div>';
     root.setAttribute('data-type', sh.type);
-    if (same) root.querySelector('.sheet').scrollTop = top;
+    if (same) root.querySelector('.sheet-body').scrollTop = top;
     hydrate(root);
   }
   function openSheet(sh, focusSel) {
@@ -2095,7 +2285,22 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function renderAll() { applySettings(); renderView(); renderSheet(); renderLb(); }
   var toastT;
-  function toast(title, body) { var r = $('#toast-root'); r.innerHTML = '<div class="toast"><strong>' + esc(title) + '</strong>' + (body ? '<span>' + esc(body) + '</span>' : '') + '</div>'; clearTimeout(toastT); toastT = setTimeout(function () { r.innerHTML = ''; }, 3200); }
+  function toast(title, body, action) {
+    var r = $('#toast-root');
+    r.innerHTML = '<div class="toast' + (action ? ' act' : '') + '"><div class="tbody"><strong>' + esc(title) + '</strong>' + (body ? '<span>' + esc(body) + '</span>' : '') + '</div>' + (action ? '<button type="button" class="toast-btn" data-act="' + esc(action.act) + '">' + esc(action.label) + '</button>' : '') + '</div>';
+    clearTimeout(toastT); toastT = setTimeout(function () { r.innerHTML = ''; }, action ? 7000 : 3200);
+  }
+  var UNDO = { label: 'Undo', act: 'undo' };
+  function loadHistory() { var pid = S.pid; Versions.list(pid).then(function (list) { if (S.sheet && S.sheet.type === 'history' && pid === S.pid) { S.sheet.list = list; renderSheet(); } }); }
+  function refreshVinfo() {
+    var pid = S.pid;
+    Versions.list(pid).then(function (vs) {
+      if (pid !== S.pid) return;
+      var info = { count: vs.length, last: vs[0] ? vs[0].at : 0, size: vs.reduce(function (a, v) { return a + (v.size || 0); }, 0) };
+      var changed = !S.vinfo || S.vinfo.count !== info.count || S.vinfo.last !== info.last;
+      S.vinfo = info; if (changed && S.tab === 'more' && !S.sheet) renderView();
+    });
+  }
   function toTop() { var s = $('#scroller'); if (s) s.scrollTop = 0; }
   function focusSoon(sel) { setTimeout(function () { var f = $(sel); if (f) try { f.focus(); } catch (e) { } }, 60); }
 
@@ -2161,7 +2366,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         if (lg.settings && lg.settings.ts) S.p.settings.ts = lg.settings.ts;
         S.p = migrate(S.p); clearLegacy(); S.legacy = null;
       }
-      nf = {}; save(); setSession(id); applySettings(); S.auth = { mode: 'home' }; S.tab = 'today';
+      nf = {}; initVersions(moved ? 'Trips moved from the earlier version' : 'Account created'); save(); setSession(id); applySettings(); S.auth = { mode: 'home' }; S.tab = 'today';
       renderAll(); toTop();
       if (moved) toast('Welcome, ' + firstName(d.name), 'Your ' + plural(moved, 'earlier trip') + ' moved into this account.');
       else { toast('Welcome, ' + firstName(d.name), 'Let’s plan your first trip.'); ACT['trip-new'](); }
@@ -2180,7 +2385,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var id = uid();
     S.index.profiles.push({ id: id, name: 'Demo · Family', salt: uid(), hash: '', demo: true, color: AV[3], createdAt: Date.now() });
     saveIndex();
-    S.pid = id; S.p = demoProfile(); nf = {}; save(); setSession(id); S.tab = 'today'; S.auth = { mode: 'home' };
+    S.pid = id; S.p = demoProfile(); nf = {}; initVersions('Example trip created'); save(); setSession(id); S.tab = 'today'; S.auth = { mode: 'home' };
     renderAll(); toTop();
     toast('Example trip ready', 'Everything here is example data. Explore, then create your own account.');
   }
@@ -2210,8 +2415,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function openBooking(id) {
     var t = trip(), b = id ? bookingById(t, id) : null;
-    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice() } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], paidNow: '' };
-    openSheet({ type: 'booking', d: d }, b ? null : '#bk-name');
+    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice(), files: (b.files || []).slice() } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], files: [], paidNow: '' };
+    openSheet({ type: 'booking', d: d, initStart: d.start }, b ? null : '#bk-name');
   }
   function saveBooking(quiet) {
     var t = trip(), d = S.sheet.d, T = BKT[d.type] || BKT.other;
@@ -2219,7 +2424,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (!name) { sheetErr('Give the booking a name.'); return null; }
     if (!validDate(d.start)) { sheetErr('Pick the date for this booking.'); return null; }
     if (d.end && (!validDate(d.end) || d.end < d.start)) { sheetErr('The end date must be on or after the start date.'); return null; }
-    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice() };
+    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice(), files: (d.files || []).slice() };
     if (d.id) t.bookings = t.bookings.map(function (b) { return b.id === d.id ? rec : b; });
     else {
       t.bookings.push(rec);
@@ -2250,7 +2455,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
      ========================================================= */
   var ACT = {
     /* sign-in screens */
-    pick: function (el) { var m = meta(el.dataset.id); if (!m) return; if (!m.hash) { enterProfile(m.id); return; } S.auth = { mode: 'signin', pick: m.id }; renderView(); focusSoon('#si-pw'); },
+    pick: function (el) { var m = meta(el.dataset.id); if (!m) return; if (lockEnabled(m)) { lockApp(m.id); renderAll(); return; } if (!m.hash) { enterProfile(m.id); return; } S.auth = { mode: 'signin', pick: m.id }; renderView(); focusSoon('#si-pw'); },
     create: function () { S.auth = { mode: 'create', d: { name: '', home: guessCur(), pw: '', pw2: '' } }; renderView(); toTop(); focusSoon('#c-name'); },
     demo: createDemo,
     'auth-home': function () { S.auth = { mode: 'home' }; renderView(); toTop(); },
@@ -2285,10 +2490,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     theme: function (el) { S.p.settings.theme = el.dataset.v; save(); renderAll(); },
     ts: function (el) { S.p.settings.ts = el.dataset.v; save(); renderAll(); },
     accounts: function () { openSheet({ type: 'accounts' }); },
-    'switch-to': function (el) { var m = meta(el.dataset.id); if (!m) return; if (m.hash) { signOut(true); S.auth = { mode: 'signin', pick: m.id }; renderAll(); focusSoon('#si-pw'); return; } enterProfile(m.id); },
+    'switch-to': function (el) { var m = meta(el.dataset.id); if (!m) return; if (lockEnabled(m)) { signOut(true); lockApp(m.id); renderAll(); return; } if (m.hash) { signOut(true); S.auth = { mode: 'signin', pick: m.id }; renderAll(); focusSoon('#si-pw'); return; } enterProfile(m.id); },
     'add-account': function () { signOut(true); ACT.create(); renderAll(); },
     signout: function () { signOut(); },
-    'reset-demo': function () { S.p = demoProfile(); save(); S.tab = 'today'; renderAll(); toTop(); toast('Example trip reset', 'Back to day 5 in Osaka.'); },
+    'reset-demo': function () { checkpoint('Before resetting the example trip', true); S.p = demoProfile(); save(); S.tab = 'today'; renderAll(); toTop(); toast('Example trip reset', 'Back to day 5 in Osaka.', UNDO); },
     'acct-del': function () {
       if (S.armed !== 'acct') { S.armed = 'acct'; renderView(); return; }
       var name = (meta() || {}).name; deleteProfile(S.pid); signOut(true); S.armed = null; renderAll(); gc(); toast('Account deleted', (name || 'The account') + ' and its trips are gone from this device.');
@@ -2308,8 +2513,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       var ph = o.photos || {}; delete o.photos; delete o.app;
       Promise.all(Object.keys(ph).map(function (id) { var b = dataToBlob(ph[id]); return b ? Photos.put(id, b) : null; })).then(function () {
         if (!o.home) o.home = S.p.home;
+        checkpoint('Before restoring a backup', true);
         o.demo = S.p.demo && o.demo; S.p = migrate(o); save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
-        toast('Restored', plural(S.p.trips.length, 'trip') + (Object.keys(ph).length ? ' and ' + plural(Object.keys(ph).length, 'photo') : '') + '.');
+        toast('Restored', plural(S.p.trips.length, 'trip') + (Object.keys(ph).length ? ' and ' + plural(Object.keys(ph).length, 'photo') : '') + '.', UNDO);
       });
     },
     'text-copy': function () {
@@ -2340,6 +2546,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       if (two && !(rate > 0)) return sheetErr('Enter the exchange rate for ' + d.local + '.');
       var people = d.people.filter(function (p) { return String(p.name).trim(); }).map(function (p) { return { id: p.id, name: p.name.trim(), color: p.color || AV[0], photo: p.photo || null }; });
       if (d.id) {
+        checkpoint('Before editing the trip “' + d.name + '”', false);
         var t = S.p.trips.filter(function (x) { return x.id === d.id; })[0];
         var oldHome = t.home, oldLocal = t.local;
         Object.assign(t, { name: d.name.trim(), place: String(d.place).trim(), start: d.start, end: d.end, home: d.home, local: d.local, rate: rate, budget: num(d.budget), cover: d.cover || null, people: people });
@@ -2350,7 +2557,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         t.expenses.forEach(function (x) { x.cur = remap(x.cur); if (x.cur === t.home) x.rate = 1; else if (d.reapply) x.rate = rate; });
         t.expenses.forEach(function (x) { if (x.who && !people.some(function (p) { return p.id === x.who; })) x.who = ''; });
         t.packing.forEach(function (x) { if (x.who && !people.some(function (p) { return p.id === x.who; })) x.who = ''; });
-        migrateTrip(t, S.p); save(); closeSheet(); renderView(); toast('Trip saved', t.name);
+        migrateTrip(t, S.p); save(); closeSheet(); renderView(); toast('Trip saved', t.name, UNDO);
       } else {
         var nt = migrateTrip({ name: d.name.trim(), place: String(d.place).trim(), start: d.start, end: d.end, home: d.home, local: d.local, rate: rate, budget: num(d.budget), cover: d.cover || null, people: people }, S.p);
         S.p.trips.unshift(nt); S.p.active = nt.id; save(); S.sheet = null; S.tab = 'plan'; S.planSeg = 'itinerary'; renderAll(); toTop();
@@ -2359,13 +2566,14 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     },
     'tr-del': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
+      checkpoint('Before deleting the trip “' + sh.d.name + '”', true);
       S.p.trips = S.p.trips.filter(function (x) { return x.id !== sh.d.id; }); S.p.active = S.p.trips[0] ? S.p.trips[0].id : null;
-      save(); closeSheet(); S.tab = 'today'; renderView(); toast('Trip deleted');
+      save(); closeSheet(); S.tab = 'today'; renderView(); toast('Trip deleted', sh.d.name, UNDO);
     },
     /* spends */
     'sp-edit': function (el) { openSpend(el.dataset.id); },
     'sp-cur': function (el) { var t = trip(), d = S.sheet.d; d.cur = el.dataset.cur; var w = walletById(t, d.wallet); if (w && w.cur !== d.cur) { var w2 = t.wallets.filter(function (x) { return x.cur === d.cur && x.type === w.type; })[0] || t.wallets.filter(function (x) { return x.cur === d.cur; })[0]; if (w2) d.wallet = w2.id; } renderSheet(); },
-    'sp-cat': function (el) { S.sheet.d.cat = el.dataset.k; renderSheet(); },
+    'sp-cat': function (el) { S.sheet.d.cat = el.dataset.k; S.sheet.catSet = true; renderSheet(); },
     'sp-who': function (el) { S.sheet.d.who = el.dataset.id; renderSheet(); },
     'sp-quick': function (el) { var q = recentNotes(trip())[+el.dataset.i], d = S.sheet.d; if (!q) return; d.note = q.note; d.cat = q.cat; d.cur = q.cur; d.amt = String(q.amt); if (q.wallet) d.wallet = q.wallet; renderSheet(); },
     'ph-rm': function (el) { S.sheet.d.photos.splice(+el.dataset.i, 1); renderSheet(); },
@@ -2394,7 +2602,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     },
     'sp-del': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
-      var t = trip(); t.expenses = t.expenses.filter(function (x) { return x.id !== sh.d.id; }); save(); closeSheet(); renderView(); toast('Spend deleted');
+      checkpoint('Deleted the spend “' + (sh.d.note || cs(sh.d.cat)) + '”', false);
+      var t = trip(); t.expenses = t.expenses.filter(function (x) { return x.id !== sh.d.id; }); save(); closeSheet(); renderView(); toast('Spend deleted', sh.d.note || '', UNDO);
     },
     /* bank SMS */
     'open-sms': function () { openSheet({ type: 'sms', step: 'input', d: { text: '' } }, '#sms-text'); },
@@ -2404,13 +2613,14 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       if (!chunks.length) return sheetErr('Paste at least one message first.');
       var mem = catMemory(t), items = [], bad = [];
       chunks.forEach(function (c) { var r = parseSms(c, t, mem); if (r.ok) items.push(r); else bad.push(r); });
-      Object.assign(S.sheet, { step: 'review', items: items, bad: bad, err: '' }); renderSheet(); var s = document.querySelector('.sheet'); if (s) s.scrollTop = 0;
+      Object.assign(S.sheet, { step: 'review', items: items, bad: bad, err: '' }); renderSheet(); var s = document.querySelector('.sheet-body'); if (s) s.scrollTop = 0;
     },
     'sms-back': function () { S.sheet.step = 'input'; renderSheet(); },
     'sms-add': function () {
       var t = trip(), on = S.sheet.items.filter(function (x) { return x.on; });
+      checkpoint('Before adding ' + plural(on.length, 'spend') + ' from bank messages', true);
       on.forEach(function (x) { t.expenses.push({ id: uid(), amt: x.amt, cur: x.cur, rate: x.cur === t.home ? 1 : t.rate, cat: x.cat, note: x.note, date: x.date, time: x.time, wallet: x.wallet, who: '', photos: [], bookingId: '' }); });
-      save(); closeSheet(); renderView(); toast('Added ' + plural(on.length, 'spend'), 'From your bank messages.');
+      save(); closeSheet(); renderView(); toast('Added ' + plural(on.length, 'spend'), 'From your bank messages.', UNDO);
     },
     /* CSV */
     'open-csv': function () { openSheet({ type: 'csv', step: 'pick', d: { text: '' } }); },
@@ -2420,8 +2630,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     'csv-cur': function (el) { S.sheet.cur = el.dataset.cur; renderSheet(); },
     'csv-import': function () {
       var t = trip(), res = csvItems(S.sheet, t), keep = S.sheet.keepDups;
+      checkpoint('Before importing ' + plural(res.items.length, 'spend') + ' from CSV', true);
       res.items.forEach(function (x) { t.expenses.push({ id: uid(), amt: x.amt, cur: x.cur, rate: x.cur === t.home ? 1 : t.rate, cat: x.cat, note: x.note, date: x.date, time: x.time, wallet: x.wallet || '', who: '', photos: [], bookingId: '' }); });
-      save(); closeSheet(); renderView(); toast('Imported ' + plural(res.items.length, 'spend'), res.dups && !keep ? res.dups + ' possible duplicates skipped.' : '');
+      save(); closeSheet(); renderView(); toast('Imported ' + plural(res.items.length, 'spend'), res.dups && !keep ? res.dups + ' possible duplicates skipped.' : '', UNDO);
     },
     /* plan items */
     'pl-add': function (el) { openItem(null, el.dataset.day || ''); },
@@ -2437,12 +2648,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     },
     'it-del': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
-      var t = trip(); t.plan = t.plan.filter(function (p) { return p.id !== sh.d.id; }); save(); closeSheet(); renderView(); toast('Removed from the plan');
+      checkpoint('Removed “' + sh.d.title + '” from the plan', false);
+      var t = trip(); t.plan = t.plan.filter(function (p) { return p.id !== sh.d.id; }); save(); closeSheet(); renderView(); toast('Removed from the plan', sh.d.title, UNDO);
     },
     /* bookings */
     'bk-add': function () { openBooking(null); },
     'bk-edit': function (el) { openBooking(el.dataset.id); },
-    'bk-type': function (el) { var d = S.sheet.d; d.type = el.dataset.k; if (d.type === 'flight' && d.cur === trip().local) d.cur = trip().home; renderSheet(); },
+    'bk-type': function (el) { var d = S.sheet.d; S.sheet.typeSet = true; d.type = el.dataset.k; if (d.type === 'flight' && d.cur === trip().local) d.cur = trip().home; renderSheet(); },
     'bk-cur': function (el) { S.sheet.d.cur = el.dataset.cur; renderSheet(); },
     'bk-save': function () { saveBooking(false); },
     'bk-pay': function () {
@@ -2454,8 +2666,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     },
     'bk-del': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
+      checkpoint('Before deleting the booking “' + sh.d.name + '”', true);
       var t = trip(); t.bookings = t.bookings.filter(function (b) { return b.id !== sh.d.id; }); t.expenses.forEach(function (x) { if (x.bookingId === sh.d.id) x.bookingId = ''; });
-      save(); closeSheet(); renderView(); toast('Booking deleted', 'Its payments stay as normal spends.');
+      save(); closeSheet(); renderView(); toast('Booking deleted', 'Its payments stay as normal spends.', UNDO);
     },
     /* packing */
     'pk-add': function () {
@@ -2465,13 +2678,13 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       t.packing.push({ id: uid(), text: txt.slice(0, 60), group: S.pkGroup, who: S.pkWho, done: false }); save(); renderView(); focusSoon('#pk-text');
     },
     'pk-toggle': function (el) { var t = trip(); t.packing.forEach(function (k) { if (k.id === el.dataset.id) k.done = !k.done; }); save(); renderView(); },
-    'pk-del': function (el) { var t = trip(); t.packing = t.packing.filter(function (k) { return k.id !== el.dataset.id; }); save(); renderView(); },
+    'pk-del': function (el) { var t = trip(), k0 = t.packing.filter(function (k) { return k.id === el.dataset.id; })[0]; checkpoint('Removed “' + (k0 ? k0.text : 'item') + '” from packing', false); t.packing = t.packing.filter(function (k) { return k.id !== el.dataset.id; }); save(); renderView(); toast('Removed from packing', k0 ? k0.text : '', UNDO); },
     'pk-template': function () {
-      var t = trip(), have = {}, n = 0; t.packing.forEach(function (k) { have[k.text.toLowerCase()] = 1; });
+      var t = trip(), have = {}, n = 0; checkpoint('Before adding the family essentials', false); t.packing.forEach(function (k) { have[k.text.toLowerCase()] = 1; });
       PACK_GROUPS.forEach(function (g) { PACK_TEMPLATE[g].forEach(function (txt) { if (!have[txt.toLowerCase()]) { t.packing.push({ id: uid(), text: txt, group: g, who: '', done: false }); n++; } }); });
-      save(); renderView(); toast(n ? 'Added ' + plural(n, 'item') : 'Nothing new to add', n ? 'Remove what you don’t need.' : 'You already have the family essentials.');
+      save(); renderView(); toast(n ? 'Added ' + plural(n, 'item') : 'Nothing new to add', n ? 'Remove what you don’t need.' : 'You already have the family essentials.', n ? UNDO : null);
     },
-    'pk-reset': function () { var t = trip(); t.packing.forEach(function (k) { k.done = false; }); save(); renderView(); toast('All unticked', 'Ready to pack for the trip home.'); },
+    'pk-reset': function () { checkpoint('Before unticking the packing list', false); var t = trip(); t.packing.forEach(function (k) { k.done = false; }); save(); renderView(); toast('All unticked', 'Ready to pack for the trip home.', UNDO); },
     /* wallets */
     'wl-add': function () { var t = trip(); openSheet({ type: 'wallet', d: { id: null, name: '', type: 'cash', cur: t.local, opening: '' } }, '#wl-name'); },
     'wl-edit': function (el) { var w = walletById(trip(), el.dataset.id); if (w) openSheet({ type: 'wallet', d: { id: w.id, name: w.name, type: w.type, cur: w.cur, opening: w.opening || '' } }); },
@@ -2486,8 +2699,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     },
     'wl-del': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
+      checkpoint('Before deleting the wallet “' + sh.d.name + '”', true);
       var t = trip(); t.wallets = t.wallets.filter(function (w) { return w.id !== sh.d.id; }); t.expenses.forEach(function (x) { if (x.wallet === sh.d.id) x.wallet = ''; });
-      save(); closeSheet(); renderView(); toast('Wallet deleted');
+      save(); closeSheet(); renderView(); toast('Wallet deleted', sh.d.name, UNDO);
     },
     /* trip fund */
     fund: function () { var t = trip(); openSheet({ type: 'fund', d: { amt: '', date: today(), target: t.fund.target || '' } }); },
@@ -2499,7 +2713,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       var saved = fundSaved(t), target = fundTarget(t); toast(money(a) + ' added to the fund', saved >= target ? 'Fully funded!' : Math.round(saved / target * 100) + '% of the way there.');
     },
     'fd-target': function () { var t = trip(); t.fund.target = num(S.sheet.d.target) || ''; save(); renderSheet(); renderView(); toast('Target saved', money(fundTarget(t))); },
-    'fd-del': function (el) { var t = trip(); t.fund.entries = t.fund.entries.filter(function (e) { return e.id !== el.dataset.id; }); save(); renderSheet(); renderView(); },
+    'fd-del': function (el) { var t = trip(); checkpoint('Removed a trip fund entry', false); toast('Fund entry removed', '', UNDO); t.fund.entries = t.fund.entries.filter(function (e) { return e.id !== el.dataset.id; }); save(); renderSheet(); renderView(); },
     /* limits */
     caps: function () { var t = trip(); openSheet({ type: 'caps', d: { caps: t.caps.map(function (k) { return { cat: k.cat, amount: k.amount }; }) } }); },
     'cap-add': function () { var d = S.sheet.d, used = d.caps.map(function (k) { return k.cat; }), free = ['food', 'shopping', 'activities', 'transport', 'other', 'stay', 'flights'].filter(function (k) { return used.indexOf(k) < 0; })[0] || 'food'; d.caps.push({ cat: free, amount: '' }); renderSheet(); },
@@ -2523,6 +2737,38 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
       BR = cleanBrand({}); Store.remove('jt_brand'); applyBrand(); S.sheet = null; renderAll(); toast('Original branding restored');
     },
+    /* version history, undo, about */
+    undo: function () {
+      if (!S.undo || !S.p) { toast('Nothing to undo'); return; }
+      var u = S.undo; S.undo = null; $('#toast-root').innerHTML = '';
+      S.p = migrate(JSON.parse(u.json)); save(); S.sheet = null; renderAll();
+      toast('Undone', u.label);
+    },
+    history: function () { openSheet({ type: 'history', d: { label: '' }, list: null }); loadHistory(); },
+    'vh-quick': function () { snapshot('manual', '').then(function () { refreshVinfo(); toast('Version saved', 'Restore it any time from Version history.'); }); },
+    'vh-save': function () {
+      var label = String(S.sheet.d.label || '').trim().slice(0, 60);
+      snapshot('manual', label).then(function () { if (S.sheet && S.sheet.type === 'history') { S.sheet.d.label = ''; loadHistory(); } toast('Version saved', label || 'Restore it any time from this list.'); });
+    },
+    'vh-open': function (el) { var sh = S.sheet; sh.open = sh.open === el.dataset.id ? null : el.dataset.id; renderSheet(); },
+    'vh-restore': function (el) {
+      var sh = S.sheet, id = el.dataset.id;
+      if (sh.armed !== id) { sh.armed = id; renderSheet(); return; }
+      var rec = (sh.list || []).filter(function (v) { return v.id === id; })[0]; if (!rec) return;
+      var p; try { p = JSON.parse(rec.data); } catch (e) { sheetErr('This version can’t be read.'); return; }
+      var demo = S.p.demo;
+      checkpoint('Before restoring the version from ' + fmtWhen(rec.at), true);
+      S.p = migrate(p); if (demo) S.p.demo = true;
+      save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
+      toast('Version restored', 'Back to ' + fmtWhen(rec.at) + '. Your previous state is saved at the top of the list.', UNDO);
+    },
+    'vh-del': function (el) { var id = el.dataset.id; Versions.del(id).then(function () { if (S.sheet && S.sheet.list) S.sheet.list = S.sheet.list.filter(function (v) { return v.id !== id; }); renderSheet(); S.vinfo = null; }); },
+    'vh-clear': function () {
+      var sh = S.sheet; if (sh.armed !== 'all') { sh.armed = 'all'; renderSheet(); return; }
+      var ids = (sh.list || []).filter(function (v) { return v.kind === 'auto'; }).map(function (v) { return v.id; });
+      Versions.del(ids).then(function () { sh.armed = null; S.vinfo = null; loadHistory(); gc(); toast('Automatic versions deleted', plural(ids.length, 'version') + ' removed.'); });
+    },
+    about: function () { openSheet({ type: 'about' }); },
     /* photo viewer */
     lb: function (el) { S.lb = { src: el.dataset.src, i: +el.dataset.i }; renderLb(); },
     'lb-close': function (el, e) { if (e.target === el || el.classList.contains('lb-btn')) { S.lb = null; renderLb(); } },
@@ -2566,18 +2812,20 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     el.value = '';
     if (!files.length) return;
     if (kind === 'logo') return processLogo(files[0]);
+    if (kind === 'bk-docs') return handleDocs(files);
     if (kind === 'csv') { var fr = new FileReader(); fr.onload = function () { loadCsv(String(fr.result || '')); }; fr.onerror = function () { sheetErr('Couldn’t read that file.'); }; fr.readAsText(files[0]); return; }
     if (kind === 'sheet-photos') { var max = S.sheet.type === 'booking' ? 4 : 6; files = files.slice(0, Math.max(0, max - S.sheet.d.photos.length)); }
     else files = files.slice(0, 1);
     if (!files.length) return;
-    var square = kind === 'avatar';
+    var square = kind === 'avatar' || kind === 'profile-photo';
     toast(files.length > 1 ? 'Adding ' + files.length + ' photos…' : 'Adding photo…');
     Promise.all(files.map(function (f) { return shrink(f, square ? 256 : 1600, square).then(function (b) { var id = 'ph_' + uid(); return Photos.put(id, b).then(function () { return id; }); }).catch(function () { return null; }); })).then(function (ids) {
       var good = ids.filter(Boolean), bad = ids.length - good.length;
       if (good.length) {
         if (kind === 'sheet-photos' && S.sheet && S.sheet.d) { S.sheet.d.photos = S.sheet.d.photos.concat(good); renderSheet(); }
         else if (kind === 'cover' && S.sheet && S.sheet.d) { S.sheet.d.cover = good[0]; renderSheet(); }
-        else if (square && S.sheet && S.sheet.d && S.sheet.d.people[idx]) { S.sheet.d.people[idx].photo = good[0]; renderSheet(); }
+        else if (kind === 'profile-photo' && S.sheet && S.sheet.d) { S.sheet.d.photo = good[0]; renderSheet(); }
+        else if (square && S.sheet && S.sheet.d && S.sheet.d.people && S.sheet.d.people[idx]) { S.sheet.d.people[idx].photo = good[0]; renderSheet(); }
         else if (kind === 'cover-direct') { var t = trip(); if (t) { t.cover = good[0]; save(); renderView(); gc(); } }
       }
       toast(bad ? 'Couldn’t read ' + plural(bad, 'photo') : good.length > 1 ? plural(good.length, 'photo') + ' added' : 'Photo added', bad ? 'Try a JPEG or PNG.' : '');
@@ -2628,6 +2876,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (ds.csvmap && S.sheet) { S.sheet.map[ds.csvmap] = el.value; renderSheet(); return; }
     if (ds.csvsign && S.sheet) { S.sheet.sign = el.value; renderSheet(); return; }
     if (ds.csvwallet && S.sheet) { S.sheet.wallet = el.value; return; }
+    if (ds.lockafter) { var mm = meta(); if (mm) { mm.lockAfter = +el.value; saveIndex(); toast('Saved', el.options[el.selectedIndex].text + '.'); } return; }
     if (el.id === 'pk-group') S.pkGroup = el.value;
     if (el.id === 'pk-who') S.pkWho = el.value;
   });
@@ -2637,6 +2886,11 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     else if (e.target.id === 'signin-form') signIn(($('#si-pw') || {}).value || '');
   });
   document.addEventListener('keydown', function (e) {
+    if (S.locked || (S.sheet && S.sheet.type === 'pin')) {
+      if (/^\d$/.test(e.key)) { e.preventDefault(); ACT.kp({ dataset: { k: e.key } }); return; }
+      if (e.key === 'Backspace') { e.preventDefault(); ACT.kp({ dataset: { k: 'del' } }); return; }
+      if (S.locked) return;
+    }
     if (S.lb) {
       if (e.key === 'Escape') { S.lb = null; renderLb(); }
       else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { var n = lbList().length; S.lb.i = (S.lb.i + (e.key === 'ArrowRight' ? 1 : -1) + n) % n; renderLb(); }
@@ -2650,6 +2904,414 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   });
 
   /* =========================================================
+     App lock: PIN and Face ID / fingerprint (WebAuthn platform authenticator)
+     The lock keeps people out of the app on this device. Data is not encrypted.
+     ========================================================= */
+  function lockEnabled(m) { return !!(m && (m.pin || m.bio)); }
+  function lockMeta() { return meta(S.lockPid || S.pid); }
+  function lockApp(pid) { S.locked = true; S.lockPid = pid || null; S.lock = { entry: '', err: '', fails: 0, until: 0, busy: false, armed: false }; S.sheet = null; S.lb = null; }
+  function b64u(buf) { var s = '', a = new Uint8Array(buf); for (var i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+  function unb64u(s) { s = String(s).replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+  function rand(n) { var a = new Uint8Array(n); crypto.getRandomValues(a); return a; }
+  var BIO = { avail: null };
+  function bioName() { var ua = navigator.userAgent || ''; return /iPhone|iPad|Macintosh/.test(ua) ? 'Face ID or Touch ID' : /Android/.test(ua) ? 'fingerprint or face unlock' : /Windows/.test(ua) ? 'Windows Hello' : 'Face ID or fingerprint'; }
+  function bioCheck() {
+    if (BIO.avail !== null) return Promise.resolve(BIO.avail);
+    try {
+      if (!IS_TOP || !window.isSecureContext || !window.PublicKeyCredential || !PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) { BIO.avail = false; return Promise.resolve(false); }
+      return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function (v) { BIO.avail = !!v; return BIO.avail; }, function () { BIO.avail = false; return false; });
+    } catch (e) { BIO.avail = false; return Promise.resolve(false); }
+  }
+  function bioEnroll(m) {
+    return navigator.credentials.create({ publicKey: {
+      challenge: rand(32), rp: { name: BR.name },
+      user: { id: new TextEncoder().encode(String(m.id)).slice(0, 64), name: m.name, displayName: m.name },
+      pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
+      authenticatorSelection: { authenticatorAttachment: 'platform', userVerification: 'required', residentKey: 'discouraged' },
+      timeout: 60000, attestation: 'none'
+    } }).then(function (c) { if (!c) throw new Error('none'); m.bio = { id: b64u(c.rawId), at: Date.now() }; saveIndex(); return true; });
+  }
+  function bioVerify(m) {
+    return navigator.credentials.get({ publicKey: { challenge: rand(32), allowCredentials: [{ type: 'public-key', id: unb64u(m.bio.id), transports: ['internal', 'hybrid'] }], userVerification: 'required', timeout: 60000 } }).then(function (a) { return !!a; });
+  }
+  function keypad(showBio) {
+    var keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', showBio ? 'bio' : '', '0', 'del'];
+    return '<div class="keypad" role="group" aria-label="PIN keypad">' + keys.map(function (k) {
+      if (!k) return '<span></span>';
+      if (k === 'bio') return '<button type="button" class="key fn" data-act="kp" data-k="bio" aria-label="Use ' + esc(bioName()) + '">' + ic('face', 26) + '</button>';
+      if (k === 'del') return '<button type="button" class="key fn" data-act="kp" data-k="del" aria-label="Delete last digit">' + ic('left', 22) + '</button>';
+      return '<button type="button" class="key" data-act="kp" data-k="' + k + '">' + k + '</button>';
+    }).join('') + '</div>';
+  }
+  function pinDots(len, n) { var h = '<div class="dots" aria-label="' + n + ' of ' + len + ' digits entered">'; for (var i = 0; i < len; i++) h += '<i class="' + (i < n ? 'on' : '') + '"></i>'; return h + '</div>'; }
+  function renderLock() {
+    var m = lockMeta(); if (!m) { S.locked = false; return renderAuth(); }
+    var L = S.lock, wait = L.until && Date.now() < L.until, canBio = m.bio && BIO.avail !== false;
+    var msg = L.err || (wait ? 'Too many tries. Try again in ' + Math.ceil((L.until - Date.now()) / 1000) + ' seconds.' : m.pin ? 'Enter your PIN to open ' + BR.name + '.' : 'Use ' + bioName() + ' to open ' + BR.name + '.');
+    return '<section class="lock">' + accAvatar(m, 76) + '<h1 class="h2">' + esc(m.name) + '</h1><p class="hint' + (L.err ? ' error' : '') + '" role="status">' + esc(msg) + '</p>' +
+      (m.pin ? pinDots(m.pin.len, L.entry.length) + keypad(canBio) : '') +
+      (canBio && !m.pin ? '<button type="button" class="btn" data-act="kp" data-k="bio">' + ic('face', 18) + ' Use ' + esc(bioName()) + '</button>' : '') +
+      '<div class="row wrap" style="justify-content:center">' + (m.hash ? '<button type="button" class="btn quiet sm" data-act="lock-pw">Use password instead</button>' : '') + '<button type="button" class="btn quiet sm" data-act="lock-switch">' + ic('users', 16) + ' Switch account</button></div>' +
+      '<details class="forgot"><summary>Forgot your PIN?</summary><p class="hint">' + (m.hash ? 'Use your account password instead.' : 'PINs stay on this device and can’t be reset. Without a password, the only way back in is to delete this account and its trips.') + '</p>' +
+      (m.hash ? '' : '<button type="button" class="btn danger block' + (L.armed ? ' armed' : '') + '" data-act="lock-del">' + (L.armed ? 'Tap again to delete this account' : 'Delete this account') + '</button>') + '</details></section>';
+  }
+  function unlocked() {
+    var pid = S.lockPid || S.pid; S.locked = false; S.lockPid = null; S.lock = null;
+    if (!S.p || S.pid !== pid) enterProfile(pid); else { renderAll(); toast('Unlocked', ''); }
+  }
+  function lockKey(k) {
+    var m = lockMeta(), L = S.lock; if (!m || !L || L.busy) return;
+    if (k === 'bio') {
+      if (!m.bio) return;
+      L.busy = true;
+      bioVerify(m).then(function (ok) { L.busy = false; if (ok) unlocked(); }, function () { L.busy = false; L.err = 'Not recognised. Try again, or use your PIN.'; renderView(); });
+      return;
+    }
+    if (L.until && Date.now() < L.until) { renderView(); return; }
+    if (k === 'del') { L.entry = L.entry.slice(0, -1); L.err = ''; renderView(); return; }
+    if (!/^\d$/.test(k) || !m.pin || L.entry.length >= m.pin.len) return;
+    L.entry += k; L.err = ''; renderView();
+    if (L.entry.length === m.pin.len) {
+      L.busy = true;
+      hashPw(L.entry, m.pin.salt).then(function (h) {
+        L.busy = false;
+        if (h === m.pin.hash) { unlocked(); return; }
+        L.fails++; L.entry = ''; L.err = 'Wrong PIN. Try again.';
+        if (L.fails >= 5) { L.fails = 0; L.until = Date.now() + 30000; L.err = ''; setTimeout(function () { if (S.locked) renderView(); }, 30500); }
+        renderView();
+        var d = document.querySelector('.dots'); if (d) { d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); }
+      });
+    }
+  }
+  /* PIN set / change / remove, in a sheet */
+  function sheetPin(sh) {
+    var m = meta(), d = sh.d, len = sh.step === 'current' || sh.step === 'remove' ? m.pin.len : d.len;
+    var title = sh.purpose === 'remove' ? 'Turn off PIN lock' : sh.purpose === 'change' ? 'Change PIN' : 'Set a PIN';
+    var prompt = { current: 'Enter your current PIN.', remove: 'Enter your PIN to turn the lock off.', 'new': 'Choose a new ' + d.len + '-digit PIN.', confirm: 'Enter the same PIN again.' }[sh.step];
+    return sheetHead(title) + '<p class="hint">' + esc(prompt) + '</p>' +
+      (sh.step === 'new' ? '<div class="seg" role="group" aria-label="PIN length"><button type="button" data-act="pin-len" data-v="4" aria-pressed="' + (d.len === 4) + '">4 digits</button><button type="button" data-act="pin-len" data-v="6" aria-pressed="' + (d.len === 6) + '">6 digits</button></div>' : '') +
+      '<div class="lock" style="padding:0">' + pinDots(len, d.entry.length) + keypad(false) + '</div>' + errLine(sh) +
+      (sh.purpose === 'remove' && m.bio ? '<p class="hint">Face ID or fingerprint unlock turns off too, because it needs the PIN as a fallback.</p>' : '');
+  }
+  function pinKey(k) {
+    var sh = S.sheet, m = meta(), d = sh.d; if (sh.busy) return;
+    var len = sh.step === 'current' || sh.step === 'remove' ? m.pin.len : d.len;
+    if (k === 'del') { d.entry = d.entry.slice(0, -1); sh.err = ''; renderSheet(); return; }
+    if (!/^\d$/.test(k) || d.entry.length >= len) return;
+    d.entry += k; sh.err = ''; renderSheet();
+    if (d.entry.length < len) return;
+    if (sh.step === 'current' || sh.step === 'remove') {
+      sh.busy = true;
+      hashPw(d.entry, m.pin.salt).then(function (h) {
+        sh.busy = false; d.entry = '';
+        if (h !== m.pin.hash) { sh.err = 'That PIN isn’t right. Try again.'; renderSheet(); return; }
+        if (sh.step === 'remove') { delete m.pin; delete m.bio; saveIndex(); closeSheet(); renderView(); toast('PIN lock turned off', 'The app opens without a PIN now.'); return; }
+        sh.step = 'new'; renderSheet();
+      });
+      return;
+    }
+    if (sh.step === 'new') { d.first = d.entry; d.entry = ''; sh.step = 'confirm'; setTimeout(renderSheet, 120); return; }
+    if (d.entry !== d.first) { d.entry = ''; d.first = ''; sh.step = 'new'; sh.err = 'The two PINs didn’t match. Choose one again.'; renderSheet(); return; }
+    sh.busy = true;
+    var salt = uid();
+    hashPw(d.entry, salt).then(function (h) {
+      m.pin = { salt: salt, hash: h, len: d.len }; if (m.lockAfter == null) m.lockAfter = 5; saveIndex();
+      closeSheet(); renderView(); toast(sh.purpose === 'change' ? 'PIN changed' : 'PIN lock is on', 'You’ll be asked for it when you open ' + BR.name + '.');
+    });
+  }
+  var LOCK_AFTER = [[0, 'Every time you come back'], [1, 'After 1 minute away'], [5, 'After 5 minutes away'], [15, 'After 15 minutes away'], [60, 'After 1 hour away']];
+  function securityCard(m) {
+    var on = lockEnabled(m), bioOk = BIO.avail !== false;
+    var bioHint = !m.pin ? 'Set a PIN first. It’s the fallback when your face or finger isn’t recognised.' : !bioOk ? 'Not available here. It works when ' + BR.name + ' is opened from its own web address or home-screen icon, on a device with Face ID, Touch ID, fingerprint or Windows Hello.' : 'Unlock with ' + bioName() + ' instead of typing the PIN.';
+    return '<section class="card"><div class="row between"><h2 class="h3">Security</h2><span class="pill ' + (on ? 'good' : 'info') + '">' + (on ? 'App lock on' : 'App lock off') + '</span></div>' +
+      '<div class="setrow"><div class="grow"><span class="label">PIN lock</span><span class="hint">' + (m.pin ? 'On · ' + m.pin.len + ' digits' : 'Ask for a PIN when the app opens.') + '</span></div><div class="row" style="gap:6px">' + (m.pin ? '<button type="button" class="btn quiet sm" data-act="pin-change">Change</button><button type="button" class="btn ghost sm" data-act="pin-off">Turn off</button>' : '<button type="button" class="btn sm" data-act="pin-set">Set PIN</button>') + '</div></div>' +
+      '<div class="setrow"><div class="grow"><span class="label" id="bio-lbl">Face ID or fingerprint</span><span class="hint">' + esc(bioHint) + '</span></div><button type="button" class="switch" role="switch" aria-labelledby="bio-lbl" aria-checked="' + !!m.bio + '" data-act="bio-toggle"' + (!m.pin || (!bioOk && !m.bio) ? ' disabled style="opacity:.4"' : '') + '><span></span></button></div>' +
+      (on ? '<div class="field"><label for="lock-after">Lock the app</label><select id="lock-after" class="input" data-lockafter="1">' + LOCK_AFTER.map(function (o) { return '<option value="' + o[0] + '"' + (+(m.lockAfter == null ? 5 : m.lockAfter) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select><span class="hint">It always locks when the app is opened fresh.</span></div>' : '') +
+      '<div class="setrow"><div class="grow"><span class="label">Account password</span><span class="hint">' + (m.hash ? 'Set. Asked when you open this account from the account list, and works if you forget the PIN.' : 'Not set.') + '</span></div><button type="button" class="btn quiet sm" data-act="profile" data-pw="1">' + (m.hash ? 'Change' : 'Set') + '</button></div>' +
+      (on ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '') +
+      '<p class="hint">The lock keeps people out of the app on this device. Your trips aren’t encrypted, so someone who can open the browser’s storage directly could still read them.</p></section>';
+  }
+
+  /* =========================================================
+     Manage profile
+     ========================================================= */
+  function sheetProfile(sh) {
+    var d = sh.d, m = meta();
+    var pwBlock = '';
+    if (d.pwMode) {
+      pwBlock = '<section class="card"><span class="label">' + (d.pwMode === 'set' ? 'Set a password' : d.pwMode === 'change' ? 'Change password' : 'Remove password') + '</span>' +
+        (d.pwMode !== 'set' ? '<div class="field"><label for="pf-cur">Current password</label><input id="pf-cur" class="input" type="password" data-f="cur" autocomplete="current-password" value="' + esc(d.cur) + '"></div>' : '') +
+        (d.pwMode !== 'remove' ? '<div class="field"><label for="pf-pw1">New password</label><input id="pf-pw1" class="input" type="password" data-f="pw1" autocomplete="new-password" value="' + esc(d.pw1) + '"><span class="hint">At least 4 characters. It can’t be reset, so pick one you’ll remember.</span></div><div class="field"><label for="pf-pw2">Confirm new password</label><input id="pf-pw2" class="input" type="password" data-f="pw2" autocomplete="new-password" value="' + esc(d.pw2) + '"></div>' : '') +
+        '<button type="button" class="link" data-act="pf-pw" data-v="" style="align-self:flex-start">Cancel</button></section>';
+    }
+    return sheetHead('Your profile') +
+      '<div class="row" style="gap:16px">' + avatar({ name: d.name || m.name, color: d.color, photo: d.photo }, 84) + '<div class="stack-xs"><label class="btn quiet sm">' + ic('camera', 16) + (d.photo ? 'Change picture' : 'Upload a picture') + '<input type="file" accept="image/*" class="sr-only" data-upload="profile-photo"></label>' + (d.photo ? '<button type="button" class="btn ghost sm" data-act="pf-photo-rm">Remove picture</button>' : '') + '</div></div>' +
+      '<div class="field"><span class="label">Colour</span><div class="swatches" role="group" aria-label="Profile colour">' + AV.map(function (c) { return '<button type="button" class="swatch" style="--c:' + c + '" data-act="pf-color" data-c="' + c + '" aria-pressed="' + (d.color === c) + '" aria-label="Colour ' + c + '"></button>'; }).join('') + '</div><span class="hint">Shown when there’s no picture.</span></div>' +
+      '<div class="field"><label for="pf-name">Name</label><input id="pf-name" class="input" data-f="name" maxlength="40" autocomplete="name" value="' + esc(d.name) + '"></div>' +
+      '<div class="field"><label for="pf-home">Home currency</label><select id="pf-home" class="input" data-f="home">' + curOptions(d.home) + '</select><span class="hint">Used for new trips. Each trip keeps its own currencies.</span></div>' +
+      '<div class="field"><span class="label">Password</span><div class="row wrap">' + (m.hash ? '<button type="button" class="btn quiet sm" data-act="pf-pw" data-v="change">Change password</button><button type="button" class="btn quiet sm" data-act="pf-pw" data-v="remove">Remove password</button>' : '<button type="button" class="btn quiet sm" data-act="pf-pw" data-v="set">Set a password</button>') + '</div></div>' + pwBlock +
+      errLine(sh) + '<button type="button" class="btn block" data-act="pf-save" data-primary="1">Save profile</button>' +
+      '<div class="duo"><button type="button" class="btn quiet" data-act="accounts">' + ic('users', 18) + ' Switch account</button><button type="button" class="btn quiet" data-act="signout">' + ic('logout', 18) + ' Sign out</button></div>' +
+      (lockEnabled(m) ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '<button type="button" class="btn ghost block" data-act="pin-set">' + ic('lock', 16) + ' Set up a PIN lock</button>');
+  }
+
+  /* =========================================================
+     Reading receipts and booking documents (pdf.js + Tesseract.js, loaded on first use)
+     ========================================================= */
+  var OCR_LIB = Object.assign({
+    tess: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+    worker: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js',
+    core: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1',
+    lang: 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int',
+    pdf: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
+    pdfWorker: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js'
+  }, window.JT_OCR_LIB || {});
+  var scriptCache = {};
+  function loadScript(src) {
+    if (scriptCache[src]) return scriptCache[src];
+    scriptCache[src] = new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.async = true; s.onload = function () { res(); }; s.onerror = function () { delete scriptCache[src]; rej(new Error('load ' + src)); }; document.head.appendChild(s); });
+    return scriptCache[src];
+  }
+  var OCR = {
+    worker: null, onProgress: null,
+    pdfLib: function () {
+      return loadScript(OCR_LIB.pdf).then(function () {
+        var lib = window.pdfjsLib; if (!lib) throw new Error('pdf.js');
+        if (!lib.GlobalWorkerOptions.workerSrc) {
+          try { lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob(['importScripts(' + JSON.stringify(OCR_LIB.pdfWorker) + ');'], { type: 'application/javascript' })); }
+          catch (e) { lib.GlobalWorkerOptions.workerSrc = OCR_LIB.pdfWorker; }
+        }
+        return lib;
+      });
+    },
+    tess: function () {
+      var self = this; if (self.worker) return Promise.resolve(self.worker);
+      return loadScript(OCR_LIB.tess).then(function () {
+        return window.Tesseract.createWorker('eng', 1, { workerPath: OCR_LIB.worker, corePath: OCR_LIB.core, langPath: OCR_LIB.lang, logger: function (m) { if (self.onProgress && m && m.status) self.onProgress(m.status, m.progress || 0); } });
+      }).then(function (w) { self.worker = w; return w; });
+    },
+    image: function (blob) { return this.tess().then(function (w) { return w.recognize(blob); }).then(function (r) { return (r && r.data && r.data.text) || ''; }); },
+    pdf: function (blob) {
+      var self = this;
+      return blob.arrayBuffer().then(function (buf) { return self.pdfLib().then(function (lib) { return lib.getDocument({ data: buf }).promise; }); }).then(function (doc) {
+        var n = Math.min(doc.numPages, 3), parts = [], chain = Promise.resolve();
+        for (var i = 1; i <= n; i++) (function (i) { chain = chain.then(function () { return doc.getPage(i).then(function (pg) { return pg.getTextContent().then(function (tc) { parts.push(tc.items.map(function (it) { return it.str + (it.hasEOL ? '\n' : ' '); }).join('')); }); }); }); })(i);
+        return chain.then(function () {
+          var text = parts.join('\n');
+          if (text.replace(/\s/g, '').length >= 40) return text;
+          if (self.onProgress) self.onProgress('scanned pdf', 0);
+          return doc.getPage(1).then(function (pg) {
+            var vp = pg.getViewport({ scale: 2 }), cv = document.createElement('canvas'); cv.width = vp.width; cv.height = vp.height;
+            return pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise.then(function () { return new Promise(function (res) { cv.toBlob(res, 'image/png'); }); });
+          }).then(function (png) { return self.image(png); });
+        });
+      });
+    },
+    read: function (blob) { return /pdf/.test(blob.type || '') ? this.pdf(blob) : this.image(blob); }
+  };
+  var MONRE = 'jan|feb|mar|apr|may|jun|jul|aug|sept?|oct|nov|dec';
+  function docLines(text) { return String(text || '').split(/\r?\n/).map(function (s) { return s.replace(/\s+/g, ' ').trim(); }).filter(Boolean); }
+  function findDates(s) {
+    var out = [], m, re;
+    function push(y, mo, d, idx) { if (y < 100) y += 2000; var dt = new Date(y, mo, d); if (isNaN(dt) || dt.getMonth() !== mo || dt.getDate() !== d || y < 2000 || y > 2100) return; out.push({ ds: iso(dt), i: idx }); }
+    re = /\b(20\d{2})[-\/.](\d{1,2})[-\/.](\d{1,2})\b/g; while ((m = re.exec(s))) push(+m[1], +m[2] - 1, +m[3], m.index);
+    re = new RegExp('\\b(\\d{1,2})(?:st|nd|rd|th)?[\\s\\-\\/.,]*(' + MONRE + ')[a-z]*\\.?[\\s\\-\\/.,]*(\\d{4})\\b', 'gi'); while ((m = re.exec(s))) push(+m[3], MON[m[2].toLowerCase()], +m[1], m.index);
+    re = new RegExp('\\b(' + MONRE + ')[a-z]*\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?,?\\s+(\\d{4})\\b', 'gi'); while ((m = re.exec(s))) push(+m[3], MON[m[1].toLowerCase()], +m[2], m.index);
+    re = /\b(\d{1,2})[\/.](\d{1,2})[\/.](20\d{2})\b/g; while ((m = re.exec(s))) { var a = +m[1], b = +m[2]; if (b > 12) push(+m[3], a - 1, b, m.index); else push(+m[3], b - 1, a, m.index); }
+    return out.sort(function (x, y) { return x.i - y.i; });
+  }
+  function findTime(s) { var m = String(s).match(/\b([01]?\d|2[0-3])[:.]([0-5]\d)\s*(am|pm)?\b/i); if (!m) return ''; var h = +m[1], ap = (m[3] || '').toLowerCase(); if (ap === 'pm' && h < 12) h += 12; if (ap === 'am' && h === 12) h = 0; return pad(h) + ':' + m[2]; }
+  function findAmounts(lines, t) {
+    var out = [];
+    lines.forEach(function (ln) {
+      var isTot = /(grand total|total price|total amount|amount paid|total paid|total charged|total due|balance due|amount due|to pay|total)/i.test(ln), m;
+      AMT_RE.lastIndex = 0;
+      while ((m = AMT_RE.exec(ln))) { var v = parseFloat((m[2] || m[3] || '').replace(/,/g, '')); if (v > 0) out.push({ v: v, cur: tokCur(m[1] || m[4], t), tot: isTot, ln: ln }); }
+      AMT_RE.lastIndex = 0;
+      if (isTot && !out.some(function (a) { return a.ln === ln; })) { var b = ln.match(/(?:total|amount|due|pay)[^0-9]{0,25}([0-9][0-9,]*(?:\.\d{1,2})?)/i); if (b) { var v2 = parseFloat(b[1].replace(/,/g, '')); if (v2 > 0) out.push({ v: v2, cur: '', tot: true, ln: ln }); } }
+    });
+    return out;
+  }
+  function pickTotal(amts) { var tot = amts.filter(function (a) { return a.tot; }), pool = tot.length ? tot : amts.filter(function (a) { return a.cur; }); if (!pool.length) return null; return pool.reduce(function (a, b) { return b.v > a.v ? b : a; }); }
+  var PROVIDERS = [[/qatar airways/i, 'Qatar Airways'], [/emirates/i, 'Emirates'], [/etihad/i, 'Etihad'], [/flydubai/i, 'flydubai'], [/air arabia/i, 'Air Arabia'], [/indigo/i, 'IndiGo'], [/air india/i, 'Air India'], [/ryanair/i, 'Ryanair'], [/easyjet/i, 'easyJet'], [/lufthansa/i, 'Lufthansa'], [/turkish airlines/i, 'Turkish Airlines'], [/saudia/i, 'Saudia'], [/singapore airlines/i, 'Singapore Airlines'], [/cathay/i, 'Cathay Pacific'], [/japan airlines|\bjal\b/i, 'Japan Airlines'], [/all nippon|\bana\b/i, 'ANA'], [/airasia/i, 'AirAsia'], [/booking\.com/i, 'Booking.com'], [/agoda/i, 'Agoda'], [/airbnb/i, 'Airbnb'], [/expedia/i, 'Expedia'], [/hotels\.com/i, 'Hotels.com'], [/marriott/i, 'Marriott'], [/hilton/i, 'Hilton'], [/hyatt/i, 'Hyatt'], [/\bihg\b|holiday inn/i, 'IHG'], [/accor|novotel|ibis/i, 'Accor'], [/klook/i, 'Klook'], [/viator/i, 'Viator'], [/getyourguide/i, 'GetYourGuide'], [/hertz/i, 'Hertz'], [/\bavis\b/i, 'Avis'], [/\bsixt\b/i, 'Sixt'], [/europcar/i, 'Europcar'], [/trainline/i, 'Trainline'], [/12go/i, '12Go']];
+  var TYPE_RULES = { flight: /flight|airline|airways|boarding|\bpnr\b|e-?ticket|departure|baggage|\bseat\b/gi, stay: /hotel|check-?in|check-?out|\broom\b|night|guest|resort|ryokan|hostel|airbnb|villa|accommodation/gi, car: /car rental|rent a car|pick-?up|drop-?off|vehicle|hertz|avis|sixt|europcar/gi, train: /\btrain\b|railway|\brail\b|coach|\bbus\b|ferry|platform/gi, tour: /ticket|\btour\b|admission|entry|attraction|museum|activity|klook|viator|getyourguide/gi };
+  var CONF_STOP = /^(NUMBER|DETAILS|CONFIRMED|CONFIRMATION|BOOKING|RESERVATION|REFERENCE|SUMMARY|RECEIPT|INVOICE|STATUS|PENDING)$/;
+  function parseDoc(text, t) {
+    var lines = docLines(text), all = lines.join('\n'), f = { lines: lines };
+    var cm, cre = /(?:confirmation|booking|reservation|itinerary|order|reference|\bref\b\.?|\bpnr\b|record locator)\s*(?:number|no\.?|code|id|#)?\s*[:#.\-]?\s*([A-Z0-9][A-Z0-9\-]{4,18})/gi;
+    while ((cm = cre.exec(all))) { var c = cm[1].toUpperCase(); if ((/\d/.test(c) && /[A-Z]/.test(c)) || /^\d{6,}$/.test(c) || (/^[A-Z]{5,8}$/.test(c) && !CONF_STOP.test(c))) { f.conf = c; break; } }
+    var score = {}; Object.keys(TYPE_RULES).forEach(function (k) { score[k] = (all.match(TYPE_RULES[k]) || []).length; });
+    var best = Object.keys(score).sort(function (a, b) { return score[b] - score[a]; })[0]; if (score[best] > 0) f.type = best;
+    PROVIDERS.some(function (p) { if (p[0].test(all)) { f.provider = p[1]; return true; } return false; });
+    var startLn = /(check-?in|arriv|depart|pick[- ]?up|travel date|flight date|date of (?:visit|travel)|outbound|valid on|start)/i, endLn = /(check-?out|return|drop[- ]?off|until|inbound|end)/i, skipLn = /(book(?:ed|ing) (?:on|date)|issued|order date|paid on|payment date|date of issue|invoice date)/i;
+    lines.forEach(function (ln) { var ds = findDates(ln); if (!ds.length) return; if (skipLn.test(ln)) return; if (!f.start && startLn.test(ln)) { f.start = ds[0].ds; f.time = f.time || findTime(ln); if (ds[1]) f.end = ds[1].ds; } else if (!f.end && endLn.test(ln)) f.end = ds[0].ds; });
+    if (!f.start) {
+      var pool = []; lines.forEach(function (ln) { if (!skipLn.test(ln)) findDates(ln).forEach(function (d) { if (pool.indexOf(d.ds) < 0) pool.push(d.ds); }); });
+      pool.sort(); var fut = pool.filter(function (d) { return d >= addDays(today(), -2); }); var use = fut.length ? fut : pool;
+      if (use[0]) f.start = use[0]; if (use[1]) f.end = f.end || use[1];
+    }
+    if (f.end && f.start && f.end < f.start) f.end = '';
+    var tot = pickTotal(findAmounts(lines, t)); if (tot) f.total = tot;
+    var route = all.match(/\b([A-Z]{3})\s*(?:-|–|—|→|>|to)\s*([A-Z]{3})\b/);
+    if (f.type === 'flight' && route) f.name = route[1] + ' – ' + route[2];
+    if (!f.name) { var st = lines.filter(function (l) { return /(hotel|resort|\binn\b|ryokan|villa|hostel|suites|apartments?|lodge|guest ?house)/i.test(l) && !/(check|booking|confirm|dear|thank)/i.test(l) && l.length <= 60; })[0]; if (st) f.name = st; }
+    if (!f.name && f.provider) f.name = f.provider;
+    return f;
+  }
+  function parseReceipt(text, t) {
+    var lines = docLines(text), r = {};
+    var tot = pickTotal(findAmounts(lines, t)); if (tot) r.total = tot;
+    var ds = findDates(lines.join('\n')); if (ds[0]) r.date = ds[0].ds;
+    r.time = findTime(lines.join(' '));
+    r.note = (lines.slice(0, 5).filter(function (l) { return /[A-Za-z]{3}/.test(l) && !/(receipt|invoice|tax|tel|phone|www|http|date|time|cashier|order|table|vat|gst|welcome)/i.test(l) && l.length <= 40; })[0] || '');
+    if (r.note) r.note = tidyName(r.note);
+    return r;
+  }
+  function ocrNote(o) {
+    if (!o) return '';
+    return '<p class="notice" id="ocr-msg" role="status" style="background:' + (o.busy ? 'var(--accent-soft)' : o.ok ? 'var(--good-soft)' : 'var(--warn-soft)') + '">' + esc(o.msg) + '</p>';
+  }
+  function ocrProgressText(status, p) {
+    if (/load|init/i.test(status)) return 'Getting the reading tool ready. The first time, it downloads about 5 MB, then it’s cached.';
+    if (/scanned/.test(status)) return 'This PDF is a scan, so reading the image…';
+    if (/recogniz/i.test(status)) return 'Reading the text… ' + Math.round(p * 100) + '%';
+    return 'Reading your file…';
+  }
+  function runOcr(blob, mode) {
+    var sh = S.sheet; if (!sh) return;
+    sh.ocr = { busy: true, msg: 'Reading your file…' }; renderSheet();
+    OCR.onProgress = function (status, p) { if (S.sheet !== sh) return; sh.ocr.msg = ocrProgressText(status, p); var el = $('#ocr-msg'); if (el) el.textContent = sh.ocr.msg; };
+    OCR.read(blob).then(function (text) {
+      if (S.sheet !== sh) return;
+      var t = trip(), found = mode === 'booking' ? fillBooking(sh, parseDoc(text, t), t) : fillSpend(sh, parseReceipt(text, t), t);
+      sh.ocr = found.length ? { ok: true, msg: 'Filled from your file: ' + found.join(' · ') + '. Check them before saving.' } : { ok: false, msg: text.trim() ? 'Read the file, but couldn’t find ' + (mode === 'booking' ? 'booking details' : 'an amount') + ' to fill in. Add them yourself.' : 'No text found in this file. Try a sharper photo, or the PDF from the confirmation email.' };
+      renderSheet();
+    }).catch(function () {
+      if (S.sheet !== sh) return;
+      sh.ocr = { ok: false, msg: IS_TOP ? 'Couldn’t read this file. The reading tool needs an internet connection the first time. Your file is saved either way.' : 'Reading files works when ' + BR.name + ' is opened from its own web address or home-screen icon. Your file is saved either way.' };
+      renderSheet();
+    });
+  }
+  function fillBooking(sh, f, t) {
+    var d = sh.d, out = [];
+    if (f.type && !d.name && !sh.typeSet) { d.type = f.type; out.push(BKT[f.type].label.toLowerCase()); }
+    if (f.name && !String(d.name).trim()) { d.name = f.name.slice(0, 60); out.push('name'); }
+    if (f.provider && !String(d.provider).trim()) { d.provider = f.provider; out.push(f.provider); }
+    if (f.conf && !String(d.conf).trim()) { d.conf = f.conf; out.push('code ' + f.conf); }
+    if (f.start && (!d.id ? d.start === sh.initStart : false)) { d.start = f.start; out.push(fmtD(f.start, { day: 'numeric', month: 'short' }) + (f.end ? ' – ' + fmtD(f.end, { day: 'numeric', month: 'short' }) : '')); if (f.end && BKT[d.type].hasEnd && !d.end) d.end = f.end; }
+    if (f.time && !d.time) d.time = f.time;
+    if (f.total && !num(d.total)) { if (f.total.cur === t.local || f.total.cur === t.home) d.cur = f.total.cur; d.total = String(f.total.v); out.push('total ' + money(f.total.v, f.total.cur === t.local || f.total.cur === t.home ? f.total.cur : d.cur, { show: true })); }
+    else if (f.total && Math.abs(num(d.total) - f.total.v) > 0.01) out.push('the file shows a total of ' + (f.total.cur || d.cur) + ' ' + f.total.v.toLocaleString());
+    return out;
+  }
+  function fillSpend(sh, r, t) {
+    var d = sh.d, out = [];
+    if (r.total && !num(d.amt)) { if (r.total.cur === t.local || r.total.cur === t.home) d.cur = r.total.cur; d.amt = String(r.total.v); out.push('amount ' + money(r.total.v, d.cur, { show: true })); }
+    if (r.note && !String(d.note).trim()) { d.note = r.note; out.push('“' + r.note + '”'); if (d.cat === 'food' && !sh.catSet) d.cat = guessCat(r.note, catMemory(t)); }
+    if (r.date && r.date !== d.date && Math.abs(diff(r.date, today())) < 400) { d.date = r.date; out.push(fmtD(r.date, { day: 'numeric', month: 'short' })); }
+    if (r.time && (!d.id)) d.time = r.time;
+    return out;
+  }
+  function docsField(sh) {
+    var d = sh.d;
+    return '<div class="field"><span class="label">Receipts and documents</span><span class="hint">Add the confirmation PDF, or a photo or screenshot of it. ' + esc(BR.name) + ' reads the code, dates and total for you.</span>' +
+      '<div class="thumbs">' + d.photos.map(function (id, i) { return '<div class="thumb"><button type="button" class="thumb-open" data-act="lb" data-src="ed" data-i="' + i + '" aria-label="View image ' + (i + 1) + '">' + photoImg(id) + '</button><button type="button" class="rm" data-act="ph-rm" data-i="' + i + '" aria-label="Remove image ' + (i + 1) + '">' + ic('x', 14) + '</button></div>'; }).join('') +
+      (d.photos.length + d.files.length < 8 ? '<label class="thumb-add">' + ic('upload', 20) + '<span>Add file</span><input type="file" accept="image/*,application/pdf,.pdf" multiple class="sr-only" data-upload="bk-docs" aria-label="Add receipts or PDFs"></label>' : '') + '</div>' +
+      (d.files.length ? '<div class="rows">' + d.files.map(function (f, i) { return '<div class="doc"><span class="tile" style="--c:var(--bad)">' + ic('doc', 17) + '</span><span class="grow"><strong class="ellip">' + esc(f.name) + '</strong><span class="hint">PDF · ' + esc(kb(f.size || 0)) + '</span></span><button type="button" class="btn quiet sm" data-act="doc-open" data-id="' + esc(f.id) + '">Open</button><button type="button" class="icon-btn sm" data-act="doc-rm" data-i="' + i + '" aria-label="Remove ' + esc(f.name) + '" style="border:0">' + ic('x', 14) + '</button></div>'; }).join('') + '</div>' : '') +
+      ocrNote(sh.ocr) +
+      (d.photos.length || d.files.length ? '<button type="button" class="btn quiet sm" data-act="ocr-run" style="align-self:flex-start"' + (sh.ocr && sh.ocr.busy ? ' disabled' : '') + '>' + ic('scan', 16) + ' Read details from the file</button>' : '') + '</div>';
+  }
+
+  Object.assign(SHEETS, { pin: sheetPin, profile: sheetProfile });
+
+  Object.assign(ACT, {
+    refresh: function () {
+      save(); toast('Refreshing…');
+      function go() { location.reload(); }
+      try { if (IS_TOP && navigator.serviceWorker) navigator.serviceWorker.getRegistration().then(function (r) { return r ? r.update().catch(function () { }) : null; }).then(go, go); else setTimeout(go, 200); } catch (e) { go(); }
+    },
+    profile: function (el) {
+      var m = meta(); if (!m) return;
+      openSheet({ type: 'profile', d: { name: m.name, color: m.color || AV[0], photo: m.photo || null, home: S.p.home, pwMode: el && el.dataset && el.dataset.pw ? (m.hash ? 'change' : 'set') : null, cur: '', pw1: '', pw2: '' } });
+    },
+    'pf-color': function (el) { S.sheet.d.color = el.dataset.c; renderSheet(); },
+    'pf-photo-rm': function () { S.sheet.d.photo = null; renderSheet(); },
+    'pf-pw': function (el) { var d = S.sheet.d; d.pwMode = el.dataset.v || null; d.cur = d.pw1 = d.pw2 = ''; S.sheet.err = ''; renderSheet(); },
+    'pf-save': function () {
+      var sh = S.sheet, d = sh.d, m = meta();
+      if (!String(d.name).trim()) return sheetErr('Add your name.');
+      var mode = d.pwMode;
+      if (mode && mode !== 'remove') { if (String(d.pw1).length < 4) return sheetErr('Use a password of at least 4 characters.'); if (d.pw1 !== d.pw2) return sheetErr('The two new passwords don’t match.'); }
+      var check = mode && mode !== 'set' ? hashPw(d.cur, m.salt) : Promise.resolve(m.hash);
+      check.then(function (h) {
+        if (mode && mode !== 'set' && h !== m.hash) { sheetErr('Your current password isn’t right.'); return; }
+        var next = mode === 'remove' ? Promise.resolve('') : mode ? hashPw(d.pw1, m.salt || (m.salt = uid())) : Promise.resolve(m.hash);
+        return next.then(function (nh) {
+          m.name = d.name.trim(); m.color = d.color; m.photo = d.photo || null; m.hash = nh || '';
+          saveIndex(); S.p.home = d.home; save(); closeSheet(); renderView();
+          toast('Profile saved', mode === 'remove' ? 'Password removed.' : mode ? 'Password updated.' : m.name);
+        });
+      });
+    },
+    'pin-set': function () { openSheet({ type: 'pin', purpose: 'set', step: 'new', d: { len: 4, entry: '', first: '' } }); },
+    'pin-change': function () { openSheet({ type: 'pin', purpose: 'change', step: 'current', d: { len: (meta().pin || {}).len || 4, entry: '', first: '' } }); },
+    'pin-off': function () { openSheet({ type: 'pin', purpose: 'remove', step: 'remove', d: { len: 4, entry: '', first: '' } }); },
+    'pin-len': function (el) { var d = S.sheet.d; d.len = +el.dataset.v; d.entry = ''; renderSheet(); },
+    kp: function (el) { var k = el.dataset.k; if (S.locked) lockKey(k); else if (S.sheet && S.sheet.type === 'pin') pinKey(k); },
+    'bio-toggle': function () {
+      var m = meta(); if (!m || !m.pin) return;
+      if (m.bio) { delete m.bio; saveIndex(); renderView(); toast(bioName() + ' unlock turned off'); return; }
+      bioCheck().then(function (ok) {
+        if (!ok) { toast('Not available here', 'Open ' + BR.name + ' from its own web address or home-screen icon on a device with ' + bioName() + '.'); return; }
+        bioEnroll(m).then(function () { renderView(); toast(bioName() + ' unlock is on', 'Use it on the lock screen. Your PIN still works too.'); }, function (e) { toast('Couldn’t turn it on', e && e.name === 'NotAllowedError' ? 'It was cancelled or isn’t allowed here.' : 'This device or browser didn’t allow it.'); });
+      });
+    },
+    'lock-now': function () { if (!lockEnabled(meta())) return; lockApp(); renderAll(); },
+    'lock-pw': function () { var m = lockMeta(); signOut(true); S.locked = false; S.lock = null; S.lockPid = null; S.auth = { mode: 'signin', pick: m.id }; renderAll(); focusSoon('#si-pw'); },
+    'lock-switch': function () { signOut(true); S.locked = false; S.lock = null; S.lockPid = null; renderAll(); },
+    'lock-del': function () {
+      var L = S.lock; if (!L.armed) { L.armed = true; renderView(); return; }
+      var m = lockMeta(); signOut(true); S.locked = false; S.lock = null; S.lockPid = null; if (m) deleteProfile(m.id); renderAll(); gc(); toast('Account deleted', 'Its trips are gone from this device.');
+    },
+    'doc-open': function (el) {
+      Photos.get(el.dataset.id).then(function (b) {
+        if (!b) { toast('File not found on this device'); return; }
+        var u = URL.createObjectURL(b), a = document.createElement('a'); a.href = u; a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+      });
+    },
+    'doc-rm': function (el) { S.sheet.d.files.splice(+el.dataset.i, 1); renderSheet(); },
+    'ocr-run': function () {
+      var sh = S.sheet, d = sh.d, id = d.files && d.files[0] ? d.files[0].id : d.photos[0];
+      if (!id) return;
+      Photos.get(id).then(function (b) { if (!b) { sh.ocr = { ok: false, msg: 'That file isn’t on this device any more.' }; renderSheet(); return; } runOcr(b, sh.type === 'booking' ? 'booking' : 'spend'); });
+    }
+  });
+  /* Uploads for documents and profile pictures */
+  function handleDocs(files) {
+    var sh = S.sheet; if (!sh || !sh.d) return;
+    var d = sh.d, first = null;
+    files = files.slice(0, Math.max(0, 8 - d.photos.length - d.files.length));
+    if (!files.length) return;
+    toast('Adding ' + plural(files.length, 'file') + '…');
+    Promise.all(files.map(function (f) {
+      var isPdf = /pdf/i.test(f.type) || /\.pdf$/i.test(f.name || '');
+      if (isPdf) {
+        if (f.size > 12 * 1024 * 1024) return Promise.resolve({ bad: 'too big' });
+        var id = 'doc_' + uid(), blob = f.type ? f : new Blob([f], { type: 'application/pdf' });
+        return Photos.put(id, blob).then(function () { return { file: { id: id, name: String(f.name || 'Document.pdf').slice(0, 80), size: f.size, mime: 'application/pdf' }, src: blob }; });
+      }
+      return shrink(f, 2000, false).then(function (b) { var id2 = 'ph_' + uid(); return Photos.put(id2, b).then(function () { return { photo: id2, src: f }; }); }).catch(function () { return { bad: 'unreadable' }; });
+    })).then(function (res) {
+      if (S.sheet !== sh) return;
+      var bad = 0;
+      res.forEach(function (r) { if (r.bad) bad++; else { if (r.file) d.files.push(r.file); if (r.photo) d.photos.push(r.photo); if (!first) first = r.src; } });
+      renderSheet();
+      if (bad) toast('Couldn’t add ' + plural(bad, 'file'), 'Use a PDF under 12 MB, or a JPEG or PNG.');
+      if (first) runOcr(first, 'booking');
+    });
+  }
+  /* =========================================================
      Start
      ========================================================= */
   Store.init();
@@ -2659,9 +3321,26 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   S.legacy = legacyData();
   Photos.open();
   var sess = Store.get('jt_sess');
-  if (sess && sess.pid && meta(sess.pid)) loadProfile(sess.pid);
+  if (sess && sess.pid && meta(sess.pid) && loadProfile(sess.pid) && lockEnabled(meta(sess.pid))) lockApp();
   renderAll();
+  bioCheck().then(function () { if (S.locked || (S.p && S.tab === 'more' && !S.sheet)) renderView(); });
   Photos.ready.then(function () { gc(); });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') {
+      S.hiddenAt = Date.now();
+      if (S.p && S.pid && !S.locked) { var j = snapJson(); if (j !== S.lastSnapJson && Date.now() - S.lastAutoAt >= 5 * 60000) snapshot('auto', '', j); }
+    } else if (S.p && !S.locked && S.hiddenAt) {
+      var m = meta(), after = m && m.lockAfter != null ? +m.lockAfter : 5;
+      if (lockEnabled(m) && Date.now() - S.hiddenAt >= after * 60000) { lockApp(); renderAll(); }
+    }
+  });
+  (function () {
+    var seen = Store.get('jt_ver');
+    if (seen !== APP_VERSION) {
+      Store.set('jt_ver', APP_VERSION);
+      if (seen || S.index.profiles.length) setTimeout(function () { toast('Updated to version ' + APP_VERSION, CHANGELOG[0].items[0], { label: 'What’s new', act: 'about' }); }, 900);
+    }
+  })();
   var lastDay = today();
   setInterval(function () { if (today() !== lastDay) { lastDay = today(); renderView(); } }, 60000);
   /* Offline + install: only when hosted on its own (GitHub Pages), never inside Claude's frame. */

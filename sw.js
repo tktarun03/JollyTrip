@@ -1,7 +1,7 @@
 /* JollyTrip service worker: lets the app open with no connection.
    Pages are fetched fresh when online (so updates arrive) and served from cache when offline.
    Your trips and photos are not stored here; they live in cookies, local storage and IndexedDB. */
-const VERSION = 'jollytrip-v2';
+const VERSION = 'jollytrip-v3';
 const SHELL = [
   './',
   './index.html',
@@ -45,7 +45,9 @@ self.addEventListener('fetch', (event) => {
   // Icons, manifest and the web font: cache first, refreshed in the background.
   const sameOrigin = url.origin === self.location.origin;
   const font = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
-  if (!sameOrigin && !font) return;
+  // The receipt reader's libraries and language data are pinned versions, so cache them for offline use.
+  const ocr = url.hostname === 'cdn.jsdelivr.net' && /\/npm\/(tesseract\.js|tesseract\.js-core|@tesseract\.js-data|pdfjs-dist)@/.test(url.pathname);
+  if (!sameOrigin && !font && !ocr) return;
   event.respondWith(
     caches.match(req).then((hit) => {
       const net = fetch(req)
