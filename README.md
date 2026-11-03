@@ -31,13 +31,13 @@ A minimalist planner and budget for family holidays. A sibling of BasKar.
 **Safety nets**
 - **Version history**: versions of each account are saved on the device automatically while you make changes (at most every 20 minutes), before big changes such as deleting a trip or importing spends, and whenever you save one yourself. Restore any version in one tap. Restoring first saves your current state, so a rollback can itself be undone.
 - **Undo** straight after deleting, importing or restoring.
-- **App lock**: a 4- or 6-digit PIN, plus Face ID, Touch ID, fingerprint or Windows Hello through the browser's built-in passkey support (WebAuthn, platform authenticator, no server). It locks when the app opens and after a chosen time away. The lock keeps people out of the app; the stored data isn't encrypted.
+- **App lock**: a 4- or 6-digit PIN, plus Face ID, Touch ID, fingerprint or Windows Hello through the browser's built-in passkey support (WebAuthn, platform authenticator, no server). It locks when the app opens, after a chosen time away, and after the same time idle (5 minutes by default). The lock keeps people out of the app; the stored data isn't encrypted.
 
 **Make it yours**
 - Several accounts on one device, each with an optional password, a profile picture and colour, and several trips per account.
 - A refresh button, and a What's new screen (More) listing every version.
 - Branding: app name, logo, accent colour, mascot ("Sunny") and the catchphrase for over-budget days.
-- Light theme by default, with Dark and System options. Text size follows the device setting, with Smaller and Larger options. Amounts can be hidden, and the cheeky comments can be turned off.
+- Light theme by default, with Dark and System options. Text size follows the device setting, with Smaller and Larger options. Amounts can be hidden, and the cheeky comments can be turned off. Pinch and double-tap zoom are disabled; use the text size setting instead.
 - Works offline and installs to the home screen.
 
 ## Where data is saved

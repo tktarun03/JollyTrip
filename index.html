@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#F4F6F5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -77,7 +77,7 @@
   color-scheme: dark;
 }
 /* Text size follows the device: Dynamic Type on iPhone/iPad, the browser's font-size setting elsewhere. */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation; }
 @supports (font: -apple-system-body) { html { font: -apple-system-body; } }
 html[data-ts="small"] { font-size: 87.5%; }
 html[data-ts="large"] { font-size: 112.5%; }
@@ -946,8 +946,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.2';
+  var APP_VERSION = '3.3';
   var CHANGELOG = [
+    { v: '3.3', date: '2026-11-03', items: ['The app locks itself after 5 minutes without a touch, click or keystroke (with a PIN or Face ID set up). The time follows your Lock the app setting.', 'Pinch and double-tap zoom are turned off. Use More → Appearance → Text size instead.'] },
     { v: '3.2', date: '2026-11-03', items: ['Paste a booking’s confirmation text to fill in its details.', 'Bookings get a picture: the hotel photo from your PDF, a photo you attach, or a drawn picture for each kind of booking.', 'Messages now slide up from the bottom and have a close button.'] },
     { v: '3.1', date: '2026-11-03', items: ['Version history: your trips are saved automatically while you make changes, before big changes, and whenever you choose. Restore any version in one tap.', 'Undo straight after deleting, importing or restoring.', 'App lock with a PIN, plus Face ID or fingerprint unlock, in More → Security.', 'Attach booking confirmations as PDFs or photos. JollyTrip reads the code, dates and total, and can read the amount from a spend’s receipt photo.', 'Manage your profile, including your own picture.', 'A refresh button, and sheets whose title stays put while the content scrolls.'] },
     { v: '3.0', date: '2026-11-03', items: ['Rebuilt as a family trip planner: day-by-day itinerary, bookings with deposits and due dates, packing list and trip notes.', 'Accounts, branding, wallets, bank SMS and CSV import, streaks, category limits, trip fund, nightly recap and insights.', 'Bookings are set aside before the daily allowance.', 'Money splitting removed.'] },
@@ -2971,7 +2972,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       (m.hash ? '' : '<button type="button" class="btn danger block' + (L.armed ? ' armed' : '') + '" data-act="lock-del">' + (L.armed ? 'Tap again to delete this account' : 'Delete this account') + '</button>') + '</details></section>';
   }
   function unlocked() {
-    var pid = S.lockPid || S.pid; S.locked = false; S.lockPid = null; S.lock = null;
+    var pid = S.lockPid || S.pid; S.locked = false; S.lockPid = null; S.lock = null; S.lastActive = Date.now();
     if (!S.p || S.pid !== pid) enterProfile(pid); else { renderAll(); toast('Unlocked', ''); }
   }
   function lockKey(k) {
@@ -3034,14 +3035,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       closeSheet(); renderView(); toast(sh.purpose === 'change' ? 'PIN changed' : 'PIN lock is on', 'You’ll be asked for it when you open ' + BR.name + '.');
     });
   }
-  var LOCK_AFTER = [[0, 'Every time you come back'], [1, 'After 1 minute away'], [5, 'After 5 minutes away'], [15, 'After 15 minutes away'], [60, 'After 1 hour away']];
+  var LOCK_AFTER = [[0, 'Every time you come back, or after 5 minutes idle'], [1, 'After 1 minute idle or away'], [5, 'After 5 minutes idle or away'], [15, 'After 15 minutes idle or away'], [60, 'After 1 hour idle or away']];
+  function idleMinutes(m) { var a = m && m.lockAfter != null ? +m.lockAfter : 5; return a > 0 ? a : 5; }
   function securityCard(m) {
     var on = lockEnabled(m), bioOk = BIO.avail !== false;
     var bioHint = !m.pin ? 'Set a PIN first. It’s the fallback when your face or finger isn’t recognised.' : !bioOk ? 'Not available here. It works when ' + BR.name + ' is opened from its own web address or home-screen icon, on a device with Face ID, Touch ID, fingerprint or Windows Hello.' : 'Unlock with ' + bioName() + ' instead of typing the PIN.';
     return '<section class="card"><div class="row between"><h2 class="h3">Security</h2><span class="pill ' + (on ? 'good' : 'info') + '">' + (on ? 'App lock on' : 'App lock off') + '</span></div>' +
       '<div class="setrow"><div class="grow"><span class="label">PIN lock</span><span class="hint">' + (m.pin ? 'On · ' + m.pin.len + ' digits' : 'Ask for a PIN when the app opens.') + '</span></div><div class="row" style="gap:6px">' + (m.pin ? '<button type="button" class="btn quiet sm" data-act="pin-change">Change</button><button type="button" class="btn ghost sm" data-act="pin-off">Turn off</button>' : '<button type="button" class="btn sm" data-act="pin-set">Set PIN</button>') + '</div></div>' +
       '<div class="setrow"><div class="grow"><span class="label" id="bio-lbl">Face ID or fingerprint</span><span class="hint">' + esc(bioHint) + '</span></div><button type="button" class="switch" role="switch" aria-labelledby="bio-lbl" aria-checked="' + !!m.bio + '" data-act="bio-toggle"' + (!m.pin || (!bioOk && !m.bio) ? ' disabled style="opacity:.4"' : '') + '><span></span></button></div>' +
-      (on ? '<div class="field"><label for="lock-after">Lock the app</label><select id="lock-after" class="input" data-lockafter="1">' + LOCK_AFTER.map(function (o) { return '<option value="' + o[0] + '"' + (+(m.lockAfter == null ? 5 : m.lockAfter) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select><span class="hint">It always locks when the app is opened fresh.</span></div>' : '') +
+      (on ? '<div class="field"><label for="lock-after">Lock the app</label><select id="lock-after" class="input" data-lockafter="1">' + LOCK_AFTER.map(function (o) { return '<option value="' + o[0] + '"' + (+(m.lockAfter == null ? 5 : m.lockAfter) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select><span class="hint">Idle means you haven’t touched or typed in the app. It always locks when the app is opened fresh.</span></div>' : '') +
       '<div class="setrow"><div class="grow"><span class="label">Account password</span><span class="hint">' + (m.hash ? 'Set. Asked when you open this account from the account list, and works if you forget the PIN.' : 'Not set.') + '</span></div><button type="button" class="btn quiet sm" data-act="profile" data-pw="1">' + (m.hash ? 'Change' : 'Set') + '</button></div>' +
       (on ? '<button type="button" class="btn ghost block" data-act="lock-now">' + ic('lock', 16) + ' Lock now</button>' : '') +
       '<p class="hint">The lock keeps people out of the app on this device. Your trips aren’t encrypted, so someone who can open the browser’s storage directly could still read them.</p></section>';
@@ -3431,6 +3433,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* =========================================================
      Start
      ========================================================= */
+  /* No pinch or double-tap zoom: the viewport is fixed, and iOS gesture events are cancelled. Text size is in More → Appearance. */
+  (function () {
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (!vp) { vp = document.createElement('meta'); vp.name = 'viewport'; document.head.appendChild(vp); }
+    vp.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) { document.addEventListener(n, function (e) { e.preventDefault(); }, { passive: false }); });
+    document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+    document.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
+  })();
   Store.init();
   BR = cleanBrand(Store.get('jt_brand')); applyBrand();
   S.index = Store.get('jt_idx') || { v: 1, profiles: [] };
@@ -3458,6 +3469,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       if (seen || S.index.profiles.length) setTimeout(function () { toast('Updated to version ' + APP_VERSION, CHANGELOG[0].items[0], { label: 'What’s new', act: 'about' }); }, 900);
     }
   })();
+  /* Auto-lock after a stretch with no touches, clicks, typing or scrolling. */
+  S.lastActive = Date.now();
+  ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach(function (n) { document.addEventListener(n, function () { S.lastActive = Date.now(); }, { passive: true, capture: true }); });
+  document.addEventListener('scroll', function () { S.lastActive = Date.now(); }, { passive: true, capture: true });
+  setInterval(function () {
+    if (!S.p || S.locked || document.visibilityState !== 'visible') return;
+    var m = meta();
+    if (lockEnabled(m) && Date.now() - S.lastActive >= idleMinutes(m) * 60000) { lockApp(); renderAll(); toast('Locked', 'No activity for ' + plural(idleMinutes(m), 'minute') + '.'); }
+  }, 15000);
   var lastDay = today();
   setInterval(function () { if (today() !== lastDay) { lastDay = today(); renderView(); } }, 60000);
   /* Offline + install: only when hosted on its own (GitHub Pages), never inside Claude's frame. */
