@@ -225,6 +225,8 @@ input[type=number] { -moz-appearance: textfield; }
 .tile { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--line); color: var(--c); }
 .tile.sm { width: 28px; height: 28px; }
 .tile.photo { border: 0; border-radius: 10px; overflow: hidden; background: var(--surface-2); position: relative; }
+.tile.photo.bk-thumb { width: 56px; height: 44px; align-self: flex-start; margin-top: 2px; }
+.tile.photo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .tile.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .amt { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex-shrink: 0; }
 .amt b { font-family: var(--f-display); font-size: var(--t-base); font-weight: 400; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -313,6 +315,8 @@ button.alert { cursor: pointer; }
 .thumb { position: relative; aspect-ratio: 1; max-width: 100%; border-radius: 12px; overflow: hidden; background: var(--surface-2); }
 .thumb-open { display: block; width: 100%; height: 100%; border: 0; padding: 0; background: none; cursor: zoom-in; }
 .thumb img, .photo-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .rm.pin { top: auto; bottom: 4px; }
+.bk-cover .cover-act { display: flex; }
 .thumb .rm { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; background: rgba(0, 0, 0, 0.55); color: #FFFFFF; border: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .thumb-add { aspect-ratio: 1; max-width: 100%; border-radius: 12px; border: 1px dashed var(--line-strong); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--muted); font-size: var(--t-xs); cursor: pointer; }
 .thumb-add:focus-within { outline: 1.5px solid var(--ink); outline-offset: 2px; }
@@ -372,6 +376,7 @@ input[type=color] { width: 56px; height: 44px; border: 1px solid var(--line); bo
 .sheet { width: 100%; max-width: 540px; max-height: 92%; overflow: hidden; background: var(--bg); border-radius: 22px 22px 0 0; display: flex; flex-direction: column; animation: up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); box-shadow: var(--shadow); }
 /* The title row stays put; only the content below it scrolls. */
 .sheet-top { flex: none; display: flex; flex-direction: column; gap: 0.625rem; padding-top: 0.625rem; padding-bottom: 0.75rem; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); background: var(--bg); border-bottom: 1px solid var(--line); }
+.sheet-body > * { flex-shrink: 0; }
 .sheet-top:not(:has(.sheet-head)) { border-bottom: 0; padding-bottom: 0.25rem; }
 .sheet-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 1.125rem; padding-top: 1rem; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)); }
 .sheet-wrap.still, .sheet-wrap.still .sheet { animation: none; }
@@ -383,10 +388,12 @@ input[type=color] { width: 56px; height: 44px; border: 1px solid var(--line); bo
 .srow label { cursor: pointer; }
 .srow-sub { grid-column: 2 / -1; }
 details.card summary { cursor: pointer; font-size: var(--t-sm); font-weight: 500; color: var(--ink-2); }
-.toast { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; z-index: 80; width: min(420px, calc(100% - 32px)); transform: translateX(-50%); display: flex; flex-direction: column; gap: 2px; padding: 0.75rem 1rem; border-radius: 16px; background: var(--notif-bg); color: var(--notif-ink); box-shadow: var(--shadow); font-size: var(--t-sm); pointer-events: none; animation: drop 0.3s ease-out; }
+.toast { position: fixed; bottom: calc(var(--toast-b, 16px) + env(safe-area-inset-bottom, 0px)); left: 50%; z-index: 80; width: min(440px, calc(100% - 32px)); transform: translateX(-50%); display: flex; align-items: center; gap: 0.5rem; padding: 0.625rem 0.375rem 0.625rem 1rem; border-radius: 16px; background: var(--notif-bg); color: var(--notif-ink); box-shadow: var(--shadow); font-size: var(--t-sm); animation: rise 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.toast.out { animation: sink 0.22s ease-in forwards; }
+.toast-x { flex-shrink: 0; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--notif-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.toast-x:hover { color: var(--notif-ink); }
 .toast strong { font-weight: 500; font-size: var(--t-base); }
 .toast .tbody { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.toast.act { pointer-events: auto; flex-direction: row; align-items: center; gap: 0.75rem; }
 .toast-btn { flex-shrink: 0; min-height: 36px; padding: 0 0.875rem; border-radius: 999px; border: 1px solid var(--notif-muted); background: transparent; color: var(--notif-ink); font-weight: 500; font-size: var(--t-sm); cursor: pointer; }
 .vrow { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 0.75rem; align-items: start; padding: 0.75rem 0; }
 .vact { display: flex; align-items: center; gap: 0.125rem; }
@@ -411,6 +418,8 @@ details.card summary { cursor: pointer; font-size: var(--t-sm); font-weight: 500
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+@keyframes rise { from { transform: translate(-50%, 24px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@keyframes sink { to { transform: translate(-50%, 24px); opacity: 0; } }
 @keyframes drop { from { transform: translate(-50%, -12px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 
@@ -937,8 +946,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.1';
+  var APP_VERSION = '3.2';
   var CHANGELOG = [
+    { v: '3.2', date: '2026-11-03', items: ['Paste a booking’s confirmation text to fill in its details.', 'Bookings get a picture: the hotel photo from your PDF, a photo you attach, or a drawn picture for each kind of booking.', 'Messages now slide up from the bottom and have a close button.'] },
     { v: '3.1', date: '2026-11-03', items: ['Version history: your trips are saved automatically while you make changes, before big changes, and whenever you choose. Restore any version in one tap.', 'Undo straight after deleting, importing or restoring.', 'App lock with a PIN, plus Face ID or fingerprint unlock, in More → Security.', 'Attach booking confirmations as PDFs or photos. JollyTrip reads the code, dates and total, and can read the amount from a spend’s receipt photo.', 'Manage your profile, including your own picture.', 'A refresh button, and sheets whose title stays put while the content scrolls.'] },
     { v: '3.0', date: '2026-11-03', items: ['Rebuilt as a family trip planner: day-by-day itinerary, bookings with deposits and due dates, packing list and trip notes.', 'Accounts, branding, wallets, bank SMS and CSV import, streaks, category limits, trip fund, nightly recap and insights.', 'Bookings are set aside before the daily allowance.', 'Money splitting removed.'] },
     { v: '2.2', date: '2026-11-02', items: ['Works offline and installs to the home screen.', 'Share a trip summary and export spends as CSV.'] },
@@ -986,7 +996,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     t.plan = (Array.isArray(t.plan) ? t.plan : []).filter(Boolean);
     t.plan.forEach(function (it) { it.id = it.id || uid(); it.day = validDate(it.day) ? it.day : ''; it.time = /^\d{2}:\d{2}$/.test(it.time || '') ? it.time : ''; it.title = String(it.title || 'Plan'); it.kind = PLK[it.kind] ? it.kind : 'sight'; it.place = String(it.place || ''); it.notes = String(it.notes || ''); it.cost = num(it.cost); it.cur = it.cur === t.local ? t.local : t.home; it.done = !!it.done; });
     t.bookings = (Array.isArray(t.bookings) ? t.bookings : []).filter(Boolean);
-    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; b.files = Array.isArray(b.files) ? b.files.filter(function (f) { return f && f.id; }) : []; });
+    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; b.files = Array.isArray(b.files) ? b.files.filter(function (f) { return f && f.id; }) : []; b.cover = b.cover || null; });
     t.packing = (Array.isArray(t.packing) ? t.packing : []).filter(Boolean);
     t.packing.forEach(function (k) { k.id = k.id || uid(); k.text = String(k.text || ''); k.group = PACK_GROUPS.indexOf(k.group) >= 0 ? k.group : 'Other'; k.who = k.who || ''; k.done = !!k.done; });
     t.notes = String(t.notes || '');
@@ -1159,8 +1169,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function bookingPaid(t, b) { return t.expenses.reduce(function (s, x) { return x.bookingId === b.id ? s + exHome(t, x) : s; }, 0); }
   function bookingState(t, b) {
     var tot = bookingHome(t, b), paid = bookingPaid(t, b), left = Math.max(tot - paid, 0), td = today();
-    var st = left < 0.5 ? 'paid' : paid > 0.5 ? 'part' : 'unpaid';
-    var overdue = st !== 'paid' && b.due && b.due < td, soon = st !== 'paid' && b.due && !overdue && diff(td, b.due) <= 7;
+    var st = tot < 0.005 && paid < 0.005 ? 'none' : left < 0.5 ? 'paid' : paid > 0.5 ? 'part' : 'unpaid';
+    var overdue = st !== 'paid' && st !== 'none' && b.due && b.due < td, soon = st !== 'paid' && st !== 'none' && b.due && !overdue && diff(td, b.due) <= 7;
     return { tot: tot, paid: paid, left: left, st: st, overdue: overdue, soon: soon };
   }
   function linked(t, x) { return !!(x.bookingId && bookingById(t, x.bookingId)); }
@@ -1255,7 +1265,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       if (t.cover) o[t.cover] = 1;
       (t.people || []).forEach(function (x) { if (x.photo) o[x.photo] = 1; });
       (t.expenses || []).forEach(function (x) { (x.photos || []).forEach(function (id) { o[id] = 1; }); });
-      (t.bookings || []).forEach(function (b) { (b.photos || []).forEach(function (id) { o[id] = 1; }); (b.files || []).forEach(function (f) { o[f.id] = 1; }); });
+      (t.bookings || []).forEach(function (b) { (b.photos || []).forEach(function (id) { o[id] = 1; }); (b.files || []).forEach(function (f) { o[f.id] = 1; }); if (b.cover) o[b.cover] = 1; });
     });
     return o;
   }
@@ -1499,7 +1509,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (c.status === 'active') L.push('Day ' + c.dayIdx + ' of ' + c.n + ' · safe to spend today ' + money(Math.max(c.safe, 0), t.home, o));
     var keys = Object.keys(CATS).filter(function (k) { return c.byCat[k]; }).sort(function (a, b) { return c.byCat[b] - c.byCat[a]; });
     if (keys.length) { L.push('', 'Where it went'); keys.forEach(function (k) { L.push('• ' + CATS[k].label + ': ' + money(c.byCat[k], t.home, o)); }); }
-    if (t.bookings.length) { L.push('', 'Bookings'); t.bookings.slice().sort(function (a, b) { return a.start < b.start ? -1 : 1; }).forEach(function (b) { var st = bookingState(t, b); L.push('• ' + b.name + ' · ' + fmtD(b.start, { day: 'numeric', month: 'short' }) + (b.conf ? ' · ' + b.conf : '') + ' · ' + (st.st === 'paid' ? 'paid' : money(st.left, t.home, o) + ' to pay')); }); }
+    if (t.bookings.length) { L.push('', 'Bookings'); t.bookings.slice().sort(function (a, b) { return a.start < b.start ? -1 : 1; }).forEach(function (b) { var st = bookingState(t, b); L.push('• ' + b.name + ' · ' + fmtD(b.start, { day: 'numeric', month: 'short' }) + (b.conf ? ' · ' + b.conf : '') + ' · ' + (st.st === 'paid' ? 'paid' : st.st === 'none' ? 'no total yet' : money(st.left, t.home, o) + ' to pay')); }); }
     return L.join('\n');
   }
   /* =========================================================
@@ -1583,7 +1593,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function agendaRow(t, e) {
     if (e.type === 'bk') {
       var b = e.e.b, T = BKT[b.type] || BKT.other, st = bookingState(t, b);
-      var sub = [T.label]; if (b.conf) sub.push(b.conf); if (!e.e.end) sub.push(st.st === 'paid' ? 'Paid' : money(st.left, t.home) + ' to pay');
+      var sub = [T.label]; if (b.conf) sub.push(b.conf); if (!e.e.end) sub.push(st.st === 'paid' ? 'Paid' : st.st === 'none' ? 'No total yet' : money(st.left, t.home) + ' to pay');
       return '<div class="it bk"><span class="it-time">' + (e.time ? esc(fmtHM(e.time)) : '—') + '</span><span class="tile sm" style="--c:' + CATS[T.cat].color + '">' + ic(T.icon, 15) + '</span>' +
         '<button type="button" class="it-main" data-act="bk-edit" data-id="' + esc(b.id) + '"><strong>' + esc(e.e.label) + '</strong><span class="hint ellip">' + esc(sub.join(' · ')) + '</span></button></div>';
     }
@@ -1761,8 +1771,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     h += '<section class="card tight"><div class="rows">' + (list.length ? list.map(function (x) {
       var b = x.b, st = x.st, T = BKT[b.type] || BKT.other;
       var when = fmtD(b.start, { day: 'numeric', month: 'short' }) + (b.time ? ' ' + fmtHM(b.time) : '') + (b.end && b.end !== b.start ? ' – ' + fmtD(b.end, { day: 'numeric', month: 'short' }) : '');
-      var pill = st.st === 'paid' ? '<span class="pill good">Paid</span>' : st.overdue ? '<span class="pill bad">Overdue</span>' : st.st === 'part' ? '<span class="pill warn">Part paid</span>' : '<span class="pill info">Not paid</span>';
-      return '<button type="button" class="txn" data-act="bk-edit" data-id="' + esc(b.id) + '"><span class="tile" style="--c:' + CATS[T.cat].color + '">' + ic(T.icon, 17) + '</span><span class="grow"><strong class="ellip">' + esc(b.name) + '</strong><span class="hint ellip">' + esc(T.label + ' · ' + when) + '</span>' + (b.conf ? '<span style="margin-top:4px"><span class="conf">' + esc(b.conf) + '</span></span>' : '') + '</span>' +
+      var pill = st.st === 'none' ? '<span class="pill info">No total yet</span>' : st.st === 'paid' ? '<span class="pill good">Paid</span>' : st.overdue ? '<span class="pill bad">Overdue</span>' : st.st === 'part' ? '<span class="pill warn">Part paid</span>' : '<span class="pill info">Not paid</span>';
+      return '<button type="button" class="txn" data-act="bk-edit" data-id="' + esc(b.id) + '"><span class="tile photo bk-thumb">' + (b.cover ? photoImg(b.cover) : bookingArt(b.type)) + '</span><span class="grow"><strong class="ellip">' + esc(b.name) + '</strong><span class="hint ellip">' + esc(T.label + ' · ' + when) + '</span>' + (b.conf ? '<span style="margin-top:4px"><span class="conf">' + esc(b.conf) + '</span></span>' : '') + '</span>' +
         '<span class="amt"><b>' + esc(money(st.tot)) + '</b>' + pill + '</span></button>';
     }).join('') : '<div class="empty"><p>No bookings yet.</p><p class="hint">Add flights, stays, car hire and tickets. They show on the right days of your itinerary, and their cost is set aside before your daily allowance.</p></div>') + '</div><div class="spacer"></div></section>';
     h += '<button type="button" class="btn ghost block" data-act="bk-add">' + ic('plus', 18) + ' Add a booking</button>';
@@ -2023,6 +2033,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     var t = trip(), d = sh.d, T = BKT[d.type] || BKT.other, b = d.id ? bookingById(t, d.id) : null, st = b ? bookingState(t, b) : null;
     var pays = b ? t.expenses.filter(function (x) { return x.bookingId === b.id; }).sort(byDate) : [];
     return sheetHead(d.id ? 'Booking' : 'Add a booking') +
+      '<div class="cover mini bk-cover">' + (d.cover ? photoImg(d.cover, d.name) : bookingArt(d.type)) + '<div class="row cover-act" style="gap:6px;background:none;box-shadow:none">' + (d.cover ? '<button type="button" class="btn sm" data-act="bk-cover-rm" style="background:var(--surface);color:var(--ink)">Remove</button>' : '') + '<label class="btn sm" style="background:var(--surface);color:var(--ink);box-shadow:0 4px 14px rgba(17,22,20,.16)">' + ic('camera', 16) + (d.cover ? 'Change picture' : 'Add a picture') + '<input type="file" accept="image/*" class="sr-only" data-upload="bk-cover"></label></div></div>' +
+      autofillCard(sh) +
       '<div class="field"><span class="label">Type</span><div class="chips">' + Object.keys(BKT).map(function (k) { return '<button type="button" class="chip" data-act="bk-type" data-k="' + k + '" aria-pressed="' + (d.type === k) + '" style="--c:' + CATS[BKT[k].cat].color + '"><i class="dot"></i>' + esc(BKT[k].label) + '</button>'; }).join('') + '</div></div>' +
       '<div class="field"><label for="bk-name">Name</label><input id="bk-name" class="input" data-f="name" maxlength="60" placeholder="' + esc(d.type === 'flight' ? 'Doha – Tbilisi' : d.type === 'stay' ? 'Hotel in the old town' : 'What is it?') + '" value="' + esc(d.name) + '"></div>' +
       '<div class="grid2"><div class="field"><label for="bk-prov">' + (d.type === 'flight' ? 'Airline' : 'Provider') + '</label><input id="bk-prov" class="input" data-f="provider" maxlength="40" value="' + esc(d.provider) + '"></div><div class="field"><label for="bk-conf">Confirmation code</label><input id="bk-conf" class="input" data-f="conf" maxlength="30" autocapitalize="characters" value="' + esc(d.conf) + '"></div></div>' +
@@ -2034,8 +2046,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
       '<div class="field"><label for="bk-due">Balance due by <span class="muted">(optional)</span></label><input id="bk-due" class="input" data-f="due" type="date" value="' + esc(d.due) + '"><span class="hint">You get a reminder on Today a week before.</span></div>' +
       '<div class="field"><label for="bk-notes">Notes</label><textarea id="bk-notes" class="input" data-f="notes" style="min-height:80px" placeholder="Seats, baggage, address, check-in rules…">' + esc(d.notes) + '</textarea></div>' +
       docsField(sh) +
-      (b ? '<section class="card tight"><div class="card-head"><h3 class="h3">Payments</h3><span class="hint">' + (st.st === 'paid' ? 'Paid in full' : esc(money(st.left, t.home)) + ' to pay') + '</span></div><div class="rows">' + (pays.length ? pays.map(function (x) { return txnRow(t, x); }).join('') : '<p class="hint" style="padding:6px 0 12px">No payments logged yet.</p>') + '</div>' +
-        (st.st !== 'paid' ? '<button type="button" class="add-row" data-act="bk-pay">' + ic('plus', 16) + ' Log a payment of ' + esc(money(st.left, t.home, { show: true })) + '</button>' : '<div class="spacer"></div>') + '</section>' : '') +
+      (b ? '<section class="card tight"><div class="card-head"><h3 class="h3">Payments</h3><span class="hint">' + (st.st === 'none' ? 'Add the total to track payments' : st.st === 'paid' ? 'Paid in full' : esc(money(st.left, t.home)) + ' to pay') + '</span></div><div class="rows">' + (pays.length ? pays.map(function (x) { return txnRow(t, x); }).join('') : '<p class="hint" style="padding:6px 0 12px">No payments logged yet.</p>') + '</div>' +
+        (st.st !== 'paid' && st.st !== 'none' ? '<button type="button" class="add-row" data-act="bk-pay">' + ic('plus', 16) + ' Log a payment of ' + esc(money(st.left, t.home, { show: true })) + '</button>' : '<div class="spacer"></div>') + '</section>' : '') +
       errLine(sh) + '<button type="button" class="btn block" data-act="bk-save" data-primary="1">' + (d.id ? 'Save booking' : 'Add booking') + '</button>' +
       (d.id ? delBtn(sh, 'Delete booking', 'Tap again to delete. Its payments stay as spends.', 'bk-del') : '');
   }
@@ -2238,6 +2250,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   var TABS = [['today', 'Today', 'sun'], ['plan', 'Plan', 'map'], ['spends', 'Spends', 'list'], ['insights', 'Insights', 'chart'], ['more', 'More', 'dots']];
   function renderView() {
     var app = $('#app'), v = $('#view'), nav = $('#nav'), fab = $('#fab');
+    document.documentElement.style.setProperty('--toast-b', S.locked || !S.p ? '16px' : '76px');
     if (S.locked) { app.classList.add('is-auth'); v.innerHTML = renderLock(); nav.hidden = true; fab.hidden = true; return; }
     if (!S.p) { app.classList.add('is-auth'); v.innerHTML = renderAuth(); nav.hidden = true; fab.hidden = true; return; }
     app.classList.remove('is-auth');
@@ -2287,9 +2300,10 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   var toastT;
   function toast(title, body, action) {
     var r = $('#toast-root');
-    r.innerHTML = '<div class="toast' + (action ? ' act' : '') + '"><div class="tbody"><strong>' + esc(title) + '</strong>' + (body ? '<span>' + esc(body) + '</span>' : '') + '</div>' + (action ? '<button type="button" class="toast-btn" data-act="' + esc(action.act) + '">' + esc(action.label) + '</button>' : '') + '</div>';
-    clearTimeout(toastT); toastT = setTimeout(function () { r.innerHTML = ''; }, action ? 7000 : 3200);
+    r.innerHTML = '<div class="toast"><div class="tbody"><strong>' + esc(title) + '</strong>' + (body ? '<span>' + esc(body) + '</span>' : '') + '</div>' + (action ? '<button type="button" class="toast-btn" data-act="' + esc(action.act) + '">' + esc(action.label) + '</button>' : '') + '<button type="button" class="toast-x" data-act="toast-x" aria-label="Dismiss">' + ic('x', 16) + '</button></div>';
+    clearTimeout(toastT); toastT = setTimeout(hideToast, action ? 7000 : 4000);
   }
+  function hideToast() { var el = document.querySelector('#toast-root .toast'); if (!el) return; el.classList.add('out'); setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 230); }
   var UNDO = { label: 'Undo', act: 'undo' };
   function loadHistory() { var pid = S.pid; Versions.list(pid).then(function (list) { if (S.sheet && S.sheet.type === 'history' && pid === S.pid) { S.sheet.list = list; renderSheet(); } }); }
   function refreshVinfo() {
@@ -2415,7 +2429,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   }
   function openBooking(id) {
     var t = trip(), b = id ? bookingById(t, id) : null;
-    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice(), files: (b.files || []).slice() } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], files: [], paidNow: '' };
+    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice(), files: (b.files || []).slice(), cover: b.cover || null, pasteText: '' } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], files: [], cover: null, pasteText: '', paidNow: '' };
     openSheet({ type: 'booking', d: d, initStart: d.start }, b ? null : '#bk-name');
   }
   function saveBooking(quiet) {
@@ -2424,7 +2438,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (!name) { sheetErr('Give the booking a name.'); return null; }
     if (!validDate(d.start)) { sheetErr('Pick the date for this booking.'); return null; }
     if (d.end && (!validDate(d.end) || d.end < d.start)) { sheetErr('The end date must be on or after the start date.'); return null; }
-    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice(), files: (d.files || []).slice() };
+    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice(), files: (d.files || []).slice(), cover: d.cover || null };
     if (d.id) t.bookings = t.bookings.map(function (b) { return b.id === d.id ? rec : b; });
     else {
       t.bookings.push(rec);
@@ -2740,7 +2754,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     /* version history, undo, about */
     undo: function () {
       if (!S.undo || !S.p) { toast('Nothing to undo'); return; }
-      var u = S.undo; S.undo = null; $('#toast-root').innerHTML = '';
+      var u = S.undo; S.undo = null; clearTimeout(toastT); $('#toast-root').innerHTML = '';
       S.p = migrate(JSON.parse(u.json)); save(); S.sheet = null; renderAll();
       toast('Undone', u.label);
     },
@@ -2813,6 +2827,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (!files.length) return;
     if (kind === 'logo') return processLogo(files[0]);
     if (kind === 'bk-docs') return handleDocs(files);
+    if (kind === 'bk-cover') { var shc = S.sheet; shrink(files[0], 1600, false).then(function (b) { var id = 'ph_' + uid(); return Photos.put(id, b).then(function () { if (S.sheet === shc) { shc.d.cover = id; renderSheet(); } toast('Picture added'); }); }).catch(function () { toast('Couldn’t read that photo', 'Try a JPEG or PNG.'); }); return; }
     if (kind === 'csv') { var fr = new FileReader(); fr.onload = function () { loadCsv(String(fr.result || '')); }; fr.onerror = function () { sheetErr('Couldn’t read that file.'); }; fr.readAsText(files[0]); return; }
     if (kind === 'sheet-photos') { var max = S.sheet.type === 'booking' ? 4 : 6; files = files.slice(0, Math.max(0, max - S.sheet.d.photos.length)); }
     else files = files.slice(0, 1);
@@ -3107,8 +3122,84 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         });
       });
     },
-    read: function (blob) { return /pdf/.test(blob.type || '') ? this.pdf(blob) : this.image(blob); }
+    read: function (blob) { return /pdf/.test(blob.type || '') ? this.pdf(blob) : this.image(blob); },
+    /* The largest picture inside the first pages of a PDF, such as the hotel photo on a confirmation. */
+    pdfImage: function (blob) {
+      var self = this;
+      return blob.arrayBuffer().then(function (buf) { return self.pdfLib().then(function (lib) { return lib.getDocument({ data: buf }).promise; }); }).then(function (doc) {
+        var lib = window.pdfjsLib, best = null, chain = Promise.resolve();
+        for (var i = 1; i <= Math.min(doc.numPages, 2); i++) (function (i) {
+          chain = chain.then(function () {
+            return doc.getPage(i).then(function (pg) {
+              return pg.getOperatorList().then(function (ops) {
+                var names = [];
+                ops.fnArray.forEach(function (fn, k) { if (fn === lib.OPS.paintImageXObject || fn === lib.OPS.paintJpegXObject) names.push(ops.argsArray[k][0]); });
+                return Promise.all(names.map(function (n) {
+                  return new Promise(function (res) {
+                    var done = false; function fin(v) { if (!done) { done = true; res(v); } }
+                    try { (String(n).indexOf('g_') === 0 ? pg.commonObjs : pg.objs).get(n, fin); } catch (e) { fin(null); }
+                    setTimeout(function () { fin(null); }, 4000);
+                  });
+                })).then(function (imgs) {
+                  imgs.forEach(function (im) { if (!im || !im.width) return; var r = im.width / im.height; if (im.width < 240 || im.height < 150 || r < 0.6 || r > 2.8) return; if (!best || im.width * im.height > best.width * best.height) best = im; });
+                });
+              });
+            });
+          });
+        })(i);
+        return chain.then(function () { return best ? pdfImgToBlob(best) : null; });
+      }).catch(function () { return null; });
+    }
   };
+  function pdfImgToBlob(im) {
+    try {
+      var cv = document.createElement('canvas'); cv.width = im.width; cv.height = im.height; var cx = cv.getContext('2d');
+      if (im.bitmap) cx.drawImage(im.bitmap, 0, 0);
+      else if (im.data) {
+        var n = im.width * im.height, src = im.data, out = cx.createImageData(im.width, im.height), dst = out.data;
+        if (src.length >= n * 4) { for (var a = 0; a < n * 4; a++) dst[a] = src[a]; }
+        else if (src.length >= n * 3) { for (var i = 0, j = 0; i < n; i++, j += 3) { dst[i * 4] = src[j]; dst[i * 4 + 1] = src[j + 1]; dst[i * 4 + 2] = src[j + 2]; dst[i * 4 + 3] = 255; } }
+        else return Promise.resolve(null);
+        cx.putImageData(out, 0, 0);
+      } else return Promise.resolve(null);
+      return new Promise(function (res) { cv.toBlob(res, 'image/jpeg', 0.86); });
+    } catch (e) { return Promise.resolve(null); }
+  }
+  /* Drawn pictures for bookings without a photo. */
+  function bookingArt(type) {
+    var g = function (id, a, b) { return '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + a + '"/><stop offset="1" stop-color="' + b + '"/></linearGradient></defs><rect width="320" height="140" fill="url(#' + id + ')"/>'; };
+    var palm = function (x, s) { var k = s || 1; return '<g transform="translate(' + x + ' 108) scale(' + k + ')"><path d="M0 0 C2 -16 -2 -28 2 -44" stroke="#7A5134" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M2 -44 C-8 -52 -20 -50 -26 -44 C-16 -48 -6 -47 2 -44Z M2 -44 C10 -54 22 -54 28 -47 C18 -50 9 -48 2 -44Z M2 -44 C-4 -56 -2 -64 6 -68 C2 -60 2 -52 2 -44Z M2 -44 C-10 -42 -16 -34 -18 -28 C-10 -34 -4 -40 2 -44Z M2 -44 C12 -42 18 -34 20 -28 C12 -34 6 -40 2 -44Z" fill="#2E8A6C"/></g>'; };
+    var svg;
+    if (type === 'stay') {
+      var win = ''; for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) win += '<rect x="' + (114 + c * 20) + '" y="' + (46 + r * 13) + '" width="12" height="7" rx="1.5" fill="' + ((r + c) % 3 === 0 ? '#F9D79A' : '#9CCFDA') + '"/>';
+      svg = g('art-stay', '#F4AE84', '#FCE7D0') + '<circle cx="252" cy="50" r="19" fill="#FFF4DE" opacity=".95"/><path d="M0 96 Q60 84 120 94 T240 90 T320 94 V140 H0Z" fill="#E59B70" opacity=".45"/>' +
+        '<rect x="104" y="36" width="92" height="72" rx="3" fill="#FFFDF8"/><rect x="100" y="31" width="100" height="8" rx="2" fill="#1F6B67"/>' + win + '<rect x="142" y="94" width="16" height="14" rx="1.5" fill="#1F6B67"/>' +
+        '<rect y="108" width="320" height="32" fill="#F2D6B3"/><path d="M58 114 H262 V128 H58Z" fill="#7CC6D6"/><path d="M70 120h18M112 123h22M162 119h16M204 123h22" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".85"/>' + palm(64) + palm(240, 1.1) + palm(276, 0.8);
+    } else if (type === 'flight') {
+      svg = g('art-fl', '#86C3EA', '#E6F3FB') + '<ellipse cx="60" cy="104" rx="46" ry="14" fill="#FFFFFF" opacity=".9"/><ellipse cx="96" cy="110" rx="36" ry="11" fill="#FFFFFF" opacity=".9"/><ellipse cx="262" cy="96" rx="52" ry="15" fill="#FFFFFF" opacity=".85"/><ellipse cx="230" cy="40" rx="30" ry="8" fill="#FFFFFF" opacity=".7"/>' +
+        '<path d="M10 82 Q70 76 118 68" stroke="#FFFFFF" stroke-width="3" opacity=".75" fill="none" stroke-linecap="round"/>' +
+        '<g transform="rotate(-8 170 62)"><path d="M116 64 L214 58 Q230 57 236 62 Q230 67 214 66 L116 66 Z" fill="#FFFFFF"/><path d="M162 64 L142 88 L155 88 L186 65Z" fill="#DCE8F1"/><path d="M168 59 L152 42 L163 42 L190 59Z" fill="#DCE8F1"/><path d="M120 64 L108 48 L117 48 L130 63Z" fill="#1F6B67"/><path d="M196 60h22" stroke="#86C3EA" stroke-width="2" stroke-dasharray="3 3"/></g>';
+    } else if (type === 'car') {
+      svg = g('art-car', '#BFE3DE', '#EEF8F3') + '<circle cx="64" cy="44" r="16" fill="#FFF6DD"/><path d="M0 92 Q80 60 160 84 T320 76 V140 H0Z" fill="#8CC5A2"/><path d="M0 104 Q90 84 200 100 T320 96 V140 H0Z" fill="#6FB08A"/>' +
+        '<rect y="112" width="320" height="28" fill="#5E6670"/><path d="M8 126h30M60 126h30M112 126h30M164 126h30M216 126h30M268 126h30" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>' +
+        '<g transform="translate(120 82)"><path d="M6 26 V18 Q6 12 14 11 L26 10 L38 0 H66 L80 10 L92 12 Q98 13 98 19 V26 Z" fill="#C06D47"/><path d="M30 10 L40 3 H52 V10Z M56 3 H64 L74 10 H56Z" fill="#D9EEF4"/><circle cx="26" cy="27" r="7" fill="#2B2F33"/><circle cx="78" cy="27" r="7" fill="#2B2F33"/><circle cx="26" cy="27" r="2.6" fill="#C9CDD2"/><circle cx="78" cy="27" r="2.6" fill="#C9CDD2"/></g>';
+    } else if (type === 'train') {
+      svg = g('art-tr', '#CFE0F2', '#F2F6FB') + '<path d="M0 94 Q70 70 150 88 T320 80 V140 H0Z" fill="#A9C9B4"/><path d="M0 116 H320" stroke="#7A808A" stroke-width="3"/><path d="M0 122 H320" stroke="#7A808A" stroke-width="2"/>' +
+        '<g transform="translate(60 70)"><rect x="0" y="6" width="190" height="38" rx="8" fill="#4C79B6"/><path d="M190 6 Q214 8 220 30 L220 44 H190Z" fill="#3E67A0"/>' + [14, 46, 78, 110, 142].map(function (x) { return '<rect x="' + x + '" y="14" width="22" height="12" rx="2" fill="#E6F0FA"/>'; }).join('') + '<rect x="0" y="32" width="220" height="4" fill="#F4F6F8"/><circle cx="30" cy="46" r="4" fill="#2B2F33"/><circle cx="90" cy="46" r="4" fill="#2B2F33"/><circle cx="150" cy="46" r="4" fill="#2B2F33"/><circle cx="200" cy="46" r="4" fill="#2B2F33"/></g>';
+    } else if (type === 'tour') {
+      svg = g('art-tour', '#E8D3EF', '#F8F0FA') + '<circle cx="250" cy="44" r="16" fill="#FFF6DD"/><path d="M0 104 Q80 90 160 100 T320 96 V140 H0Z" fill="#D9B8E3" opacity=".7"/>' +
+        '<g transform="translate(92 34)" fill="#B2628A"><rect x="0" y="12" width="136" height="8" rx="2"/><path d="M8 0 H128 L136 12 H0Z" opacity=".85"/>' + [12, 40, 68, 96, 120].map(function (x) { return '<rect x="' + x + '" y="22" width="8" height="48"/>'; }).join('') + '<rect x="-6" y="70" width="148" height="8" rx="2"/></g>' +
+        '<g transform="translate(28 96) rotate(-8)"><path d="M0 0 H70 V10 a6 6 0 0 0 0 12 V32 H0 V22 a6 6 0 0 0 0 -12Z" fill="#FFFFFF"/><path d="M20 4 V28" stroke="#B2628A" stroke-width="1.4" stroke-dasharray="2 3"/><path d="M28 12h30M28 19h20" stroke="#B2628A" stroke-width="2" stroke-linecap="round"/></g>';
+    } else return POSTCARD;
+    return '<svg viewBox="0 0 320 140" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + svg + '</svg>';
+  }
+  function autofillCard(sh) {
+    var d = sh.d;
+    return '<section class="card" style="gap:10px"><div class="row between"><span class="label">Fill in from your confirmation</span>' + ic('scan', 18) + '</div><p class="hint">Paste the confirmation email, or attach its PDF, a photo or a screenshot. Empty fields are filled in for you to check.</p>' +
+      (sh.paste ? '<textarea id="bk-paste" class="input" data-f="pasteText" style="min-height:140px" placeholder="Paste the booking email or confirmation text here">' + esc(d.pasteText) + '</textarea><div class="row wrap"><button type="button" class="btn sm" data-act="bk-paste-read">Read pasted details</button><button type="button" class="btn ghost sm" data-act="bk-paste">Cancel</button></div>'
+        : '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="bk-paste">' + ic('copy', 16) + ' Paste details</button><label class="btn quiet sm">' + ic('upload', 16) + ' Attach PDF or photo<input type="file" accept="image/*,application/pdf,.pdf" multiple class="sr-only" data-upload="bk-docs"></label></div>') +
+      ocrNote(sh.ocr) + '</section>';
+  }
   var MONRE = 'jan|feb|mar|apr|may|jun|jul|aug|sept?|oct|nov|dec';
   function docLines(text) { return String(text || '').split(/\r?\n/).map(function (s) { return s.replace(/\s+/g, ' ').trim(); }).filter(Boolean); }
   function findDates(s) {
@@ -3138,7 +3229,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   var CONF_STOP = /^(NUMBER|DETAILS|CONFIRMED|CONFIRMATION|BOOKING|RESERVATION|REFERENCE|SUMMARY|RECEIPT|INVOICE|STATUS|PENDING)$/;
   function parseDoc(text, t) {
     var lines = docLines(text), all = lines.join('\n'), f = { lines: lines };
-    var cm, cre = /(?:confirmation|booking|reservation|itinerary|order|reference|\bref\b\.?|\bpnr\b|record locator)\s*(?:number|no\.?|code|id|#)?\s*[:#.\-]?\s*([A-Z0-9][A-Z0-9\-]{4,18})/gi;
+    var cm, cre = /(?:confirmation|booking|reservation|itinerary|order|reference|\bref\b\.?|\bpnr\b|record locator)\s*(?:number|no\.?|code|id|#)?(?:\s+is)?\s*[:#.\-]?\s*([A-Z0-9][A-Z0-9\-]{4,18})/gi;
     while ((cm = cre.exec(all))) { var c = cm[1].toUpperCase(); if ((/\d/.test(c) && /[A-Z]/.test(c)) || /^\d{6,}$/.test(c) || (/^[A-Z]{5,8}$/.test(c) && !CONF_STOP.test(c))) { f.conf = c; break; } }
     var score = {}; Object.keys(TYPE_RULES).forEach(function (k) { score[k] = (all.match(TYPE_RULES[k]) || []).length; });
     var best = Object.keys(score).sort(function (a, b) { return score[b] - score[a]; })[0]; if (score[best] > 0) f.type = best;
@@ -3177,13 +3268,18 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (/recogniz/i.test(status)) return 'Reading the text… ' + Math.round(p * 100) + '%';
     return 'Reading your file…';
   }
-  function runOcr(blob, mode) {
+  function runOcr(blob, mode, photoId) {
     var sh = S.sheet; if (!sh) return;
     sh.ocr = { busy: true, msg: 'Reading your file…' }; renderSheet();
     OCR.onProgress = function (status, p) { if (S.sheet !== sh) return; sh.ocr.msg = ocrProgressText(status, p); var el = $('#ocr-msg'); if (el) el.textContent = sh.ocr.msg; };
     OCR.read(blob).then(function (text) {
       if (S.sheet !== sh) return;
       var t = trip(), found = mode === 'booking' ? fillBooking(sh, parseDoc(text, t), t) : fillSpend(sh, parseReceipt(text, t), t);
+      if (mode === 'booking' && photoId && text.replace(/\s/g, '').length < 40) {
+        if (!sh.d.cover) sh.d.cover = photoId;
+        sh.d.photos = sh.d.photos.filter(function (x) { return x !== photoId; }).concat(sh.d.cover === photoId ? [] : [photoId]);
+        sh.ocr = { ok: true, msg: 'This looks like a photo rather than a confirmation, so it’s now the booking picture.' }; renderSheet(); return;
+      }
       sh.ocr = found.length ? { ok: true, msg: 'Filled from your file: ' + found.join(' · ') + '. Check them before saving.' } : { ok: false, msg: text.trim() ? 'Read the file, but couldn’t find ' + (mode === 'booking' ? 'booking details' : 'an amount') + ' to fill in. Add them yourself.' : 'No text found in this file. Try a sharper photo, or the PDF from the confirmation email.' };
       renderSheet();
     }).catch(function () {
@@ -3200,13 +3296,17 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     if (f.conf && !String(d.conf).trim()) { d.conf = f.conf; out.push('code ' + f.conf); }
     if (f.start && (!d.id ? d.start === sh.initStart : false)) { d.start = f.start; out.push(fmtD(f.start, { day: 'numeric', month: 'short' }) + (f.end ? ' – ' + fmtD(f.end, { day: 'numeric', month: 'short' }) : '')); if (f.end && BKT[d.type].hasEnd && !d.end) d.end = f.end; }
     if (f.time && !d.time) d.time = f.time;
-    if (f.total && !num(d.total)) { if (f.total.cur === t.local || f.total.cur === t.home) d.cur = f.total.cur; d.total = String(f.total.v); out.push('total ' + money(f.total.v, f.total.cur === t.local || f.total.cur === t.home ? f.total.cur : d.cur, { show: true })); }
+    var okCur = f.total && (!f.total.cur || f.total.cur === t.local || f.total.cur === t.home);
+    if (f.total && !okCur) out.push('the total is in ' + f.total.cur + ' (' + f.total.v.toLocaleString() + '), not this trip’s currency, so enter it yourself');
+    else if (f.total && !num(d.total)) { if (f.total.cur) d.cur = f.total.cur; d.total = String(f.total.v); out.push('total ' + money(f.total.v, d.cur, { show: true })); }
     else if (f.total && Math.abs(num(d.total) - f.total.v) > 0.01) out.push('the file shows a total of ' + (f.total.cur || d.cur) + ' ' + f.total.v.toLocaleString());
     return out;
   }
   function fillSpend(sh, r, t) {
     var d = sh.d, out = [];
-    if (r.total && !num(d.amt)) { if (r.total.cur === t.local || r.total.cur === t.home) d.cur = r.total.cur; d.amt = String(r.total.v); out.push('amount ' + money(r.total.v, d.cur, { show: true })); }
+    var okCur = r.total && (!r.total.cur || r.total.cur === t.local || r.total.cur === t.home);
+    if (r.total && !okCur) out.push('the amount is in ' + r.total.cur + ' (' + r.total.v.toLocaleString() + '), not this trip’s currency, so enter it yourself');
+    else if (r.total && !num(d.amt)) { if (r.total.cur) d.cur = r.total.cur; d.amt = String(r.total.v); out.push('amount ' + money(r.total.v, d.cur, { show: true })); }
     if (r.note && !String(d.note).trim()) { d.note = r.note; out.push('“' + r.note + '”'); if (d.cat === 'food' && !sh.catSet) d.cat = guessCat(r.note, catMemory(t)); }
     if (r.date && r.date !== d.date && Math.abs(diff(r.date, today())) < 400) { d.date = r.date; out.push(fmtD(r.date, { day: 'numeric', month: 'short' })); }
     if (r.time && (!d.id)) d.time = r.time;
@@ -3215,10 +3315,9 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
   function docsField(sh) {
     var d = sh.d;
     return '<div class="field"><span class="label">Receipts and documents</span><span class="hint">Add the confirmation PDF, or a photo or screenshot of it. ' + esc(BR.name) + ' reads the code, dates and total for you.</span>' +
-      '<div class="thumbs">' + d.photos.map(function (id, i) { return '<div class="thumb"><button type="button" class="thumb-open" data-act="lb" data-src="ed" data-i="' + i + '" aria-label="View image ' + (i + 1) + '">' + photoImg(id) + '</button><button type="button" class="rm" data-act="ph-rm" data-i="' + i + '" aria-label="Remove image ' + (i + 1) + '">' + ic('x', 14) + '</button></div>'; }).join('') +
+      '<div class="thumbs">' + d.photos.map(function (id, i) { return '<div class="thumb"><button type="button" class="thumb-open" data-act="lb" data-src="ed" data-i="' + i + '" aria-label="View image ' + (i + 1) + '">' + photoImg(id) + '</button><button type="button" class="rm" data-act="ph-rm" data-i="' + i + '" aria-label="Remove image ' + (i + 1) + '">' + ic('x', 14) + '</button><button type="button" class="rm pin" data-act="bk-cover-use" data-i="' + i + '" aria-label="Use image ' + (i + 1) + ' as the booking picture">' + ic('camera', 13) + '</button></div>'; }).join('') +
       (d.photos.length + d.files.length < 8 ? '<label class="thumb-add">' + ic('upload', 20) + '<span>Add file</span><input type="file" accept="image/*,application/pdf,.pdf" multiple class="sr-only" data-upload="bk-docs" aria-label="Add receipts or PDFs"></label>' : '') + '</div>' +
       (d.files.length ? '<div class="rows">' + d.files.map(function (f, i) { return '<div class="doc"><span class="tile" style="--c:var(--bad)">' + ic('doc', 17) + '</span><span class="grow"><strong class="ellip">' + esc(f.name) + '</strong><span class="hint">PDF · ' + esc(kb(f.size || 0)) + '</span></span><button type="button" class="btn quiet sm" data-act="doc-open" data-id="' + esc(f.id) + '">Open</button><button type="button" class="icon-btn sm" data-act="doc-rm" data-i="' + i + '" aria-label="Remove ' + esc(f.name) + '" style="border:0">' + ic('x', 14) + '</button></div>'; }).join('') + '</div>' : '') +
-      ocrNote(sh.ocr) +
       (d.photos.length || d.files.length ? '<button type="button" class="btn quiet sm" data-act="ocr-run" style="align-self:flex-start"' + (sh.ocr && sh.ocr.busy ? ' disabled' : '') + '>' + ic('scan', 16) + ' Read details from the file</button>' : '') + '</div>';
   }
 
@@ -3280,6 +3379,19 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
         setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
       });
     },
+    'toast-x': function () { clearTimeout(toastT); hideToast(); },
+    'bk-paste': function () { var sh = S.sheet; sh.paste = !sh.paste; renderSheet(); if (sh.paste) focusSoon('#bk-paste'); },
+    'bk-paste-read': function () {
+      var sh = S.sheet, d = sh.d, t = trip(), text = String(d.pasteText || '').trim();
+      if (!text) { sheetErr('Paste the confirmation text first.'); return; }
+      var found = fillBooking(sh, parseDoc(text, t), t);
+      if (!String(d.notes || '').trim()) { d.notes = text.slice(0, 1500); found.push('notes'); }
+      sh.paste = false; d.pasteText = ''; sh.err = '';
+      sh.ocr = found.length ? { ok: true, msg: 'Filled from the pasted text: ' + found.join(' · ') + '. Check them before saving.' } : { ok: false, msg: 'Couldn’t find booking details in that text. Fill them in yourself.' };
+      renderSheet();
+    },
+    'bk-cover-use': function (el) { var d = S.sheet.d; d.cover = d.photos[+el.dataset.i]; renderSheet(); toast('Booking picture set'); },
+    'bk-cover-rm': function () { S.sheet.d.cover = null; renderSheet(); },
     'doc-rm': function (el) { S.sheet.d.files.splice(+el.dataset.i, 1); renderSheet(); },
     'ocr-run': function () {
       var sh = S.sheet, d = sh.d, id = d.files && d.files[0] ? d.files[0].id : d.photos[0];
@@ -3305,10 +3417,15 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
     })).then(function (res) {
       if (S.sheet !== sh) return;
       var bad = 0;
-      res.forEach(function (r) { if (r.bad) bad++; else { if (r.file) d.files.push(r.file); if (r.photo) d.photos.push(r.photo); if (!first) first = r.src; } });
+      var firstPhoto = null, pdf = null;
+      res.forEach(function (r) { if (r.bad) bad++; else { if (r.file) { d.files.push(r.file); if (!pdf) pdf = r.src; } if (r.photo) d.photos.push(r.photo); if (!first) { first = r.src; firstPhoto = r.photo || null; } } });
       renderSheet();
       if (bad) toast('Couldn’t add ' + plural(bad, 'file'), 'Use a PDF under 12 MB, or a JPEG or PNG.');
-      if (first) runOcr(first, 'booking');
+      if (first) runOcr(first, 'booking', firstPhoto);
+      if (pdf && !d.cover) OCR.pdfImage(pdf).then(function (img) {
+        if (!img || S.sheet !== sh || d.cover) return null;
+        return shrink(img, 1600, false).then(function (b) { var id = 'ph_' + uid(); return Photos.put(id, b).then(function () { if (S.sheet === sh && !d.cover) { d.cover = id; renderSheet(); toast('Picture added', 'Taken from your PDF.'); } }); });
+      }).catch(function () { });
     });
   }
   /* =========================================================

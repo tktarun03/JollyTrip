@@ -11,6 +11,8 @@ A minimalist planner and budget for family holidays. A sibling of BasKar.
 - **Bookings**: flights, stays, car hire, trains and tickets, each with its confirmation code, total cost, deposits and the date the balance is due. Bookings show up on the right days of the itinerary, and Today reminds you a week before a balance is due.
 - **Packing**: a family checklist grouped by Documents, Clothes, Toiletries, Health, Electronics, Kids and Other. Items can be assigned to one person, the essentials can be added in one tap, and everything can be unticked again for the trip home.
 - **Notes**: hotel addresses, emergency numbers and anything else you want to keep.
+- **Paste booking details**: paste the confirmation email text and the same reader fills in the booking.
+- **Booking pictures**: the hotel photo inside a confirmation PDF, a photo you attach (one with almost no text is taken as a picture), or a drawn picture for each kind of booking.
 - **Booking documents**: attach the confirmation as a PDF, photo or screenshot. JollyTrip reads the confirmation code, dates, time, provider and total, and fills in the empty fields for you to check. Digital PDFs are read with [pdf.js](https://mozilla.github.io/pdf.js/); photos and scanned PDFs use [Tesseract.js](https://tesseract.projectnaptha.com/) OCR. Both load from jsDelivr the first time they're needed (about 5 MB), and are then cached for offline use.
 
 **Spend**
