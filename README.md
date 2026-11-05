@@ -65,6 +65,24 @@ Notes:
 - **Android / desktop Chrome:** use "Install app" in the browser menu.
 - **Opening the file directly** (a `file://` address): most browsers block cookies there, so the app falls back to `localStorage`.
 
+## Editing the app
+
+The code is in `src/`. Edit those files, then run `python3 build.py` to rebuild `index.html`, which is the file GitHub Pages serves. Don't edit `index.html` directly, because the next build overwrites it.
+
+| Source file | What's in it |
+|---|---|
+| `a-core.js` | Helpers, cookie and local storage, photo storage, currencies |
+| `b-data.js` | Categories, icons, branding, accounts, example trip, trip maths, version history, bank SMS and CSV reading |
+| `c-views.js` | Sign-in screens and the Today, Plan, Spends, Insights and More tabs |
+| `d-sheets.js` | The bottom sheets: spends, trips, bookings, plans, wallets, recap, branding and more |
+| `e-events.js` | Rendering, actions, buttons and form handling |
+| `f-extra.js` | App lock (PIN, Face ID), profile, receipt and PDF reading |
+| `g-wallet.js` | Travel wallet passes, Apple Wallet hand-off, adding a wallet from forms |
+| `h-maps.js` | Directions chooser and WalletWallet passes |
+| `z-start.js` | Start-up: loading, zoom lock, idle lock, offline cache |
+| `style.css`, `head.html`, `body.html` | Styles and page shell |
+| `lib-*.js` | Bundled libraries (js-cookie, lz-string, qrcode-generator) |
+
 ## Files
 
 | File | Purpose |
