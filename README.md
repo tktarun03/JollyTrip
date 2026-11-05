@@ -11,6 +11,8 @@ A minimalist planner and budget for family holidays. A sibling of BasKar.
 - **Bookings**: flights, stays, car hire, trains and tickets, each with its confirmation code, total cost, deposits and the date the balance is due. Bookings show up on the right days of the itinerary, and Today reminds you a week before a balance is due.
 - **Packing**: a family checklist grouped by Documents, Clothes, Toiletries, Health, Electronics, Kids and Other. Items can be assigned to one person, the essentials can be added in one tap, and everything can be unticked again for the trip home.
 - **Notes**: hotel addresses, emergency numbers and anything else you want to keep.
+- **Travel wallet**: every booking as a pass with its booking code as a QR code, dates, travellers and picture. It works offline. JollyTrip can't issue Apple or Google Wallet passes itself, because both need signing keys held on a server. It can add a `.pkpass` file the airline or hotel sent to Apple Wallet, and open their "Save to Google Wallet" link.
+- **Add a wallet anywhere**: "+ Add a wallet…" in the spend, booking-deposit and CSV import forms creates a card or cash wallet and returns to the form with it selected.
 - **Paste booking details**: paste the confirmation email text and the same reader fills in the booking.
 - **Booking pictures**: the hotel photo inside a confirmation PDF, a photo you attach (one with almost no text is taken as a picture), or a drawn picture for each kind of booking.
 - **Booking documents**: attach the confirmation as a PDF, photo or screenshot. JollyTrip reads the confirmation code, dates, time, provider and total, and fills in the empty fields for you to check. Digital PDFs are read with [pdf.js](https://mozilla.github.io/pdf.js/); photos and scanned PDFs use [Tesseract.js](https://tesseract.projectnaptha.com/) OCR. Both load from jsDelivr the first time they're needed (about 5 MB), and are then cached for offline use.
@@ -65,7 +67,7 @@ Notes:
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole app. It's built from separate source files, with `js-cookie` 3.0.5 and `lz-string` 1.5.0 (both MIT) inlined, so saving works offline. Only the web font needs a connection. |
+| `index.html` | The whole app. It's built from separate source files, with `js-cookie` 3.0.5, `lz-string` 1.5.0 and `qrcode-generator` 1.4.4 (all MIT) inlined, so saving works offline. Only the web font needs a connection. |
 | `manifest.webmanifest` | App name, icons and colours for installing |
 | `sw.js` | The offline service worker. When online it fetches the page fresh; when offline it serves the cached copy. It also caches the pinned receipt-reader libraries. It never stores your trips. |
 | `icons/` | App icons, including the maskable Android icon and the iPhone Home Screen icon |
