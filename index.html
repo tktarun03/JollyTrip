@@ -245,7 +245,8 @@ input[type=number] { -moz-appearance: textfield; }
 .dash { width: 14px; border-top: 1px dashed var(--ink-2); display: inline-block; }
 
 /* Itinerary */
-.it { display: grid; grid-template-columns: 3.5rem 28px minmax(0, 1fr); gap: 0.625rem; align-items: center; padding: 0.625rem 0; }
+.it { display: grid; grid-template-columns: 3.5rem 28px minmax(0, 1fr) auto; gap: 0.625rem; align-items: center; padding: 0.625rem 0; }
+.dir-btn { border-color: var(--line); color: var(--accent); }
 .it-time { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .it-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; border: 0; background: none; padding: 0; text-align: left; cursor: pointer; color: var(--ink); }
 .it-main strong { font-weight: 500; }
@@ -419,7 +420,7 @@ details.card summary { cursor: pointer; font-size: var(--t-sm); font-weight: 500
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes up { from { transform: translateY(40px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 /* Travel wallet: a card floating on a dark backdrop, the same in both themes, like a photo viewer. */
-.pass-wrap { position: fixed; inset: 0; z-index: 75; background: rgba(6, 8, 8, 0.97); display: flex; flex-direction: column; align-items: center; gap: 0.75rem; overflow-y: auto; padding: calc(12px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); animation: fade 0.2s ease; }
+.pass-wrap { position: fixed; inset: 0; z-index: 75; background: #0A0C0C; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; overflow-y: auto; padding: calc(12px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); animation: fade 0.2s ease; }
 .pass-top { width: 100%; max-width: 420px; display: flex; align-items: center; justify-content: space-between; }
 .pass-count { color: rgba(255, 255, 255, 0.8); font-size: var(--t-sm); }
 .pass { width: 100%; max-width: 420px; flex-shrink: 0; border-radius: 22px; overflow: hidden; background: var(--surface); color: var(--ink); box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45); }
@@ -888,6 +889,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/>',
     clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
     wallet: '<path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2.5"/><path d="M16 13.5h.01"/>',
+    nav: '<path d="M12 2.5 19.5 21 12 16.8 4.5 21z"/>',
     face: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16a3.5 3.5 0 0 0 5 0"/>',
     doc: '<path d="M6 3.5h8l4 4V20.5H6z"/><path d="M14 3.5v4h4M9 13h6M9 16.5h4"/>',
     scan: '<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8 10h8M8 14h5"/>',
@@ -967,8 +969,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.5';
+  var APP_VERSION = '3.6';
   var CHANGELOG = [
+    { v: '3.6', date: '2026-11-05', items: ['Directions: tap the arrow next to a place or booking and choose Apple Maps, Google Maps or Waze, for driving, walking or transit. Save a favourite in More → Maps and wallet.', 'Add to Apple Wallet on every booking: uses the airline’s or hotel’s own pass if attached, or makes one with the free WalletWallet service.', 'Bookings have an address, read from pasted or scanned confirmations when possible.'] },
     { v: '3.5', date: '2026-11-05', items: ['Travel wallet: every booking as a pass with its code as a QR code, offline. Open it from Plan → Bookings or any booking.', 'Add the airline’s or hotel’s own Apple Wallet pass (.pkpass) to Apple Wallet, or open their Google Wallet link.', '“+ Add a wallet…” in the spend, booking and CSV import forms, so you can add a card or cash wallet without leaving the form.'] },
     { v: '3.4', date: '2026-11-03', items: ['Face ID or fingerprint can be turned on straight from More → Security or your profile. Without a PIN, it walks you through setting one first, and new PINs offer Face ID right away.'] },
     { v: '3.3', date: '2026-11-03', items: ['The app locks itself after 5 minutes without a touch, click or keystroke (with a PIN or Face ID set up). The time follows your Lock the app setting.', 'Pinch and double-tap zoom are turned off. Use More → Appearance → Text size instead.'] },
@@ -1020,7 +1023,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     t.plan = (Array.isArray(t.plan) ? t.plan : []).filter(Boolean);
     t.plan.forEach(function (it) { it.id = it.id || uid(); it.day = validDate(it.day) ? it.day : ''; it.time = /^\d{2}:\d{2}$/.test(it.time || '') ? it.time : ''; it.title = String(it.title || 'Plan'); it.kind = PLK[it.kind] ? it.kind : 'sight'; it.place = String(it.place || ''); it.notes = String(it.notes || ''); it.cost = num(it.cost); it.cur = it.cur === t.local ? t.local : t.home; it.done = !!it.done; });
     t.bookings = (Array.isArray(t.bookings) ? t.bookings : []).filter(Boolean);
-    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; b.files = Array.isArray(b.files) ? b.files.filter(function (f) { return f && f.id; }) : []; b.cover = b.cover || null; b.gwallet = /^https:\/\//i.test(b.gwallet || '') ? String(b.gwallet).trim() : ''; });
+    t.bookings.forEach(function (b) { b.id = b.id || uid(); b.type = BKT[b.type] ? b.type : 'other'; b.name = String(b.name || BKT[b.type].label); b.provider = String(b.provider || ''); b.start = validDate(b.start) ? b.start : t.start; b.end = validDate(b.end) ? b.end : ''; b.time = b.time || ''; b.endTime = b.endTime || ''; b.conf = String(b.conf || ''); b.total = num(b.total); b.cur = b.cur === t.local ? t.local : t.home; b.due = validDate(b.due) ? b.due : ''; b.notes = String(b.notes || ''); b.photos = Array.isArray(b.photos) ? b.photos : []; b.files = Array.isArray(b.files) ? b.files.filter(function (f) { return f && f.id; }) : []; b.cover = b.cover || null; b.gwallet = /^https:\/\//i.test(b.gwallet || '') ? String(b.gwallet).trim() : ''; b.address = String(b.address || ''); });
     t.packing = (Array.isArray(t.packing) ? t.packing : []).filter(Boolean);
     t.packing.forEach(function (k) { k.id = k.id || uid(); k.text = String(k.text || ''); k.group = PACK_GROUPS.indexOf(k.group) >= 0 ? k.group : 'Other'; k.who = k.who || ''; k.done = !!k.done; });
     t.notes = String(t.notes || '');
@@ -1619,12 +1622,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var b = e.e.b, T = BKT[b.type] || BKT.other, st = bookingState(t, b);
       var sub = [T.label]; if (b.conf) sub.push(b.conf); if (!e.e.end) sub.push(st.st === 'paid' ? 'Paid' : st.st === 'none' ? 'No total yet' : money(st.left, t.home) + ' to pay');
       return '<div class="it bk"><span class="it-time">' + (e.time ? esc(fmtHM(e.time)) : '—') + '</span><span class="tile sm" style="--c:' + CATS[T.cat].color + '">' + ic(T.icon, 15) + '</span>' +
-        '<button type="button" class="it-main" data-act="bk-edit" data-id="' + esc(b.id) + '"><strong>' + esc(e.e.label) + '</strong><span class="hint ellip">' + esc(sub.join(' · ')) + '</span></button></div>';
+        '<button type="button" class="it-main" data-act="bk-edit" data-id="' + esc(b.id) + '"><strong>' + esc(e.e.label) + '</strong><span class="hint ellip">' + esc(sub.join(' · ')) + '</span></button>' + dirBtn(bookingQuery(t, b), true) + '</div>';
     }
     var it = e.it, K = PLK[it.kind] || PLK.sight, sub2 = [K.label]; if (it.place) sub2.push(it.place); if (it.cost) sub2.push('≈ ' + money(plannedCost(t, it), t.home));
     return '<div class="it' + (it.done ? ' done' : '') + '"><span class="it-time">' + (it.time ? esc(fmtHM(it.time)) : '—') + '</span>' +
       '<button type="button" class="check" data-act="pl-done" data-id="' + esc(it.id) + '" aria-pressed="' + it.done + '" aria-label="' + (it.done ? 'Mark not done: ' : 'Mark done: ') + esc(it.title) + '">' + ic('check', 14) + '</button>' +
-      '<button type="button" class="it-main" data-act="pl-edit" data-id="' + esc(it.id) + '"><strong>' + esc(it.title) + '</strong><span class="hint ellip">' + esc(sub2.join(' · ')) + '</span></button></div>';
+      '<button type="button" class="it-main" data-act="pl-edit" data-id="' + esc(it.id) + '"><strong>' + esc(it.title) + '</strong><span class="hint ellip">' + esc(sub2.join(' · ')) + '</span></button>' + dirBtn(placeQuery(t, it.place), true) + '</div>';
   }
   function agendaCard(t, ds, title) {
     var ag = dayAgenda(t, ds);
@@ -1949,6 +1952,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<p class="hint">The backup includes photos, so it can be large. Paste it into Restore on another device to move everything across.</p>' +
       (S.showJson ? '<pre class="json" tabindex="0">' + esc(JSON.stringify(S.p, null, 2)) + '</pre>' : '') + '</section>';
     right += securityCard(m);
+    var mapApp = S.p.settings.mapApp || '';
+    right += '<section class="card"><h2 class="h3">Maps and wallet</h2>' +
+      '<div class="field"><label for="map-app">Directions open in</label><select id="map-app" class="input" data-mapapp="1"><option value="">Ask me each time</option>' + Object.keys(MAP_APPS).map(function (k) { return '<option value="' + k + '"' + (mapApp === k ? ' selected' : '') + '>' + MAP_APPS[k].label + '</option>'; }).join('') + '</select><span class="hint">Used by the Directions buttons on places, bookings and passes.</span></div>' +
+      '<div class="setrow"><div class="grow"><span class="label">Apple Wallet passes</span><span class="hint">' + (S.p.settings.wwKey ? 'WalletWallet key saved on this device. One-tap passes are on.' : 'Add to Apple Wallet uses the free WalletWallet web tool. Add your free API key on any booking for one-tap passes.') + '</span></div>' + (S.p.settings.wwKey ? '<button type="button" class="btn ghost sm" data-act="ww-key-clear">Remove key</button>' : '') + '</div></section>';
     var vi = S.vinfo; if (!vi) refreshVinfo();
     right += '<section class="card"><div class="row between"><h2 class="h3">Version history</h2>' + (vi ? '<span class="hint">' + plural(vi.count, 'version') + '</span>' : '') + '</div>' +
       '<p class="hint">' + (vi && vi.last ? 'Last saved ' + esc(fmtWhen(vi.last)) + '. ' : '') + 'Go back to an earlier state of your trips if something goes wrong. Versions save automatically as you make changes.</p>' +
@@ -2069,6 +2076,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<div class="field"><label for="bk-total">Total cost</label><div class="money-input sm"><input id="bk-total" data-f="total" type="number" inputmode="decimal" step="any" min="0" placeholder="0" value="' + esc(d.total) + '"><span class="cur">' + esc(d.cur) + '</span></div></div>' +
       (d.id ? '' : '<div class="field"><label for="bk-paid">Paid so far</label><div class="money-input sm"><input id="bk-paid" data-f="paidNow" type="number" inputmode="decimal" step="any" min="0" placeholder="0" value="' + esc(d.paidNow) + '"><span class="cur">' + esc(d.cur) + '</span></div><span class="hint">A deposit or the full amount. It’s logged as a spend today.</span></div><div class="field"><label for="bk-from">Paid from</label><select id="bk-from" class="input" data-f="paidFrom">' + walletOptions(t, d.paidFrom) + '</select></div>') +
       '<div class="field"><label for="bk-due">Balance due by <span class="muted">(optional)</span></label><input id="bk-due" class="input" data-f="due" type="date" value="' + esc(d.due) + '"><span class="hint">You get a reminder on Today a week before.</span></div>' +
+      '<div class="field"><label for="bk-addr">Address <span class="muted">(optional)</span></label><input id="bk-addr" class="input" data-f="address" maxlength="160" placeholder="' + esc(d.type === 'flight' ? 'Airport or terminal' : 'Street, area, city') + '" value="' + esc(d.address || '') + '"><div id="bk-dir">' + dirBtn(placeQuery(trip(), d.address || (d.type !== 'flight' ? d.name : ''))) + '</div></div>' +
       '<div class="field"><label for="bk-notes">Notes</label><textarea id="bk-notes" class="input" data-f="notes" style="min-height:80px" placeholder="Seats, baggage, address, check-in rules…">' + esc(d.notes) + '</textarea></div>' +
       docsField(sh) + walletCard(sh) +
       (b ? '<section class="card tight"><div class="card-head"><h3 class="h3">Payments</h3><span class="hint">' + (st.st === 'none' ? 'Add the total to track payments' : st.st === 'paid' ? 'Paid in full' : esc(money(st.left, t.home)) + ' to pay') + '</span></div><div class="rows">' + (pays.length ? pays.map(function (x) { return txnRow(t, x); }).join('') : '<p class="hint" style="padding:6px 0 12px">No payments logged yet.</p>') + '</div>' +
@@ -2091,7 +2099,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<div class="field"><label for="it-title">What’s the plan?</label><input id="it-title" class="input" data-f="title" maxlength="80" placeholder="Sunset at the old fortress" value="' + esc(d.title) + '"></div>' +
       '<div class="field"><span class="label">Kind</span><div class="chips">' + Object.keys(PLK).map(function (k) { return '<button type="button" class="chip" data-act="it-kind" data-k="' + k + '" aria-pressed="' + (d.kind === k) + '" style="--c:' + CATS[PLK[k].cat].color + '"><i class="dot"></i>' + esc(PLK[k].label) + '</button>'; }).join('') + '</div></div>' +
       '<div class="grid2"><div class="field"><label for="it-day">Day</label><select id="it-day" class="input" data-f="day">' + dayOptions(t, d.day) + '</select></div><div class="field"><label for="it-time">Time</label><input id="it-time" class="input" data-f="time" type="time" value="' + esc(d.time) + '"></div></div>' +
-      '<div class="field"><label for="it-place">Place</label><input id="it-place" class="input" data-f="place" maxlength="80" placeholder="Name or address" value="' + esc(d.place) + '"><a class="link" id="it-map" href="' + esc(mapUrl || '#') + '" target="_blank" rel="noopener"' + (mapUrl ? '' : ' hidden') + '>' + ic('open', 14) + ' Open in Maps</a></div>' +
+      '<div class="field"><label for="it-place">Place</label><input id="it-place" class="input" data-f="place" maxlength="80" placeholder="Name or address" value="' + esc(d.place) + '"><div id="it-dir">' + dirBtn(placeQuery(t, d.place)) + '</div></div>' +
       curSeg(t, d, 'it-cur') +
       '<div class="field"><label for="it-cost">Estimated cost <span class="muted">(optional)</span></label><div class="money-input sm"><input id="it-cost" data-f="cost" type="number" inputmode="decimal" step="any" min="0" placeholder="0" value="' + esc(d.cost || '') + '"><span class="cur">' + esc(d.cur) + '</span></div><span class="hint">For the whole family. Used in Insights to compare plan and actual.</span></div>' +
       '<div class="field"><label for="it-notes">Notes</label><textarea id="it-notes" class="input" data-f="notes" style="min-height:80px" placeholder="Opening hours, tickets, who’s coming…">' + esc(d.notes) + '</textarea></div>' +
@@ -2457,7 +2465,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function openBooking(id) {
     var t = trip(), b = id ? bookingById(t, id) : null;
-    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice(), files: (b.files || []).slice(), cover: b.cover || null, pasteText: '', gwallet: b.gwallet || '' } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], files: [], cover: null, pasteText: '', gwallet: '', paidNow: '', paidFrom: ((t.wallets.filter(function (x) { return x.type === 'card'; })[0] || t.wallets[0] || {}).id || '') };
+    var d = b ? { id: b.id, type: b.type, name: b.name, provider: b.provider, start: b.start, time: b.time, end: b.end, endTime: b.endTime, conf: b.conf, total: b.total || '', cur: b.cur, due: b.due, notes: b.notes, photos: b.photos.slice(), files: (b.files || []).slice(), cover: b.cover || null, pasteText: '', gwallet: b.gwallet || '', address: b.address || '' } : { id: null, type: 'stay', name: '', provider: '', start: t.start, time: '', end: '', endTime: '', conf: '', total: '', cur: t.local, due: '', notes: '', photos: [], files: [], cover: null, pasteText: '', gwallet: '', address: '', paidNow: '', paidFrom: ((t.wallets.filter(function (x) { return x.type === 'card'; })[0] || t.wallets[0] || {}).id || '') };
     openSheet({ type: 'booking', d: d, initStart: d.start }, b ? null : '#bk-name');
   }
   function saveBooking(quiet) {
@@ -2466,7 +2474,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (!name) { sheetErr('Give the booking a name.'); return null; }
     if (!validDate(d.start)) { sheetErr('Pick the date for this booking.'); return null; }
     if (d.end && (!validDate(d.end) || d.end < d.start)) { sheetErr('The end date must be on or after the start date.'); return null; }
-    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice(), files: (d.files || []).slice(), cover: d.cover || null, gwallet: /^https:\/\//i.test(String(d.gwallet || '').trim()) ? String(d.gwallet).trim() : '' };
+    var rec = { id: d.id || uid(), type: d.type, name: name, provider: String(d.provider || '').trim(), start: d.start, time: d.time || '', end: T.hasEnd ? (d.end || '') : '', endTime: T.hasEnd ? (d.endTime || '') : '', conf: String(d.conf || '').trim().toUpperCase(), total: num(d.total), cur: d.cur, due: validDate(d.due) ? d.due : '', notes: String(d.notes || ''), photos: d.photos.slice(), files: (d.files || []).slice(), cover: d.cover || null, address: String(d.address || '').trim().slice(0, 160), gwallet: /^https:\/\//i.test(String(d.gwallet || '').trim()) ? String(d.gwallet).trim() : '' };
     if (d.id) t.bookings = t.bookings.map(function (b) { return b.id === d.id ? rec : b; });
     else {
       t.bookings.push(rec);
@@ -2893,7 +2901,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       setPath(S.sheet.d, ds.f, el.type === 'checkbox' ? el.checked : el.value);
       if (S.sheet.type === 'spend' && ds.f === 'amt') { var c = $('#sp-conv'); if (c) c.textContent = convText(trip(), S.sheet.d); }
       if (S.sheet.type === 'brand') { if (ds.f === 'accent') applyBrand(S.sheet.d); var pv = $('#b-preview'); if (pv) pv.innerHTML = brandPreview(S.sheet.d); }
-      if (S.sheet.type === 'item' && ds.f === 'place') { var a = $('#it-map'), u = mapLink(trip(), el.value.trim()); if (a) { a.hidden = !u; a.href = u || '#'; } }
+      if (S.sheet.type === 'item' && ds.f === 'place') { var a = $('#it-dir'); if (a) a.innerHTML = dirBtn(placeQuery(trip(), el.value)); }
+      if (S.sheet.type === 'booking' && (ds.f === 'address' || ds.f === 'name')) { var a2 = $('#bk-dir'), dd = S.sheet.d; if (a2) a2.innerHTML = dirBtn(placeQuery(trip(), dd.address || (dd.type !== 'flight' ? dd.name : ''))); }
     } else if (ds.a && S.auth.d) {
       var had = !!S.auth.d.pw; S.auth.d[ds.a] = el.value;
       if (ds.a === 'pw' && had !== !!el.value) { renderView(); var f = $('#c-pw'); if (f) { f.focus(); try { f.setSelectionRange(f.value.length, f.value.length); } catch (x) { } } }
@@ -2924,6 +2933,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (ds.csvmap && S.sheet) { S.sheet.map[ds.csvmap] = el.value; renderSheet(); return; }
     if (ds.csvsign && S.sheet) { S.sheet.sign = el.value; renderSheet(); return; }
     if (ds.csvwallet && S.sheet) { S.sheet.wallet = el.value; return; }
+    if (ds.mapsremember && S.sheet) { S.sheet.remember = el.checked; return; }
+    if (ds.mapapp) { if (el.value) S.p.settings.mapApp = el.value; else delete S.p.settings.mapApp; save(); toast('Saved', el.value ? 'Directions open in ' + MAP_APPS[el.value].label + '.' : 'You’ll be asked each time.'); return; }
     if (ds.lockafter) { var mm = meta(); if (mm) { mm.lockAfter = +el.value; saveIndex(); toast('Saved', el.options[el.selectedIndex].text + '.'); } return; }
     if (el.id === 'pk-group') S.pkGroup = el.value;
     if (el.id === 'pk-who') S.pkWho = el.value;
@@ -3297,6 +3308,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (f.type === 'flight' && route) f.name = route[1] + ' – ' + route[2];
     if (!f.name) { var st = lines.filter(function (l) { return /(hotel|resort|\binn\b|ryokan|villa|hostel|suites|apartments?|lodge|guest ?house)/i.test(l) && !/(check|booking|confirm|dear|thank)/i.test(l) && l.length <= 60; })[0]; if (st) f.name = st; }
     if (!f.name && f.provider) f.name = f.provider;
+    var ad = lines.filter(function (l) { return l.length >= 12 && l.length <= 140 && /(\broad\b|\brd\b\.?|street|\bst\b\.?|avenue|\bave\b|lane|nagar|salai|marg|boulevard|blvd|district|chome|\b\d{6}\b|\b\d{3}-\d{4}\b)/i.test(l) && !/(check|booking|total|phone|tel|email|price|paid|confirm)/i.test(l); })[0];
+    if (ad) f.address = ad.replace(/^(address|location)\s*[:\-]\s*/i, '');
     return f;
   }
   function parseReceipt(text, t) {
@@ -3346,6 +3359,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (f.conf && !String(d.conf).trim()) { d.conf = f.conf; out.push('code ' + f.conf); }
     if (f.start && (!d.id ? d.start === sh.initStart : false)) { d.start = f.start; out.push(fmtD(f.start, { day: 'numeric', month: 'short' }) + (f.end ? ' – ' + fmtD(f.end, { day: 'numeric', month: 'short' }) : '')); if (f.end && BKT[d.type].hasEnd && !d.end) d.end = f.end; }
     if (f.time && !d.time) d.time = f.time;
+    if (f.address && !String(d.address || '').trim()) { d.address = f.address.slice(0, 160); out.push('address'); }
     var okCur = f.total && (!f.total.cur || f.total.cur === t.local || f.total.cur === t.home);
     if (f.total && !okCur) out.push('the total is in ' + f.total.cur + ' (' + f.total.v.toLocaleString() + '), not this trip’s currency, so enter it yourself');
     else if (f.total && !num(d.total)) { if (f.total.cur) d.cur = f.total.cur; d.total = String(f.total.v); out.push('total ' + money(f.total.v, d.cur, { show: true })); }
@@ -3504,10 +3518,10 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     return '<section class="card" style="gap:10px"><div class="row between"><span class="label">Wallet</span>' + ic('wallet', 18) + '</div>' +
       '<p class="hint">Show this booking as a pass, even offline, with its code as a QR code. Add the airline’s or hotel’s own pass to Apple or Google Wallet if they sent one.</p>' +
       '<div class="row wrap">' + (d.id ? '<button type="button" class="btn sm" data-act="pass-open" data-id="' + esc(d.id) + '">' + ic('wallet', 16) + ' Show pass</button>' : '<span class="hint">Save the booking to show its pass.</span>') +
-      (pk ? '<button type="button" class="btn quiet sm" data-act="pkpass-add" data-id="' + esc(pk.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' : '') +
+      (d.id ? '<button type="button" class="btn quiet sm" data-act="apple-pass" data-id="' + esc(d.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' : '') +
       (gw ? '<a class="btn quiet sm" href="' + esc(String(d.gwallet).trim()) + '" target="_blank" rel="noopener">' + ic('open', 16) + ' Save to Google Wallet</a>' : '') + '</div>' +
       '<div class="field"><label for="bk-gw">Google Wallet link <span class="muted">(optional)</span></label><input id="bk-gw" class="input" data-f="gwallet" type="url" inputmode="url" placeholder="https://pay.google.com/gp/v/save/…" value="' + esc(d.gwallet || '') + '"><span class="hint">Copy the “Save to Google Wallet” link from your confirmation email.</span></div>' +
-      (pk ? '' : '<p class="hint">Got an Apple Wallet pass (a .pkpass file) from the airline or hotel? Attach it under Receipts and documents, then add it from here.</p>') + '</section>';
+      '<p class="hint">Add to Apple Wallet uses the pass the airline or hotel sent if you attached one (a .pkpass file). Otherwise it makes one with the free WalletWallet service.</p></section>';
   }
   function passOrder(t) { return t.bookings.slice().sort(function (a, b) { return (a.start + (a.time || '')) < (b.start + (b.time || '')) ? -1 : 1; }); }
   function renderPass() {
@@ -3531,7 +3545,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<div class="stack-xs"><span class="eyebrow">Booking code</span>' + (b.conf ? '<span class="conf big">' + esc(b.conf) + '</span><button type="button" class="link" data-act="pass-copy" data-v="' + esc(b.conf) + '" style="align-self:flex-start">' + ic('copy', 14) + ' Copy</button>' : '<span class="hint">None yet. Add it to the booking to show a QR code.</span>') + '</div></div>' +
       (t.people.length ? '<div class="row" style="gap:8px"><span class="av-stack">' + t.people.slice(0, 6).map(function (p) { return avatar(p, 26); }).join('') + '</span><span class="hint">' + esc(t.people.map(function (p) { return p.name; }).join(', ')) + '</span></div>' : '') +
       (b.notes ? '<p class="hint pass-notes">' + esc(b.notes.split('\n')[0].slice(0, 140)) + '</p>' : '') +
-      '<div class="row wrap">' + (pk ? '<button type="button" class="btn sm" data-act="pkpass-add" data-id="' + esc(pk.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' : '') +
+      '<div class="row wrap"><button type="button" class="btn sm" data-act="apple-pass" data-id="' + esc(b.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' + dirBtn(bookingQuery(t, b)) +
       (gw ? '<a class="btn sm" href="' + esc(b.gwallet) + '" target="_blank" rel="noopener">' + ic('open', 16) + ' Save to Google Wallet</a>' : '') +
       '<button type="button" class="btn ghost sm" data-act="pass-edit" data-id="' + esc(b.id) + '">' + ic('edit', 16) + ' Booking details</button></div></div></article>' +
       (list.length > 1 ? '<div class="pass-nav"><button type="button" class="lb-btn" data-act="pass-step" data-d="-1" aria-label="Previous booking" style="position:static">' + ic('left', 20) + '</button><button type="button" class="lb-btn" data-act="pass-step" data-d="1" aria-label="Next booking" style="position:static">' + ic('right', 20) + '</button></div>' : '') +
@@ -3570,6 +3584,130 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     'pass-edit': function (el) { S.pass = null; renderPass(); openBooking(el.dataset.id); },
     'pass-copy': function (el) { var v = el.dataset.v; try { navigator.clipboard.writeText(v).then(function () { toast('Copied', v); }, function () { toast('Booking code', v); }); } catch (e) { toast('Booking code', v); } },
     'pkpass-add': function (el) { addPkpass(el.dataset.id); }
+  });
+  /* =========================================================
+     Directions: ask which map app to open (Apple Maps, Google Maps, Waze), or use the saved choice
+     ========================================================= */
+  var MAP_APPS = {
+    apple: { label: 'Apple Maps', url: function (q, m) { return 'https://maps.apple.com/?daddr=' + encodeURIComponent(q) + '&dirflg=' + ({ drive: 'd', walk: 'w', transit: 'r' }[m] || 'd'); } },
+    google: { label: 'Google Maps', url: function (q, m) { return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(q) + '&travelmode=' + ({ drive: 'driving', walk: 'walking', transit: 'transit' }[m] || 'driving'); } },
+    waze: { label: 'Waze', drive: true, url: function (q) { return 'https://waze.com/ul?q=' + encodeURIComponent(q) + '&navigate=yes'; } }
+  };
+  function placeQuery(t, place) { place = String(place || '').trim(); if (!place) return ''; return t && t.place && place.toLowerCase().indexOf(t.place.toLowerCase()) < 0 ? place + ', ' + t.place : place; }
+  function bookingQuery(t, b) { if (b.type === 'flight' && !b.address) return ''; return placeQuery(t, b.address || b.name); }
+  function dirBtn(q, small) { return q ? '<button type="button" class="' + (small ? 'icon-btn sm dir-btn' : 'btn quiet sm') + '" data-act="maps" data-q="' + esc(q) + '" aria-label="Directions to ' + esc(q) + '">' + ic('nav', small ? 15 : 16) + (small ? '' : ' Directions') + '</button>' : ''; }
+  function openLink(url) { var a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); }
+  function sheetMaps(sh) {
+    var mode = sh.mode || 'drive';
+    return sheetHead('Directions') + '<p class="hint">To <strong style="color:var(--ink)">' + esc(sh.q) + '</strong></p>' +
+      '<div class="seg" role="group" aria-label="How you’re travelling">' + [['drive', 'Drive'], ['walk', 'Walk'], ['transit', 'Transit']].map(function (o) { return '<button type="button" data-act="maps-mode" data-v="' + o[0] + '" aria-pressed="' + (mode === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="stack" style="gap:8px">' + Object.keys(MAP_APPS).map(function (k) {
+        var A = MAP_APPS[k], off = A.drive && mode !== 'drive';
+        return '<button type="button" class="ready" data-act="maps-go" data-app="' + k + '"' + (off ? ' disabled style="opacity:.45"' : '') + '><span class="tile" style="--c:var(--accent)">' + ic(k === 'waze' ? 'car' : 'map', 18) + '</span><span class="grow"><strong>' + esc(A.label) + '</strong><span class="hint">' + (off ? 'Driving only' : k === 'apple' ? 'Built into iPhone, iPad and Mac' : k === 'google' ? 'Opens the app if it’s installed, otherwise the website' : 'Opens the Waze app if it’s installed') + '</span></span>' + ic('chev', 18) + '</button>';
+      }).join('') + '</div>' +
+      '<label class="row" style="gap:10px;cursor:pointer"><input type="checkbox" id="maps-remember"' + (sh.remember ? ' checked' : '') + ' data-mapsremember="1" style="width:18px;height:18px;accent-color:var(--ink)"><span class="hint" style="color:var(--ink-2)">Always use this app. You can change it in More → Maps and wallet.</span></label>';
+  }
+
+  /* =========================================================
+     Apple Wallet passes through WalletWallet (free tool, or the free API with your own key)
+     ========================================================= */
+  var WW_TOOL = 'https://walletwallet.alen.ro/', WW_API = 'https://api.walletwallet.dev/api/pkpass';
+  function passFields(t, b) {
+    var T = BKT[b.type] || BKT.other, d1 = fmtD(b.start, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + (b.time ? ' ' + fmtHM(b.time) : '');
+    var sec = [{ label: T.a || 'Date', value: d1 }];
+    if (T.hasEnd && b.end) sec.push({ label: T.b || 'Ends', value: fmtD(b.end, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + (b.endTime ? ' ' + fmtHM(b.endTime) : '') });
+    var back = [];
+    if (b.provider) back.push({ label: 'Provider', value: b.provider });
+    if (b.address) back.push({ label: 'Address', value: b.address });
+    if (t.people.length) back.push({ label: 'Travellers', value: t.people.map(function (p) { return p.name; }).join(', ') });
+    if (b.notes) back.push({ label: 'Notes', value: b.notes.slice(0, 500) });
+    back.push({ label: 'Trip', value: t.name + ' · ' + range(t) });
+    var colors = { flight: 'blue', stay: 'orange', car: 'green', train: 'blue', tour: 'purple', other: 'dark' };
+    var body = { logoText: BR.name, description: T.label + ': ' + b.name, colorPreset: colors[b.type] || 'dark', headerFields: b.conf ? [{ label: 'CODE', value: b.conf }] : [], primaryFields: [{ label: T.label.toUpperCase(), value: b.name.slice(0, 60) }], secondaryFields: sec, backFields: back };
+    if (b.conf) { body.barcodeValue = b.conf; body.barcodeFormat = 'QR'; }
+    return body;
+  }
+  function wwSummary(t, b) {
+    var f = passFields(t, b);
+    return [b.name, f.secondaryFields.map(function (x) { return x.label + ': ' + x.value; }).join(' · '), b.conf ? 'Code: ' + b.conf : ''].filter(Boolean).join('\n');
+  }
+  function sheetApplePass(sh) {
+    var t = trip(), b = bookingById(t, sh.id); if (!b) return sheetHead('Add to Apple Wallet') + '<p class="hint">This booking is gone.</p>';
+    var key = S.p.settings.wwKey || '', pk = bookingPkpass(b);
+    return sheetHead('Add to Apple Wallet') +
+      (pk ? '<section class="card"><strong>The pass you attached</strong><p class="hint">' + esc(pk.name) + '. Passes from the airline or hotel are the ones their staff can scan.</p><button type="button" class="btn" data-act="pkpass-add" data-id="' + esc(pk.id) + '">' + ic('wallet', 18) + ' Add this pass</button></section>' : '') +
+      '<section class="card"><div class="row between"><strong>One tap, with WalletWallet</strong><span class="pill ' + (key ? 'good' : 'info') + '">' + (key ? 'Key saved' : 'Needs a free key') + '</span></div>' +
+      '<p class="hint">Makes a pass from this booking: name, dates, travellers and a QR code of ' + (b.conf ? 'code ' + esc(b.conf) : 'the booking code (add one first for a QR code)') + '. WalletWallet’s free plan covers 1,000 passes a month. The booking details are sent to WalletWallet to sign the pass.</p>' +
+      (key ? '<button type="button" class="btn" data-act="ww-make" data-id="' + esc(b.id) + '"' + (sh.busy ? ' disabled' : '') + '>' + ic('wallet', 18) + (sh.busy ? ' Making your pass…' : ' Make and add the pass') + '</button>'
+        : '<div class="field"><label for="ww-key">Your WalletWallet API key</label><input id="ww-key" class="input" data-f="key" autocomplete="off" spellcheck="false" placeholder="ww_live_…" value="' + esc(sh.d.key) + '"><span class="hint">Get one free at <a class="link" href="https://www.walletwallet.dev/" target="_blank" rel="noopener">walletwallet.dev</a>. It’s stored only on this device.</span></div><button type="button" class="btn" data-act="ww-key-save">Save key and make the pass</button>') +
+      '</section>' +
+      '<section class="card"><strong>Free, no account: WalletWallet web tool</strong><p class="hint">Opens WalletWallet in a new tab with this booking’s details copied. Paste them in, then download the pass and tap Add. Nothing is sent until you do.</p><button type="button" class="btn quiet" data-act="ww-tool" data-id="' + esc(b.id) + '">' + ic('open', 16) + ' Copy details and open WalletWallet</button></section>' +
+      errLine(sh) + '<p class="hint">WalletWallet is a third-party service, not part of ' + esc(BR.name) + '. Passes it makes are handy copies, not the airline’s or hotel’s official ticket.</p>';
+  }
+  function b64ToBlob(b64, type) { var bin = atob(String(b64).replace(/\s/g, '')), a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: type }); }
+  function makeWalletPass(b) {
+    var t = trip(), sh = S.sheet, key = S.p.settings.wwKey;
+    sh.busy = true; sh.err = ''; renderSheet();
+    fetch(WW_API, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }, body: JSON.stringify(passFields(t, b)) })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) throw new Error('key');
+        if (r.status === 429) throw new Error('limit');
+        if (!r.ok) throw new Error('http ' + r.status);
+        var ct = r.headers.get('Content-Type') || '';
+        if (/json/i.test(ct)) return r.json().then(function (j) { if (!j || !j.applePass) throw new Error('nopass'); return b64ToBlob(j.applePass, 'application/vnd.apple.pkpass'); });
+        return r.blob().then(function (bl) { return new Blob([bl], { type: 'application/vnd.apple.pkpass' }); });
+      })
+      .then(function (blob) {
+        var id = 'doc_' + uid();
+        return Photos.put(id, blob).then(function () {
+          b.files = (b.files || []).filter(function (f) { return !(isPkpass(f) && f.made); });
+          b.files.push({ id: id, name: slug(b.name) + '.pkpass', size: blob.size, mime: 'application/vnd.apple.pkpass', made: true });
+          save(); if (S.sheet === sh) { sh.busy = false; renderSheet(); }
+          addPkpass(id);
+        });
+      })
+      .catch(function (e) {
+        if (S.sheet !== sh) return;
+        sh.busy = false;
+        var m = String(e && e.message || '');
+        sh.err = m === 'key' ? 'WalletWallet didn’t accept the key. Remove it in More → Maps and wallet and try again.' : m === 'limit' ? 'You’ve used this month’s free passes. Use the free web tool below instead.' : (IS_TOP ? 'Couldn’t reach WalletWallet. Check your connection, or use the free web tool below.' : 'This preview blocks outside services. Open ' + BR.name + ' from its own web address, or use the free web tool below.');
+        renderSheet();
+      });
+  }
+
+  Object.assign(SHEETS, { maps: sheetMaps, applepass: sheetApplePass });
+  Object.assign(ACT, {
+    maps: function (el) {
+      var q = el.dataset.q; if (!q) return;
+      var app = S.p && S.p.settings.mapApp;
+      if (app && MAP_APPS[app]) { openLink(MAP_APPS[app].url(q, 'drive')); return; }
+      var back = S.sheet && S.sheet.type !== 'maps' ? S.sheet : null;
+      openSheet({ type: 'maps', q: q, mode: 'drive', remember: false, back: back });
+    },
+    'maps-mode': function (el) { S.sheet.mode = el.dataset.v; renderSheet(); },
+    'maps-go': function (el) {
+      var sh = S.sheet, A = MAP_APPS[el.dataset.app]; if (!A) return;
+      if (sh.remember) { S.p.settings.mapApp = el.dataset.app; save(); }
+      openLink(A.url(sh.q, sh.mode));
+      closeSheet();
+      if (sh.remember) toast('Directions open in ' + A.label, 'Change it in More → Maps and wallet.');
+    },
+    'apple-pass': function (el) { var back = S.sheet && S.sheet.type !== 'applepass' ? S.sheet : null; S.pass = null; renderPass(); openSheet({ type: 'applepass', id: el.dataset.id, d: { key: '' }, back: back }); },
+    'ww-key-save': function () {
+      var sh = S.sheet, k = String(sh.d.key || '').trim();
+      if (!/^ww_(live|test)_[A-Za-z0-9]{8,}$/.test(k)) { sheetErr('That doesn’t look like a WalletWallet key. It starts with ww_live_.'); return; }
+      S.p.settings.wwKey = k; save(); sh.err = '';
+      var b = bookingById(trip(), sh.id); if (b) makeWalletPass(b); else renderSheet();
+    },
+    'ww-make': function (el) { var b = bookingById(trip(), el.dataset.id); if (b) makeWalletPass(b); },
+    'ww-tool': function (el) {
+      var t = trip(), b = bookingById(t, el.dataset.id); if (!b) return;
+      var txt = wwSummary(t, b);
+      try { navigator.clipboard.writeText(b.conf || txt).catch(function () { }); } catch (e) { }
+      openLink(WW_TOOL);
+      toast('Opened WalletWallet', b.conf ? 'Code ' + b.conf + ' is copied. Use it as the barcode, and the booking name as the title.' : 'Details copied. Add a booking code for a scannable pass.');
+    },
+    'ww-key-clear': function () { delete S.p.settings.wwKey; save(); renderView(); toast('Key removed'); }
   });
   /* =========================================================
      Start
