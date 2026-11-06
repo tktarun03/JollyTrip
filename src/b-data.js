@@ -257,19 +257,19 @@
     if (!p.trips.some(function (t) { return t.id === p.active; })) p.active = p.trips[0] ? p.trips[0].id : null;
     return p;
   }
-  function saveIndex() { Store.set('jt_idx', S.index); }
+  function saveIndex() { Store.set(APP.key + 'idx', S.index); }
   function save() {
     if (!S.p || !S.pid) return;
     S.p.savedAt = Date.now();
-    var r = Store.set('jt_p_' + S.pid, S.p);
+    var r = Store.set(APP.key + 'p_' + S.pid, S.p);
     autoVersion();
     if (!r.ok) toast('Couldn’t save', 'This browser’s storage is full or blocked. Copy a backup from More to keep your trips.');
     else if (r.overflow && !S.warned) { S.warned = true; toast('Moved to local storage', 'Your trips outgrew cookie space, so they now save to local storage on this device.'); }
   }
-  function setSession(pid) { if (pid) Store.set('jt_sess', { pid: pid }); else Store.remove('jt_sess'); }
-  function loadProfile(pid) { var p = Store.get('jt_p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); initVersions(''); return true; }
+  function setSession(pid) { if (pid) Store.set(APP.key + 'sess', { pid: pid }); else Store.remove(APP.key + 'sess'); }
+  function loadProfile(pid) { var p = Store.get(APP.key + 'p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); initVersions(''); return true; }
   function signOut(silent) { S.undo = null; S.vinfo = null; S.pid = null; S.p = null; S.sheet = null; S.lb = null; setSession(null); nf = {}; S.auth = { mode: 'home' }; applySettings(); if (!silent) { renderAll(); toast('Signed out', 'Your trips stay saved on this device.'); } }
-  function deleteProfile(pid) { Versions.list(pid).then(function (vs) { return Versions.del(vs.map(function (v) { return v.id; })); }); Store.remove('jt_p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
+  function deleteProfile(pid) { Versions.list(pid).then(function (vs) { return Versions.del(vs.map(function (v) { return v.id; })); }); Store.remove(APP.key + 'p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
   /* =========================================================
      Version history and undo
      ========================================================= */
@@ -513,7 +513,7 @@
   }
   function allRefs() {
     var o = {};
-    S.index.profiles.forEach(function (m) { refsOf(m.id === S.pid ? S.p : Store.get('jt_p_' + m.id), o); });
+    S.index.profiles.forEach(function (m) { refsOf(m.id === S.pid ? S.p : Store.get(APP.key + 'p_' + m.id), o); });
     if (S.p) refsOf(S.p, o);
     S.index.profiles.forEach(function (m) { if (m.photo) o[m.photo] = 1; });
     var lg = legacyData(); if (lg) refsOf(lg, o);

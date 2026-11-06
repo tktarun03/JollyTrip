@@ -36,7 +36,7 @@
   function plusMin(ds, hm, mins) { var p = hm.split(':'), d = D(ds); d.setHours(+p[0], +p[1] + mins, 0, 0); return { ds: iso(d), hm: pad(d.getHours()) + ':' + pad(d.getMinutes()) }; }
   /* Times are "floating": they follow the phone's time zone, which is the local one while you travel. */
   function icsEvent(o) {
-    var L = ['BEGIN:VEVENT', 'UID:' + o.uid + '@jollytrip', 'DTSTAMP:' + icsStamp(), 'SUMMARY:' + icsEsc(o.title)];
+    var L = ['BEGIN:VEVENT', 'UID:' + o.uid + '@' + APP.id, 'DTSTAMP:' + icsStamp(), 'SUMMARY:' + icsEsc(o.title)];
     if (o.hm) { var e = plusMin(o.ds, o.hm, o.mins || 60); L.push('DTSTART:' + icsDT(o.ds, o.hm), 'DTEND:' + icsDT(e.ds, e.hm)); }
     else { L.push('DTSTART;VALUE=DATE:' + o.ds.replace(/-/g, ''), 'DTEND;VALUE=DATE:' + addDays(o.endDs || o.ds, o.endDs ? 0 : 1).replace(/-/g, '')); L.push('TRANSP:TRANSPARENT'); }
     if (o.loc) L.push('LOCATION:' + icsEsc(o.loc));

@@ -382,7 +382,7 @@
      More: trip, money, appearance, data, account
      ========================================================= */
   function renderMore(t) {
-    var m = meta() || {}, s = S.p.settings, u = Store.usage('jt_p_' + S.pid, S.p), left = '', right = '';
+    var m = meta() || {}, s = S.p.settings, u = Store.usage(APP.key + 'p_' + S.pid, S.p), left = '', right = '';
     if (t) {
       var c = calc(t), saved = fundSaved(t), target = fundTarget(t);
       left += '<section class="card"><div class="cover mini">' + (t.cover ? photoImg(t.cover) : POSTCARD) + '</div><div class="row between" style="align-items:flex-start"><div class="grow"><h2 class="h3" style="font-size:var(--t-lg);font-weight:300">' + esc(t.name) + '</h2><span class="hint">' + esc((t.place ? t.place + ' · ' : '') + range(t)) + '</span><span class="hint">Budget ' + esc(money(c.budget)) + (t.local !== t.home ? ' · ' + esc(rateText(t)) : '') + '</span></div><span class="av-stack">' + t.people.slice(0, 5).map(function (p) { return avatar(p, 26); }).join('') + '</span></div>' +

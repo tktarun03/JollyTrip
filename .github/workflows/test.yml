@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: index.html matches src/
+      - name: Built files match src/
         run: |
           python3 build.py
-          git diff --exit-code index.html || (echo "::error::index.html is out of date. Run python3 build.py and commit it." && exit 1)
+          git diff --exit-code index.html docs/CODEMAP.md CHANGELOG.md || (echo "::error::Built files are out of date. Run python3 build.py and commit them." && exit 1)
 
       - uses: actions/setup-node@v5
         with:

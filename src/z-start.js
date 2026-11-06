@@ -11,12 +11,12 @@
     document.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
   })();
   Store.init();
-  BR = cleanBrand(Store.get('jt_brand')); applyBrand();
-  S.index = Store.get('jt_idx') || { v: 1, profiles: [] };
+  BR = cleanBrand(Store.get(APP.key + 'brand')); applyBrand();
+  S.index = Store.get(APP.key + 'idx') || { v: 1, profiles: [] };
   if (!Array.isArray(S.index.profiles)) S.index = { v: 1, profiles: [] };
   S.legacy = legacyData();
   Photos.open();
-  var sess = Store.get('jt_sess');
+  var sess = Store.get(APP.key + 'sess');
   if (sess && sess.pid && meta(sess.pid) && loadProfile(sess.pid) && lockEnabled(meta(sess.pid))) lockApp();
   renderAll();
   bioCheck().then(function () { if (S.locked || (S.p && S.tab === 'more' && !S.sheet)) renderView(); });
@@ -31,9 +31,9 @@
     }
   });
   (function () {
-    var seen = Store.get('jt_ver');
+    var seen = Store.get(APP.key + 'ver');
     if (seen !== APP_VERSION) {
-      Store.set('jt_ver', APP_VERSION);
+      Store.set(APP.key + 'ver', APP_VERSION);
       if (seen || S.index.profiles.length) setTimeout(function () { toast('Updated to version ' + APP_VERSION, CHANGELOG[0].items[0], { label: 'What’s new', act: 'about' }); }, 900);
     }
   })();

@@ -108,7 +108,7 @@
   function buildBackup() {
     var ids = Object.keys(refsOf(S.p, {}));
     return Promise.all(ids.map(function (id) { return Photos.get(id).then(function (b) { return b ? blobToData(b).then(function (u) { return u ? [id, u] : null; }) : null; }); }))
-      .then(function (pairs) { var o = JSON.parse(JSON.stringify(S.p)), ph = {}; pairs.forEach(function (p) { if (p) ph[p[0]] = p[1]; }); o.photos = ph; o.app = 'jollytrip'; delete o.savedAt; return JSON.stringify(o); });
+      .then(function (pairs) { var o = JSON.parse(JSON.stringify(S.p)), ph = {}; pairs.forEach(function (p) { if (p) ph[p[0]] = p[1]; }); o.photos = ph; o.app = APP.id; delete o.savedAt; return JSON.stringify(o); });
   }
 
   /* =========================================================
@@ -502,12 +502,12 @@
     'br-mascot': function () { S.sheet.d.showMascot = !S.sheet.d.showMascot; renderSheet(); },
     'br-save': function () {
       var d = S.sheet.d; if (!String(d.name || '').trim()) return sheetErr('Give the app a name.');
-      BR = cleanBrand(d); var r = Store.set('jt_brand', BR); applyBrand(); S.sheet = null; renderAll();
+      BR = cleanBrand(d); var r = Store.set(APP.key + 'brand', BR); applyBrand(); S.sheet = null; renderAll();
       toast(r.ok ? 'Branding saved' : 'Branding applied, not saved', r.ok ? 'It shows on this device, for every account.' : 'This browser blocked storage, so it resets when you close the tab.');
     },
     'br-reset': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
-      BR = cleanBrand({}); Store.remove('jt_brand'); applyBrand(); S.sheet = null; renderAll(); toast('Original branding restored');
+      BR = cleanBrand({}); Store.remove(APP.key + 'brand'); applyBrand(); S.sheet = null; renderAll(); toast('Original branding restored');
     },
     /* version history, undo, about */
     undo: function () {

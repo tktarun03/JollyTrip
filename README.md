@@ -67,9 +67,20 @@ Notes:
 - **Android / desktop Chrome:** use "Install app" in the browser menu.
 - **Opening the file directly** (a `file://` address): most browsers block cookies there, so the app falls back to `localStorage`.
 
+## Documentation
+
+| Read | For |
+|---|---|
+| `ROADMAP.md` | What's planned next, with IDs to ask for |
+| `CHANGELOG.md` | What changed in each version (generated) |
+| `docs/ARCHITECTURE.md` | How it works: files, data model, storage, and reusing it for another app |
+| `docs/CODEMAP.md` | Every function and button action with its line number (generated) |
+| `docs/RELEASE.md` | Release steps and the iPhone checklist |
+| `CLAUDE.md` | Working rules for AI assistants, written to keep each change cheap |
+
 ## Editing the app
 
-The code is in `src/`. Edit those files, then run `python3 build.py` to rebuild `index.html`, which is the file GitHub Pages serves. Don't edit `index.html` directly, because the next build overwrites it.
+The code is in `src/`. Edit those files, then run `python3 build.py` to rebuild `index.html` (the file GitHub Pages serves), `docs/CODEMAP.md` and `CHANGELOG.md`. Don't edit `index.html` directly, because the next build overwrites it.
 
 | Source file | What's in it |
 |---|---|

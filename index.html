@@ -492,6 +492,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* =========================================================
      Core helpers
      ========================================================= */
+  /* App identity. A copy of this app for another purpose changes these, so its saved data,
+     photos and backups never mix with JollyTrip's on the same web address. */
+  var APP = { id: 'jollytrip', key: 'jt_' };
   var DAY = 86400000;
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -532,16 +535,16 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var ok = false;
       try {
         if (window.Cookies && window.LZString) {
-          Cookies.set('jt_probe', '1', C_OPTS);
-          ok = Cookies.get('jt_probe') === '1';
-          Cookies.remove('jt_probe', R_OPTS);
+          Cookies.set(APP.key + 'probe', '1', C_OPTS);
+          ok = Cookies.get(APP.key + 'probe') === '1';
+          Cookies.remove(APP.key + 'probe', R_OPTS);
         }
       } catch (e) { ok = false; }
       if (ok) { this.mode = 'cookie'; return; }
       try {
-        localStorage.setItem('jt_probe', '1');
-        var l = localStorage.getItem('jt_probe') === '1';
-        localStorage.removeItem('jt_probe');
+        localStorage.setItem(APP.key + 'probe', '1');
+        var l = localStorage.getItem(APP.key + 'probe') === '1';
+        localStorage.removeItem(APP.key + 'probe');
         if (l) { this.mode = 'local'; this.note = 'This browser blocks cookies here, so JollyTrip saves to local storage instead.'; return; }
       } catch (e) { }
       this.mode = 'memory';
@@ -636,7 +639,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       var self = this;
       this.ready = new Promise(function (res) {
         try {
-          var r = indexedDB.open('jollytrip', 2), done = false;
+          var r = indexedDB.open(APP.id, 2), done = false;
           r.onupgradeneeded = function () {
             var db = r.result;
             if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos', { keyPath: 'id' });
@@ -1043,19 +1046,19 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (!p.trips.some(function (t) { return t.id === p.active; })) p.active = p.trips[0] ? p.trips[0].id : null;
     return p;
   }
-  function saveIndex() { Store.set('jt_idx', S.index); }
+  function saveIndex() { Store.set(APP.key + 'idx', S.index); }
   function save() {
     if (!S.p || !S.pid) return;
     S.p.savedAt = Date.now();
-    var r = Store.set('jt_p_' + S.pid, S.p);
+    var r = Store.set(APP.key + 'p_' + S.pid, S.p);
     autoVersion();
     if (!r.ok) toast('Couldn’t save', 'This browser’s storage is full or blocked. Copy a backup from More to keep your trips.');
     else if (r.overflow && !S.warned) { S.warned = true; toast('Moved to local storage', 'Your trips outgrew cookie space, so they now save to local storage on this device.'); }
   }
-  function setSession(pid) { if (pid) Store.set('jt_sess', { pid: pid }); else Store.remove('jt_sess'); }
-  function loadProfile(pid) { var p = Store.get('jt_p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); initVersions(''); return true; }
+  function setSession(pid) { if (pid) Store.set(APP.key + 'sess', { pid: pid }); else Store.remove(APP.key + 'sess'); }
+  function loadProfile(pid) { var p = Store.get(APP.key + 'p_' + pid); if (!p) return false; S.pid = pid; S.p = migrate(p); nf = {}; S.tab = 'today'; S.filter = { wallet: 'all', cat: 'all', q: '' }; S.showJson = false; applySettings(); initVersions(''); return true; }
   function signOut(silent) { S.undo = null; S.vinfo = null; S.pid = null; S.p = null; S.sheet = null; S.lb = null; setSession(null); nf = {}; S.auth = { mode: 'home' }; applySettings(); if (!silent) { renderAll(); toast('Signed out', 'Your trips stay saved on this device.'); } }
-  function deleteProfile(pid) { Versions.list(pid).then(function (vs) { return Versions.del(vs.map(function (v) { return v.id; })); }); Store.remove('jt_p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
+  function deleteProfile(pid) { Versions.list(pid).then(function (vs) { return Versions.del(vs.map(function (v) { return v.id; })); }); Store.remove(APP.key + 'p_' + pid); S.index.profiles = S.index.profiles.filter(function (x) { return x.id !== pid; }); saveIndex(); }
   /* =========================================================
      Version history and undo
      ========================================================= */
@@ -1299,7 +1302,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function allRefs() {
     var o = {};
-    S.index.profiles.forEach(function (m) { refsOf(m.id === S.pid ? S.p : Store.get('jt_p_' + m.id), o); });
+    S.index.profiles.forEach(function (m) { refsOf(m.id === S.pid ? S.p : Store.get(APP.key + 'p_' + m.id), o); });
     if (S.p) refsOf(S.p, o);
     S.index.profiles.forEach(function (m) { if (m.photo) o[m.photo] = 1; });
     var lg = legacyData(); if (lg) refsOf(lg, o);
@@ -1924,7 +1927,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
      More: trip, money, appearance, data, account
      ========================================================= */
   function renderMore(t) {
-    var m = meta() || {}, s = S.p.settings, u = Store.usage('jt_p_' + S.pid, S.p), left = '', right = '';
+    var m = meta() || {}, s = S.p.settings, u = Store.usage(APP.key + 'p_' + S.pid, S.p), left = '', right = '';
     if (t) {
       var c = calc(t), saved = fundSaved(t), target = fundTarget(t);
       left += '<section class="card"><div class="cover mini">' + (t.cover ? photoImg(t.cover) : POSTCARD) + '</div><div class="row between" style="align-items:flex-start"><div class="grow"><h2 class="h3" style="font-size:var(--t-lg);font-weight:300">' + esc(t.name) + '</h2><span class="hint">' + esc((t.place ? t.place + ' · ' : '') + range(t)) + '</span><span class="hint">Budget ' + esc(money(c.budget)) + (t.local !== t.home ? ' · ' + esc(rateText(t)) : '') + '</span></div><span class="av-stack">' + t.people.slice(0, 5).map(function (p) { return avatar(p, 26); }).join('') + '</span></div>' +
@@ -2389,7 +2392,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   function buildBackup() {
     var ids = Object.keys(refsOf(S.p, {}));
     return Promise.all(ids.map(function (id) { return Photos.get(id).then(function (b) { return b ? blobToData(b).then(function (u) { return u ? [id, u] : null; }) : null; }); }))
-      .then(function (pairs) { var o = JSON.parse(JSON.stringify(S.p)), ph = {}; pairs.forEach(function (p) { if (p) ph[p[0]] = p[1]; }); o.photos = ph; o.app = 'jollytrip'; delete o.savedAt; return JSON.stringify(o); });
+      .then(function (pairs) { var o = JSON.parse(JSON.stringify(S.p)), ph = {}; pairs.forEach(function (p) { if (p) ph[p[0]] = p[1]; }); o.photos = ph; o.app = APP.id; delete o.savedAt; return JSON.stringify(o); });
   }
 
   /* =========================================================
@@ -2783,12 +2786,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     'br-mascot': function () { S.sheet.d.showMascot = !S.sheet.d.showMascot; renderSheet(); },
     'br-save': function () {
       var d = S.sheet.d; if (!String(d.name || '').trim()) return sheetErr('Give the app a name.');
-      BR = cleanBrand(d); var r = Store.set('jt_brand', BR); applyBrand(); S.sheet = null; renderAll();
+      BR = cleanBrand(d); var r = Store.set(APP.key + 'brand', BR); applyBrand(); S.sheet = null; renderAll();
       toast(r.ok ? 'Branding saved' : 'Branding applied, not saved', r.ok ? 'It shows on this device, for every account.' : 'This browser blocked storage, so it resets when you close the tab.');
     },
     'br-reset': function () {
       var sh = S.sheet; if (!sh.armed) { sh.armed = true; renderSheet(); return; }
-      BR = cleanBrand({}); Store.remove('jt_brand'); applyBrand(); S.sheet = null; renderAll(); toast('Original branding restored');
+      BR = cleanBrand({}); Store.remove(APP.key + 'brand'); applyBrand(); S.sheet = null; renderAll(); toast('Original branding restored');
     },
     /* version history, undo, about */
     undo: function () {
@@ -3750,7 +3753,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   function plusMin(ds, hm, mins) { var p = hm.split(':'), d = D(ds); d.setHours(+p[0], +p[1] + mins, 0, 0); return { ds: iso(d), hm: pad(d.getHours()) + ':' + pad(d.getMinutes()) }; }
   /* Times are "floating": they follow the phone's time zone, which is the local one while you travel. */
   function icsEvent(o) {
-    var L = ['BEGIN:VEVENT', 'UID:' + o.uid + '@jollytrip', 'DTSTAMP:' + icsStamp(), 'SUMMARY:' + icsEsc(o.title)];
+    var L = ['BEGIN:VEVENT', 'UID:' + o.uid + '@' + APP.id, 'DTSTAMP:' + icsStamp(), 'SUMMARY:' + icsEsc(o.title)];
     if (o.hm) { var e = plusMin(o.ds, o.hm, o.mins || 60); L.push('DTSTART:' + icsDT(o.ds, o.hm), 'DTEND:' + icsDT(e.ds, e.hm)); }
     else { L.push('DTSTART;VALUE=DATE:' + o.ds.replace(/-/g, ''), 'DTEND;VALUE=DATE:' + addDays(o.endDs || o.ds, o.endDs ? 0 : 1).replace(/-/g, '')); L.push('TRANSP:TRANSPARENT'); }
     if (o.loc) L.push('LOCATION:' + icsEsc(o.loc));
@@ -3824,12 +3827,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     document.addEventListener('wheel', function (e) { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
   })();
   Store.init();
-  BR = cleanBrand(Store.get('jt_brand')); applyBrand();
-  S.index = Store.get('jt_idx') || { v: 1, profiles: [] };
+  BR = cleanBrand(Store.get(APP.key + 'brand')); applyBrand();
+  S.index = Store.get(APP.key + 'idx') || { v: 1, profiles: [] };
   if (!Array.isArray(S.index.profiles)) S.index = { v: 1, profiles: [] };
   S.legacy = legacyData();
   Photos.open();
-  var sess = Store.get('jt_sess');
+  var sess = Store.get(APP.key + 'sess');
   if (sess && sess.pid && meta(sess.pid) && loadProfile(sess.pid) && lockEnabled(meta(sess.pid))) lockApp();
   renderAll();
   bioCheck().then(function () { if (S.locked || (S.p && S.tab === 'more' && !S.sheet)) renderView(); });
@@ -3844,9 +3847,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
   });
   (function () {
-    var seen = Store.get('jt_ver');
+    var seen = Store.get(APP.key + 'ver');
     if (seen !== APP_VERSION) {
-      Store.set('jt_ver', APP_VERSION);
+      Store.set(APP.key + 'ver', APP_VERSION);
       if (seen || S.index.profiles.length) setTimeout(function () { toast('Updated to version ' + APP_VERSION, CHANGELOG[0].items[0], { label: 'What’s new', act: 'about' }); }, 900);
     }
   })();

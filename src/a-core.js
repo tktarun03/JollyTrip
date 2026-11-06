@@ -1,6 +1,9 @@
   /* =========================================================
      Core helpers
      ========================================================= */
+  /* App identity. A copy of this app for another purpose changes these, so its saved data,
+     photos and backups never mix with JollyTrip's on the same web address. */
+  var APP = { id: 'jollytrip', key: 'jt_' };
   var DAY = 86400000;
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -41,16 +44,16 @@
       var ok = false;
       try {
         if (window.Cookies && window.LZString) {
-          Cookies.set('jt_probe', '1', C_OPTS);
-          ok = Cookies.get('jt_probe') === '1';
-          Cookies.remove('jt_probe', R_OPTS);
+          Cookies.set(APP.key + 'probe', '1', C_OPTS);
+          ok = Cookies.get(APP.key + 'probe') === '1';
+          Cookies.remove(APP.key + 'probe', R_OPTS);
         }
       } catch (e) { ok = false; }
       if (ok) { this.mode = 'cookie'; return; }
       try {
-        localStorage.setItem('jt_probe', '1');
-        var l = localStorage.getItem('jt_probe') === '1';
-        localStorage.removeItem('jt_probe');
+        localStorage.setItem(APP.key + 'probe', '1');
+        var l = localStorage.getItem(APP.key + 'probe') === '1';
+        localStorage.removeItem(APP.key + 'probe');
         if (l) { this.mode = 'local'; this.note = 'This browser blocks cookies here, so JollyTrip saves to local storage instead.'; return; }
       } catch (e) { }
       this.mode = 'memory';
@@ -145,7 +148,7 @@
       var self = this;
       this.ready = new Promise(function (res) {
         try {
-          var r = indexedDB.open('jollytrip', 2), done = false;
+          var r = indexedDB.open(APP.id, 2), done = false;
           r.onupgradeneeded = function () {
             var db = r.result;
             if (!db.objectStoreNames.contains('photos')) db.createObjectStore('photos', { keyPath: 'id' });
