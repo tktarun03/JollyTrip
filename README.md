@@ -13,6 +13,7 @@ A minimalist planner and budget for family holidays. A sibling of BasKar.
 - **Notes**: hotel addresses, emergency numbers and anything else you want to keep.
 - **Travel wallet**: every booking as a pass with its booking code as a QR code, dates, travellers and picture. It works offline. JollyTrip can't issue Apple or Google Wallet passes itself, because both need signing keys held on a server. It can add a `.pkpass` file the airline or hotel sent to Apple Wallet, and open their "Save to Google Wallet" link.
 - **Add to Apple Wallet**: uses the airline's or hotel's own `.pkpass` if you attached one. Otherwise it makes a pass with [WalletWallet](https://www.walletwallet.dev/): one tap with your own free API key (1,000 passes a month, stored only on your device; the booking details are sent to WalletWallet), or with their free [web tool](https://walletwallet.alen.ro/), opened with the booking code copied.
+- **Add to Calendar**: the whole trip from Plan → Bookings, or one booking from its sheet or pass, as an `.ics` file. It holds the trip's dates, check-in and check-out, flights, balances due and timed plans, each with an alert. Times follow the phone's time zone, so they stay right when you land.
 - **Directions**: an arrow button on itinerary places, bookings and passes asks which app to use (Apple Maps, Google Maps or Waze), with Drive, Walk or Transit, and can remember your choice.
 - **Add a wallet anywhere**: "+ Add a wallet…" in the spend, booking-deposit and CSV import forms creates a card or cash wallet and returns to the form with it selected.
 - **Paste booking details**: paste the confirmation email text and the same reader fills in the booking.
@@ -33,6 +34,7 @@ A minimalist planner and budget for family holidays. A sibling of BasKar.
 - Share a trip summary to WhatsApp, or export every spend as a CSV.
 
 **Safety nets**
+- **Backups**: More → Save backup makes one `.json` file with your trips and photos. On iPhone, choose Save to Files and pick iCloud Drive. Today reminds you when the last backup is more than 7 days old. More → Restore from backup reads the file back (or pasted text).
 - **Version history**: versions of each account are saved on the device automatically while you make changes (at most every 20 minutes), before big changes such as deleting a trip or importing spends, and whenever you save one yourself. Restore any version in one tap. Restoring first saves your current state, so a rollback can itself be undone.
 - **Undo** straight after deleting, importing or restoring.
 - **App lock**: a 4- or 6-digit PIN, plus Face ID, Touch ID, fingerprint or Windows Hello through the browser's built-in passkey support (WebAuthn, platform authenticator, no server). It locks when the app opens, after a chosen time away, and after the same time idle (5 minutes by default). The lock keeps people out of the app; the stored data isn't encrypted.
@@ -55,13 +57,13 @@ Everything stays in the browser on the device you use. Nothing is uploaded.
 | Photos and PDFs | The browser's IndexedDB. Photos are shrunk to JPEG (receipts up to 2000 px, avatars 256 px); PDFs up to 12 MB are kept as they are. |
 | Saved versions | IndexedDB on the device. They aren't included in backups. |
 | PIN | A salted PBKDF2 hash in the account list. Face unlock stores only a passkey ID; the passkey itself stays in the device's secure hardware. |
-| Backup | More → Copy backup puts trips and photos into one block of text. Paste it into Restore on another device. |
+| Backup | More → Save backup makes one `.json` file with trips and photos. Choose it in Restore from backup on any device. |
 
 Trips from the first version of JollyTrip move into the first account you create.
 
 Notes:
 
-- **iPhone:** Safari can clear a website's data after 7 days without a visit. Add JollyTrip to the Home Screen (Share → Add to Home Screen) and use it only from there. The Home Screen app keeps its storage separate from Safari, so move any existing trips across with Copy backup → Restore.
+- **iPhone:** Safari can clear a website's data after 7 days without a visit. Add JollyTrip to the Home Screen (Share → Add to Home Screen) and use it only from there. The Home Screen app keeps its storage separate from Safari, so move any existing trips across with Save backup → Restore from backup.
 - **Android / desktop Chrome:** use "Install app" in the browser menu.
 - **Opening the file directly** (a `file://` address): most browsers block cookies there, so the app falls back to `localStorage`.
 
@@ -79,9 +81,22 @@ The code is in `src/`. Edit those files, then run `python3 build.py` to rebuild 
 | `f-extra.js` | App lock (PIN, Face ID), profile, receipt and PDF reading |
 | `g-wallet.js` | Travel wallet passes, Apple Wallet hand-off, adding a wallet from forms |
 | `h-maps.js` | Directions chooser and WalletWallet passes |
+| `i-backup-cal.js` | Backup files, the backup reminder, and calendar (`.ics`) export |
 | `z-start.js` | Start-up: loading, zoom lock, idle lock, offline cache |
 | `style.css`, `head.html`, `body.html` | Styles and page shell |
 | `lib-*.js` | Bundled libraries (js-cookie, lz-string, qrcode-generator) |
+
+## Tests
+
+`tests/e2e.js` opens the built app in headless Chromium at phone size and checks the main flows: every tab of the example trip, fixed sheet headers, calendar export, backup and restore from a file, PIN lock and the 5-minute idle lock, undo and version history, the directions chooser, and attached Apple Wallet passes. Outside sites are stubbed, so the tests need no network.
+
+```
+npm install
+npx playwright install chromium
+npm test
+```
+
+GitHub Actions runs them on every push to `main` (`.github/workflows/test.yml`). It also rebuilds `index.html` from `src/` and fails if the committed file is out of date. Receipt reading (OCR) isn't tested in CI, because it downloads about 5 MB of libraries.
 
 ## Files
 

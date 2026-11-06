@@ -1,0 +1,12 @@
+{
+  "name": "jollytrip",
+  "private": true,
+  "description": "JollyTrip: a family holiday planner and budget. Tests only; the app itself has no build dependencies.",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "node --test tests/e2e.js"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

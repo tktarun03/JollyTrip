@@ -183,8 +183,9 @@
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.6';
+  var APP_VERSION = '3.7';
   var CHANGELOG = [
+    { v: '3.7', date: '2026-11-06', items: ['Save backup makes a file you can keep in Files or iCloud Drive, and Restore from backup can read it back. Today reminds you when your last backup is more than a week old.', 'Add to Calendar: the whole trip from Plan → Bookings, or one booking from its sheet or pass. Check-in, check-out, flights, balances due and timed plans come with alerts.', 'Add to Apple Wallet now uses a pass you’ve just attached, before you save the booking.'] },
     { v: '3.6', date: '2026-11-05', items: ['Directions: tap the arrow next to a place or booking and choose Apple Maps, Google Maps or Waze, for driving, walking or transit. Save a favourite in More → Maps and wallet.', 'Add to Apple Wallet on every booking: uses the airline’s or hotel’s own pass if attached, or makes one with the free WalletWallet service.', 'Bookings have an address, read from pasted or scanned confirmations when possible.'] },
     { v: '3.5', date: '2026-11-05', items: ['Travel wallet: every booking as a pass with its code as a QR code, offline. Open it from Plan → Bookings or any booking.', 'Add the airline’s or hotel’s own Apple Wallet pass (.pkpass) to Apple Wallet, or open their Google Wallet link.', '“+ Add a wallet…” in the spend, booking and CSV import forms, so you can add a card or cash wallet without leaving the form.'] },
     { v: '3.4', date: '2026-11-03', items: ['Face ID or fingerprint can be turned on straight from More → Security or your profile. Without a PIN, it walks you through setting one first, and new PINs offer Face ID right away.'] },

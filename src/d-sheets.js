@@ -205,7 +205,7 @@
     return sheetHead(sh.title) + '<p class="hint">' + esc(sh.msg) + '</p><textarea id="text-out" class="input code" readonly aria-label="' + esc(sh.title) + '" style="min-height:260px">' + esc(sh.body) + '</textarea><button type="button" class="btn block" data-act="text-copy">' + ic('copy', 18) + ' Copy</button>';
   }
   function sheetRestore(sh) {
-    return sheetHead('Restore from backup') + '<p class="hint">Paste a ' + esc(BR.name) + ' backup copied from More. It replaces this account’s trips and brings back their photos.</p><textarea id="restore-box" class="input code" data-f="text" style="min-height:200px" spellcheck="false" placeholder="Paste the backup here">' + esc(sh.d.text) + '</textarea>' + errLine(sh) + '<button type="button" class="btn block" data-act="restore">Replace with this backup</button>';
+    return sheetHead('Restore from backup') + '<p class="hint">Choose a ' + esc(BR.name) + ' backup file, or paste a backup you copied. It replaces this account’s trips and brings back their photos.</p><label class="btn ghost block">' + ic('upload', 18) + ' Choose a backup file<input type="file" accept=".json,application/json,text/plain" class="sr-only" data-upload="restore-file"></label>' + (sh.d.file ? '<p class="notice">' + esc(sh.d.file) + ' loaded. Check it below, then tap Replace.</p>' : '') + '<textarea id="restore-box" class="input code" data-f="text" style="min-height:200px" spellcheck="false" placeholder="Paste the backup here">' + esc(sh.d.text) + '</textarea>' + errLine(sh) + '<button type="button" class="btn block" data-act="restore">Replace with this backup</button>';
   }
 
   function sheetRecap() {

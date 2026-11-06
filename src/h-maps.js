@@ -46,7 +46,7 @@
   }
   function sheetApplePass(sh) {
     var t = trip(), b = bookingById(t, sh.id); if (!b) return sheetHead('Add to Apple Wallet') + '<p class="hint">This booking is gone.</p>';
-    var key = S.p.settings.wwKey || '', pk = bookingPkpass(b);
+    var key = S.p.settings.wwKey || '', draft = sh.back && sh.back.type === 'booking' && sh.back.d.id === b.id ? sh.back.d : null, pk = bookingPkpass(draft || b); /* a pass just attached in the open booking counts before it's saved */
     return sheetHead('Add to Apple Wallet') +
       (pk ? '<section class="card"><strong>The pass you attached</strong><p class="hint">' + esc(pk.name) + '. Passes from the airline or hotel are the ones their staff can scan.</p><button type="button" class="btn" data-act="pkpass-add" data-id="' + esc(pk.id) + '">' + ic('wallet', 18) + ' Add this pass</button></section>' : '') +
       '<section class="card"><div class="row between"><strong>One tap, with WalletWallet</strong><span class="pill ' + (key ? 'good' : 'info') + '">' + (key ? 'Key saved' : 'Needs a free key') + '</span></div>' +

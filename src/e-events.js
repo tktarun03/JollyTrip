@@ -280,12 +280,12 @@
     'restore-open': function () { openSheet({ type: 'restore', d: { text: '' } }, '#restore-box'); },
     restore: function () {
       var o; try { o = JSON.parse(S.sheet.d.text); } catch (e) { o = null; }
-      if (!o || !Array.isArray(o.trips)) { sheetErr('That isn’t a ' + BR.name + ' backup. Paste the whole text you copied.'); return; }
+      if (!o || !Array.isArray(o.trips)) { sheetErr('That isn’t a ' + BR.name + ' backup. Choose the .json backup file, or paste the whole text you copied.'); return; }
       var ph = o.photos || {}; delete o.photos; delete o.app;
       Promise.all(Object.keys(ph).map(function (id) { var b = dataToBlob(ph[id]); return b ? Photos.put(id, b) : null; })).then(function () {
         if (!o.home) o.home = S.p.home;
         checkpoint('Before restoring a backup', true);
-        o.demo = S.p.demo && o.demo; S.p = migrate(o); save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
+        o.demo = S.p.demo && o.demo; S.p = migrate(o); S.p.settings.lastBackup = Date.now(); save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
         toast('Restored', plural(S.p.trips.length, 'trip') + (Object.keys(ph).length ? ' and ' + plural(Object.keys(ph).length, 'photo') : '') + '.', UNDO);
       });
     },
@@ -586,6 +586,7 @@
     if (kind === 'logo') return processLogo(files[0]);
     if (kind === 'bk-docs') return handleDocs(files);
     if (kind === 'bk-cover') { var shc = S.sheet; shrink(files[0], 1600, false).then(function (b) { var id = 'ph_' + uid(); return Photos.put(id, b).then(function () { if (S.sheet === shc) { shc.d.cover = id; renderSheet(); } toast('Picture added'); }); }).catch(function () { toast('Couldn’t read that photo', 'Try a JPEG or PNG.'); }); return; }
+    if (kind === 'restore-file') { var rf = new FileReader(), shr = S.sheet; rf.onload = function () { if (S.sheet !== shr) return; shr.d.text = String(rf.result || ''); shr.d.file = files[0].name; shr.err = ''; renderSheet(); }; rf.onerror = function () { sheetErr('Couldn’t read that file.'); }; rf.readAsText(files[0]); return; }
     if (kind === 'csv') { var fr = new FileReader(); fr.onload = function () { loadCsv(String(fr.result || '')); }; fr.onerror = function () { sheetErr('Couldn’t read that file.'); }; fr.readAsText(files[0]); return; }
     if (kind === 'sheet-photos') { var max = S.sheet.type === 'booking' ? 4 : 6; files = files.slice(0, Math.max(0, max - S.sheet.d.photos.length)); }
     else files = files.slice(0, 1);

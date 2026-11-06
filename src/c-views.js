@@ -139,7 +139,7 @@
      Today
      ========================================================= */
   function renderToday(t) {
-    var c = calc(t), h = header(t, greeting()) + coverBanner(t);
+    var c = calc(t), h = header(t, greeting()) + coverBanner(t) + backupReminder();
     if (c.status === 'upcoming') return h + todayUpcoming(t, c);
     if (c.status === 'done') return h + todayDone(t, c);
     return h + todayActive(t, c);
@@ -262,6 +262,7 @@
         '<span class="amt"><b>' + esc(money(st.tot)) + '</b>' + pill + '</span></button>';
     }).join('') : '<div class="empty"><p>No bookings yet.</p><p class="hint">Add flights, stays, car hire and tickets. They show on the right days of your itinerary, and their cost is set aside before your daily allowance.</p></div>') + '</div><div class="spacer"></div></section>';
     h += '<button type="button" class="btn ghost block" data-act="bk-add">' + ic('plus', 18) + ' Add a booking</button>';
+    if (t.bookings.length || t.plan.length) h += '<button type="button" class="btn quiet block" data-act="cal-trip">' + ic('calendar', 18) + ' Add the trip to Calendar</button><p class="hint pad">' + plural(calCount(t), 'event') + ' with alerts: the trip, each booking, balances due and timed plans.</p>';
     if (t.bookings.length) h = '<button type="button" class="alert info" data-act="pass-open" data-id=""><span class="tile" style="--c:var(--ink)">' + ic('wallet', 18) + '</span><span class="grow"><strong>Travel wallet</strong><span class="hint">Your bookings as passes with QR codes. Works offline.</span></span>' + ic('chev', 18) + '</button>' + h;
     return h;
   }
@@ -407,7 +408,7 @@
       '<dl class="stats"><div><dt>Account data</dt><dd>' + kb(u.raw) + '</dd></div><div><dt>Compressed</dt><dd>' + (u.comp ? kb(u.comp) : '—') + '</dd></div><div><dt>Cookie chunks</dt><dd>' + (u.chunks || '—') + '</dd></div><div><dt>Trips · spends · photos</dt><dd>' + S.p.trips.length + ' · ' + spendCount + ' · ' + photoCount + '</dd></div></dl>' +
       '<p class="hint">' + (u.where === 'cookie' ? 'A cookie holds about 4 KB, so your trips are compressed and split across ' + plural(u.chunks, 'cookie') + ', with a copy in local storage. Photos live in the browser’s photo storage.' : u.where === 'local' ? (Store.mode === 'cookie' ? 'Your trips outgrew cookie space, so they now live in local storage.' : esc(Store.note)) : esc(Store.note)) + ' Everything stays on this device.</p>' +
       (Photos.ok ? '' : '<p class="notice">This browser can’t store photos here, so photos last only until you close the tab.</p>') +
-      '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="backup">' + ic('copy', 16) + 'Copy backup</button><button type="button" class="btn quiet sm" data-act="restore-open">Restore from backup</button><button type="button" class="btn quiet sm" data-act="json">' + (S.showJson ? 'Hide JSON' : 'View JSON') + '</button>' + (t ? '<button type="button" class="btn quiet sm" data-act="csv">Export CSV</button><button type="button" class="btn quiet sm" data-act="open-csv">Import CSV</button>' : '') + '</div>' +
+      '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="backup-file">' + ic('download', 16) + 'Save backup</button><button type="button" class="btn quiet sm" data-act="restore-open">Restore from backup</button><button type="button" class="btn quiet sm" data-act="json">' + (S.showJson ? 'Hide JSON' : 'View JSON') + '</button>' + (t ? '<button type="button" class="btn quiet sm" data-act="csv">Export CSV</button><button type="button" class="btn quiet sm" data-act="open-csv">Import CSV</button>' : '') + '</div>' +
       '<p class="hint">The backup includes photos, so it can be large. Paste it into Restore on another device to move everything across.</p>' +
       (S.showJson ? '<pre class="json" tabindex="0">' + esc(JSON.stringify(S.p, null, 2)) + '</pre>' : '') + '</section>';
     right += securityCard(m);

@@ -969,8 +969,9 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   /* =========================================================
      App version and what changed
      ========================================================= */
-  var APP_VERSION = '3.6';
+  var APP_VERSION = '3.7';
   var CHANGELOG = [
+    { v: '3.7', date: '2026-11-06', items: ['Save backup makes a file you can keep in Files or iCloud Drive, and Restore from backup can read it back. Today reminds you when your last backup is more than a week old.', 'Add to Calendar: the whole trip from Plan → Bookings, or one booking from its sheet or pass. Check-in, check-out, flights, balances due and timed plans come with alerts.', 'Add to Apple Wallet now uses a pass you’ve just attached, before you save the booking.'] },
     { v: '3.6', date: '2026-11-05', items: ['Directions: tap the arrow next to a place or booking and choose Apple Maps, Google Maps or Waze, for driving, walking or transit. Save a favourite in More → Maps and wallet.', 'Add to Apple Wallet on every booking: uses the airline’s or hotel’s own pass if attached, or makes one with the free WalletWallet service.', 'Bookings have an address, read from pasted or scanned confirmations when possible.'] },
     { v: '3.5', date: '2026-11-05', items: ['Travel wallet: every booking as a pass with its code as a QR code, offline. Open it from Plan → Bookings or any booking.', 'Add the airline’s or hotel’s own Apple Wallet pass (.pkpass) to Apple Wallet, or open their Google Wallet link.', '“+ Add a wallet…” in the spend, booking and CSV import forms, so you can add a card or cash wallet without leaving the form.'] },
     { v: '3.4', date: '2026-11-03', items: ['Face ID or fingerprint can be turned on straight from More → Security or your profile. Without a PIN, it walks you through setting one first, and new PINs offer Face ID right away.'] },
@@ -1680,7 +1681,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
      Today
      ========================================================= */
   function renderToday(t) {
-    var c = calc(t), h = header(t, greeting()) + coverBanner(t);
+    var c = calc(t), h = header(t, greeting()) + coverBanner(t) + backupReminder();
     if (c.status === 'upcoming') return h + todayUpcoming(t, c);
     if (c.status === 'done') return h + todayDone(t, c);
     return h + todayActive(t, c);
@@ -1803,6 +1804,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         '<span class="amt"><b>' + esc(money(st.tot)) + '</b>' + pill + '</span></button>';
     }).join('') : '<div class="empty"><p>No bookings yet.</p><p class="hint">Add flights, stays, car hire and tickets. They show on the right days of your itinerary, and their cost is set aside before your daily allowance.</p></div>') + '</div><div class="spacer"></div></section>';
     h += '<button type="button" class="btn ghost block" data-act="bk-add">' + ic('plus', 18) + ' Add a booking</button>';
+    if (t.bookings.length || t.plan.length) h += '<button type="button" class="btn quiet block" data-act="cal-trip">' + ic('calendar', 18) + ' Add the trip to Calendar</button><p class="hint pad">' + plural(calCount(t), 'event') + ' with alerts: the trip, each booking, balances due and timed plans.</p>';
     if (t.bookings.length) h = '<button type="button" class="alert info" data-act="pass-open" data-id=""><span class="tile" style="--c:var(--ink)">' + ic('wallet', 18) + '</span><span class="grow"><strong>Travel wallet</strong><span class="hint">Your bookings as passes with QR codes. Works offline.</span></span>' + ic('chev', 18) + '</button>' + h;
     return h;
   }
@@ -1948,7 +1950,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<dl class="stats"><div><dt>Account data</dt><dd>' + kb(u.raw) + '</dd></div><div><dt>Compressed</dt><dd>' + (u.comp ? kb(u.comp) : '—') + '</dd></div><div><dt>Cookie chunks</dt><dd>' + (u.chunks || '—') + '</dd></div><div><dt>Trips · spends · photos</dt><dd>' + S.p.trips.length + ' · ' + spendCount + ' · ' + photoCount + '</dd></div></dl>' +
       '<p class="hint">' + (u.where === 'cookie' ? 'A cookie holds about 4 KB, so your trips are compressed and split across ' + plural(u.chunks, 'cookie') + ', with a copy in local storage. Photos live in the browser’s photo storage.' : u.where === 'local' ? (Store.mode === 'cookie' ? 'Your trips outgrew cookie space, so they now live in local storage.' : esc(Store.note)) : esc(Store.note)) + ' Everything stays on this device.</p>' +
       (Photos.ok ? '' : '<p class="notice">This browser can’t store photos here, so photos last only until you close the tab.</p>') +
-      '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="backup">' + ic('copy', 16) + 'Copy backup</button><button type="button" class="btn quiet sm" data-act="restore-open">Restore from backup</button><button type="button" class="btn quiet sm" data-act="json">' + (S.showJson ? 'Hide JSON' : 'View JSON') + '</button>' + (t ? '<button type="button" class="btn quiet sm" data-act="csv">Export CSV</button><button type="button" class="btn quiet sm" data-act="open-csv">Import CSV</button>' : '') + '</div>' +
+      '<div class="row wrap"><button type="button" class="btn quiet sm" data-act="backup-file">' + ic('download', 16) + 'Save backup</button><button type="button" class="btn quiet sm" data-act="restore-open">Restore from backup</button><button type="button" class="btn quiet sm" data-act="json">' + (S.showJson ? 'Hide JSON' : 'View JSON') + '</button>' + (t ? '<button type="button" class="btn quiet sm" data-act="csv">Export CSV</button><button type="button" class="btn quiet sm" data-act="open-csv">Import CSV</button>' : '') + '</div>' +
       '<p class="hint">The backup includes photos, so it can be large. Paste it into Restore on another device to move everything across.</p>' +
       (S.showJson ? '<pre class="json" tabindex="0">' + esc(JSON.stringify(S.p, null, 2)) + '</pre>' : '') + '</section>';
     right += securityCard(m);
@@ -2184,7 +2186,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     return sheetHead(sh.title) + '<p class="hint">' + esc(sh.msg) + '</p><textarea id="text-out" class="input code" readonly aria-label="' + esc(sh.title) + '" style="min-height:260px">' + esc(sh.body) + '</textarea><button type="button" class="btn block" data-act="text-copy">' + ic('copy', 18) + ' Copy</button>';
   }
   function sheetRestore(sh) {
-    return sheetHead('Restore from backup') + '<p class="hint">Paste a ' + esc(BR.name) + ' backup copied from More. It replaces this account’s trips and brings back their photos.</p><textarea id="restore-box" class="input code" data-f="text" style="min-height:200px" spellcheck="false" placeholder="Paste the backup here">' + esc(sh.d.text) + '</textarea>' + errLine(sh) + '<button type="button" class="btn block" data-act="restore">Replace with this backup</button>';
+    return sheetHead('Restore from backup') + '<p class="hint">Choose a ' + esc(BR.name) + ' backup file, or paste a backup you copied. It replaces this account’s trips and brings back their photos.</p><label class="btn ghost block">' + ic('upload', 18) + ' Choose a backup file<input type="file" accept=".json,application/json,text/plain" class="sr-only" data-upload="restore-file"></label>' + (sh.d.file ? '<p class="notice">' + esc(sh.d.file) + ' loaded. Check it below, then tap Replace.</p>' : '') + '<textarea id="restore-box" class="input code" data-f="text" style="min-height:200px" spellcheck="false" placeholder="Paste the backup here">' + esc(sh.d.text) + '</textarea>' + errLine(sh) + '<button type="button" class="btn block" data-act="restore">Replace with this backup</button>';
   }
 
   function sheetRecap() {
@@ -2559,12 +2561,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     'restore-open': function () { openSheet({ type: 'restore', d: { text: '' } }, '#restore-box'); },
     restore: function () {
       var o; try { o = JSON.parse(S.sheet.d.text); } catch (e) { o = null; }
-      if (!o || !Array.isArray(o.trips)) { sheetErr('That isn’t a ' + BR.name + ' backup. Paste the whole text you copied.'); return; }
+      if (!o || !Array.isArray(o.trips)) { sheetErr('That isn’t a ' + BR.name + ' backup. Choose the .json backup file, or paste the whole text you copied.'); return; }
       var ph = o.photos || {}; delete o.photos; delete o.app;
       Promise.all(Object.keys(ph).map(function (id) { var b = dataToBlob(ph[id]); return b ? Photos.put(id, b) : null; })).then(function () {
         if (!o.home) o.home = S.p.home;
         checkpoint('Before restoring a backup', true);
-        o.demo = S.p.demo && o.demo; S.p = migrate(o); save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
+        o.demo = S.p.demo && o.demo; S.p = migrate(o); S.p.settings.lastBackup = Date.now(); save(); S.sheet = null; S.tab = 'today'; renderAll(); toTop();
         toast('Restored', plural(S.p.trips.length, 'trip') + (Object.keys(ph).length ? ' and ' + plural(Object.keys(ph).length, 'photo') : '') + '.', UNDO);
       });
     },
@@ -2865,6 +2867,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     if (kind === 'logo') return processLogo(files[0]);
     if (kind === 'bk-docs') return handleDocs(files);
     if (kind === 'bk-cover') { var shc = S.sheet; shrink(files[0], 1600, false).then(function (b) { var id = 'ph_' + uid(); return Photos.put(id, b).then(function () { if (S.sheet === shc) { shc.d.cover = id; renderSheet(); } toast('Picture added'); }); }).catch(function () { toast('Couldn’t read that photo', 'Try a JPEG or PNG.'); }); return; }
+    if (kind === 'restore-file') { var rf = new FileReader(), shr = S.sheet; rf.onload = function () { if (S.sheet !== shr) return; shr.d.text = String(rf.result || ''); shr.d.file = files[0].name; shr.err = ''; renderSheet(); }; rf.onerror = function () { sheetErr('Couldn’t read that file.'); }; rf.readAsText(files[0]); return; }
     if (kind === 'csv') { var fr = new FileReader(); fr.onload = function () { loadCsv(String(fr.result || '')); }; fr.onerror = function () { sheetErr('Couldn’t read that file.'); }; fr.readAsText(files[0]); return; }
     if (kind === 'sheet-photos') { var max = S.sheet.type === 'booking' ? 4 : 6; files = files.slice(0, Math.max(0, max - S.sheet.d.photos.length)); }
     else files = files.slice(0, 1);
@@ -3518,7 +3521,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     return '<section class="card" style="gap:10px"><div class="row between"><span class="label">Wallet</span>' + ic('wallet', 18) + '</div>' +
       '<p class="hint">Show this booking as a pass, even offline, with its code as a QR code. Add the airline’s or hotel’s own pass to Apple or Google Wallet if they sent one.</p>' +
       '<div class="row wrap">' + (d.id ? '<button type="button" class="btn sm" data-act="pass-open" data-id="' + esc(d.id) + '">' + ic('wallet', 16) + ' Show pass</button>' : '<span class="hint">Save the booking to show its pass.</span>') +
-      (d.id ? '<button type="button" class="btn quiet sm" data-act="apple-pass" data-id="' + esc(d.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' : '') +
+      (d.id ? '<button type="button" class="btn quiet sm" data-act="apple-pass" data-id="' + esc(d.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button><button type="button" class="btn quiet sm" data-act="cal-booking" data-id="' + esc(d.id) + '">' + ic('calendar', 16) + ' Add to Calendar</button>' : '') +
       (gw ? '<a class="btn quiet sm" href="' + esc(String(d.gwallet).trim()) + '" target="_blank" rel="noopener">' + ic('open', 16) + ' Save to Google Wallet</a>' : '') + '</div>' +
       '<div class="field"><label for="bk-gw">Google Wallet link <span class="muted">(optional)</span></label><input id="bk-gw" class="input" data-f="gwallet" type="url" inputmode="url" placeholder="https://pay.google.com/gp/v/save/…" value="' + esc(d.gwallet || '') + '"><span class="hint">Copy the “Save to Google Wallet” link from your confirmation email.</span></div>' +
       '<p class="hint">Add to Apple Wallet uses the pass the airline or hotel sent if you attached one (a .pkpass file). Otherwise it makes one with the free WalletWallet service.</p></section>';
@@ -3545,7 +3548,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       '<div class="stack-xs"><span class="eyebrow">Booking code</span>' + (b.conf ? '<span class="conf big">' + esc(b.conf) + '</span><button type="button" class="link" data-act="pass-copy" data-v="' + esc(b.conf) + '" style="align-self:flex-start">' + ic('copy', 14) + ' Copy</button>' : '<span class="hint">None yet. Add it to the booking to show a QR code.</span>') + '</div></div>' +
       (t.people.length ? '<div class="row" style="gap:8px"><span class="av-stack">' + t.people.slice(0, 6).map(function (p) { return avatar(p, 26); }).join('') + '</span><span class="hint">' + esc(t.people.map(function (p) { return p.name; }).join(', ')) + '</span></div>' : '') +
       (b.notes ? '<p class="hint pass-notes">' + esc(b.notes.split('\n')[0].slice(0, 140)) + '</p>' : '') +
-      '<div class="row wrap"><button type="button" class="btn sm" data-act="apple-pass" data-id="' + esc(b.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button>' + dirBtn(bookingQuery(t, b)) +
+      '<div class="row wrap"><button type="button" class="btn sm" data-act="apple-pass" data-id="' + esc(b.id) + '">' + ic('wallet', 16) + ' Add to Apple Wallet</button><button type="button" class="btn quiet sm" data-act="cal-booking" data-id="' + esc(b.id) + '">' + ic('calendar', 16) + ' Calendar</button>' + dirBtn(bookingQuery(t, b)) +
       (gw ? '<a class="btn sm" href="' + esc(b.gwallet) + '" target="_blank" rel="noopener">' + ic('open', 16) + ' Save to Google Wallet</a>' : '') +
       '<button type="button" class="btn ghost sm" data-act="pass-edit" data-id="' + esc(b.id) + '">' + ic('edit', 16) + ' Booking details</button></div></div></article>' +
       (list.length > 1 ? '<div class="pass-nav"><button type="button" class="lb-btn" data-act="pass-step" data-d="-1" aria-label="Previous booking" style="position:static">' + ic('left', 20) + '</button><button type="button" class="lb-btn" data-act="pass-step" data-d="1" aria-label="Next booking" style="position:static">' + ic('right', 20) + '</button></div>' : '') +
@@ -3633,7 +3636,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
   }
   function sheetApplePass(sh) {
     var t = trip(), b = bookingById(t, sh.id); if (!b) return sheetHead('Add to Apple Wallet') + '<p class="hint">This booking is gone.</p>';
-    var key = S.p.settings.wwKey || '', pk = bookingPkpass(b);
+    var key = S.p.settings.wwKey || '', draft = sh.back && sh.back.type === 'booking' && sh.back.d.id === b.id ? sh.back.d : null, pk = bookingPkpass(draft || b); /* a pass just attached in the open booking counts before it's saved */
     return sheetHead('Add to Apple Wallet') +
       (pk ? '<section class="card"><strong>The pass you attached</strong><p class="hint">' + esc(pk.name) + '. Passes from the airline or hotel are the ones their staff can scan.</p><button type="button" class="btn" data-act="pkpass-add" data-id="' + esc(pk.id) + '">' + ic('wallet', 18) + ' Add this pass</button></section>' : '') +
       '<section class="card"><div class="row between"><strong>One tap, with WalletWallet</strong><span class="pill ' + (key ? 'good' : 'info') + '">' + (key ? 'Key saved' : 'Needs a free key') + '</span></div>' +
@@ -3708,6 +3711,105 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       toast('Opened WalletWallet', b.conf ? 'Code ' + b.conf + ' is copied. Use it as the barcode, and the booking name as the title.' : 'Details copied. Add a booking code for a scannable pass.');
     },
     'ww-key-clear': function () { delete S.p.settings.wwKey; save(); renderView(); toast('Key removed'); }
+  });
+  /* =========================================================
+     Backups as files, with a weekly reminder
+     ========================================================= */
+  var BACKUP_EVERY = 7 * DAY;
+  function lastBackupText() { var lb = S.p && S.p.settings.lastBackup; if (!lb) return 'Never backed up'; var d = Math.floor((Date.now() - lb) / DAY); return 'Last backup ' + (d <= 0 ? 'today' : d === 1 ? 'yesterday' : d + ' days ago'); }
+  function needsBackup() {
+    if (!S.p || S.p.demo) return false;
+    var s = S.p.settings, now = Date.now();
+    if (s.backupSnooze && now < s.backupSnooze) return false;
+    var hasData = S.p.trips.some(function (t) { return t.expenses.length || t.bookings.length || t.plan.length; });
+    return hasData && (!s.lastBackup || now - s.lastBackup > BACKUP_EVERY);
+  }
+  function backupReminder() {
+    if (!needsBackup()) return '';
+    return '<section class="alert warn" role="status" style="align-items:flex-start"><span class="tile" style="--c:var(--warn)">' + ic('download', 18) + '</span><span class="grow"><strong>Back up your trips</strong><span class="hint">' + esc(lastBackupText()) + '. Your trips live only on this phone. Save a backup file to Files or iCloud Drive so you can get them back.</span><span class="row wrap" style="margin-top:8px"><button type="button" class="btn sm" data-act="backup-file">Save backup</button><button type="button" class="btn ghost sm" data-act="backup-snooze">Later</button></span></span></section>';
+  }
+  function backupName() { var d = new Date(); return slug(BR.name) + '-backup-' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.json'; }
+  function markBackedUp() { S.p.settings.lastBackup = Date.now(); delete S.p.settings.backupSnooze; save(); }
+  function sheetBackupReady(sh) {
+    var canShare = IS_TOP && navigator.canShare && (function () { try { return navigator.canShare({ files: [new File(['{}'], 'x.json', { type: 'application/json' })] }); } catch (e) { return false; } })();
+    return sheetHead('Your backup is ready') + '<div class="lock" style="padding:0.5rem 0 0"><span class="flame" style="width:72px;height:72px">' + ic('download', 32) + '</span><h3 class="h3">' + esc(sh.name) + '</h3><p class="hint">' + esc(kb(sh.txt.length)) + ' · ' + plural(sh.trips, 'trip') + (sh.photos ? ' and ' + plural(sh.photos, 'photo or file', 'photos and files') : '') + '</p></div>' +
+      (IS_TOP ? '<button type="button" class="btn block" data-act="backup-share">' + ic('download', 18) + (canShare ? ' Save to Files or iCloud Drive' : ' Download the file') + '</button>' : '<p class="notice">This preview can’t save files. Copy the backup instead, or open ' + esc(BR.name) + ' from its own web address.</p>') +
+      '<button type="button" class="btn ghost block" data-act="backup-copy">' + ic('copy', 16) + ' Copy as text instead</button>' +
+      '<p class="hint">' + (canShare ? 'In the share sheet, choose Save to Files, then pick iCloud Drive so it’s safe even if you lose this phone. ' : '') + 'To restore, go to More → Restore from backup and choose this file.</p>';
+  }
+
+  /* =========================================================
+     Calendar export (.ics) with alerts
+     ========================================================= */
+  function icsEsc(s) { return String(s == null ? '' : s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n'); }
+  /* Lines fold at 75 bytes of UTF-8, never splitting a character. */
+  function u8len(ch) { var c = ch.codePointAt(0); return c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4; }
+  function icsFold(line) { var out = [], cur = '', n = 0; Array.from(line).forEach(function (ch) { var l = u8len(ch); if (n + l > 75) { out.push(cur); cur = ' '; n = 1; } cur += ch; n += l; }); out.push(cur); return out.join('\r\n'); }
+  function icsStamp() { var d = new Date(); return d.getUTCFullYear() + pad(d.getUTCMonth() + 1) + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + pad(d.getUTCMinutes()) + pad(d.getUTCSeconds()) + 'Z'; }
+  function icsDT(ds, hm) { return ds.replace(/-/g, '') + 'T' + String(hm).replace(':', '') + '00'; }
+  function plusMin(ds, hm, mins) { var p = hm.split(':'), d = D(ds); d.setHours(+p[0], +p[1] + mins, 0, 0); return { ds: iso(d), hm: pad(d.getHours()) + ':' + pad(d.getMinutes()) }; }
+  /* Times are "floating": they follow the phone's time zone, which is the local one while you travel. */
+  function icsEvent(o) {
+    var L = ['BEGIN:VEVENT', 'UID:' + o.uid + '@jollytrip', 'DTSTAMP:' + icsStamp(), 'SUMMARY:' + icsEsc(o.title)];
+    if (o.hm) { var e = plusMin(o.ds, o.hm, o.mins || 60); L.push('DTSTART:' + icsDT(o.ds, o.hm), 'DTEND:' + icsDT(e.ds, e.hm)); }
+    else { L.push('DTSTART;VALUE=DATE:' + o.ds.replace(/-/g, ''), 'DTEND;VALUE=DATE:' + addDays(o.endDs || o.ds, o.endDs ? 0 : 1).replace(/-/g, '')); L.push('TRANSP:TRANSPARENT'); }
+    if (o.loc) L.push('LOCATION:' + icsEsc(o.loc));
+    if (o.desc) L.push('DESCRIPTION:' + icsEsc(o.desc));
+    if (o.alarm) L.push('BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsEsc(o.title), 'TRIGGER:-PT' + o.alarm + 'M', 'END:VALARM');
+    L.push('END:VEVENT');
+    return L.map(icsFold).join('\r\n');
+  }
+  function icsWrap(name, events) { return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//' + icsEsc(BR.name) + '//Trip planner//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', icsFold('X-WR-CALNAME:' + icsEsc(name))].join('\r\n') + '\r\n' + events.join('\r\n') + '\r\nEND:VCALENDAR\r\n'; }
+  function bookingEventsIcs(t, b) {
+    var T = BKT[b.type] || BKT.other, loc = b.address || (b.type !== 'flight' ? placeQuery(t, b.name) : '');
+    var desc = [T.label + (b.provider ? ' · ' + b.provider : ''), b.conf ? 'Booking code: ' + b.conf : '', b.notes ? b.notes.slice(0, 400) : '', 'From ' + BR.name + ' · ' + t.name].filter(Boolean).join('\n');
+    var startAlarm = b.type === 'flight' ? 180 : b.time ? 60 : 900, out = [];
+    out.push(icsEvent({ uid: b.id + '-a', title: (T.a ? T.a + ': ' : '') + b.name, ds: b.start, hm: b.time, mins: b.type === 'flight' ? 120 : 60, loc: loc, desc: desc, alarm: startAlarm }));
+    if (T.hasEnd && b.end && (b.end !== b.start || b.endTime)) out.push(icsEvent({ uid: b.id + '-b', title: (T.b || 'Ends') + ': ' + b.name, ds: b.end, hm: b.endTime, mins: b.type === 'flight' ? 120 : 30, loc: loc, desc: desc, alarm: b.type === 'flight' ? 180 : b.endTime ? 60 : 900 }));
+    var st = bookingState(t, b);
+    if (b.due && (st.st === 'unpaid' || st.st === 'part')) out.push(icsEvent({ uid: b.id + '-due', title: 'Pay balance: ' + b.name + ' (' + money(st.left, t.home, { show: true }) + ')', ds: b.due, desc: desc, alarm: 900 }));
+    return out;
+  }
+  function tripIcs(t) {
+    var ev = [icsEvent({ uid: t.id + '-trip', title: t.name + (t.place ? ' · ' + t.place : ''), ds: t.start, endDs: addDays(t.end, 1), desc: 'Trip planned in ' + BR.name + '. ' + plural(t.people.length, 'traveller') + '.' })];
+    t.bookings.forEach(function (b) { ev = ev.concat(bookingEventsIcs(t, b)); });
+    t.plan.forEach(function (it) { if (!inTrip(t, it.day)) return; ev.push(icsEvent({ uid: it.id, title: it.title, ds: it.day, hm: it.time, mins: 60, loc: placeQuery(t, it.place), desc: [(PLK[it.kind] || PLK.sight).label, it.notes].filter(Boolean).join('\n'), alarm: it.time ? 30 : 0 })); });
+    return icsWrap(t.name, ev);
+  }
+  function openIcs(text, name) {
+    if (!IS_TOP) { toast('Open ' + BR.name + ' from its own web address', 'This preview can’t hand files to Calendar.'); return; }
+    var blob = new Blob([text], { type: 'text/calendar;charset=utf-8' }), u = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = u; if (!/iPhone|iPad|Macintosh/.test(navigator.userAgent)) a.download = name; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+    toast('Opening Calendar', /iPhone|iPad/.test(navigator.userAgent) ? 'Tap Add All to add the events with their alerts.' : 'Open the downloaded file to add the events to your calendar.');
+  }
+  function calCount(t) { var n = 1; t.bookings.forEach(function (b) { n += bookingEventsIcs(t, b).length; }); t.plan.forEach(function (it) { if (inTrip(t, it.day)) n++; }); return n; }
+
+  Object.assign(SHEETS, { backupready: sheetBackupReady });
+  Object.assign(ACT, {
+    'backup-file': function () {
+      toast('Preparing backup', 'Photos are included, so this can take a moment.');
+      buildBackup().then(function (txt) { var o = JSON.parse(txt); hideToast(); openSheet({ type: 'backupready', txt: txt, name: backupName(), trips: (o.trips || []).length, photos: Object.keys(o.photos || {}).length }); });
+    },
+    'backup-share': function () {
+      var sh = S.sheet, file;
+      try { file = new File([sh.txt], sh.name, { type: 'application/json' }); } catch (e) { file = null; }
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: sh.name }).then(function () { markBackedUp(); closeSheet(); renderView(); toast('Backup saved', sh.name); }, function (e) { if (!e || e.name !== 'AbortError') toast('Couldn’t share the file', 'Try Copy as text instead.'); });
+        return;
+      }
+      var u = URL.createObjectURL(new Blob([sh.txt], { type: 'application/json' })), a = document.createElement('a');
+      a.href = u; a.download = sh.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 60000);
+      markBackedUp(); closeSheet(); renderView(); toast('Backup downloaded', sh.name + '. Keep it somewhere safe, like iCloud Drive or Google Drive.');
+    },
+    'backup-copy': function () {
+      var sh = S.sheet, txt = sh.txt;
+      try { navigator.clipboard.writeText(txt).then(function () { markBackedUp(); closeSheet(); renderView(); toast('Backup copied', kb(txt.length) + '. Paste it somewhere safe, like a note or an email to yourself.'); }, function () { showText('Your backup', txt, kb(txt.length) + '. Tap Copy, then paste it somewhere safe.'); markBackedUp(); }); }
+      catch (e) { showText('Your backup', txt, kb(txt.length) + '. Tap Copy, then paste it somewhere safe.'); markBackedUp(); }
+    },
+    'backup-snooze': function () { S.p.settings.backupSnooze = Date.now() + 3 * DAY; save(); renderView(); toast('Reminder in 3 days'); },
+    'cal-trip': function () { var t = trip(); if (!t) return; openIcs(tripIcs(t), slug(t.name) + '.ics'); },
+    'cal-booking': function (el) { var t = trip(), b = bookingById(t, el.dataset.id); if (!b) return; openIcs(icsWrap(b.name, bookingEventsIcs(t, b)), slug(b.name) + '.ics'); }
   });
   /* =========================================================
      Start
